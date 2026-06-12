@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netzplan A2 · Studyguide Kapitel 7–12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAFAF7; --ink:#161616; --line:#DCDCD6; --muted:#6B6B66;
+  --u1:#E2002A; --u2:#9462A6; --u3:#F07C00; --u4:#009A3D; --u5:#00B5AD; --u6:#9E6B2E;
+  --ok:#009A3D; --bad:#E2002A; --amber:#F5A800;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{background:var(--paper);color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;min-height:100svh;}
+.shell{max-width:660px;margin:0 auto;padding:20px 18px 60px;}
+
+/* header */
+.tophead{display:flex;align-items:center;gap:12px;border-bottom:4px solid var(--ink);padding-bottom:14px;margin-bottom:18px;}
+.netz{display:grid;grid-template-columns:1fr 1fr;gap:3px;flex:none;}
+.netz i{width:14px;height:14px;border-radius:3px;display:block;}
+.tophead h1{font-family:'Archivo',sans-serif;font-stretch:115%;font-weight:800;font-size:clamp(20px,5.4vw,27px);line-height:1.05;}
+.tophead .sub{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--muted);margin-top:3px;}
+.backbtn{font-family:'Spline Sans Mono',monospace;font-size:12.5px;background:none;border:none;color:var(--muted);cursor:pointer;padding:6px 0;margin-bottom:8px;display:none;}
+.backbtn:before{content:"← ";}
+
+/* home: line list */
+.linecard{
+  display:flex;align-items:stretch;gap:0;width:100%;text-align:left;
+  background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;
+  margin-bottom:12px;cursor:pointer;font:inherit;
+  transition:transform .08s, box-shadow .15s;
+  box-shadow:0 1px 3px rgba(20,20,20,.04);
+}
+.linecard:active{transform:scale(.985);}
+.linecard .rail{width:10px;flex:none;}
+.linecard .body{padding:15px 16px;flex:1;}
+.linecard .row1{display:flex;align-items:center;gap:9px;margin-bottom:4px;}
+.linecard .ub{color:#fff;font-family:'Archivo',sans-serif;font-weight:900;font-size:14px;padding:2px 8px;border-radius:4px;}
+.linecard .kap{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--muted);}
+.linecard h2{font-family:'Archivo',sans-serif;font-stretch:108%;font-weight:800;font-size:17.5px;}
+.linecard .topics{font-size:13px;color:var(--muted);line-height:1.45;margin-top:4px;}
+.linecard .prog{margin-top:9px;height:6px;background:var(--paper);border:1px solid var(--line);border-radius:3px;overflow:hidden;}
+.linecard .prog i{display:block;height:100%;border-radius:3px;transition:width .4s;}
+.linecard .pct{font-family:'Spline Sans Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:4px;}
+.examcard{background:var(--ink);color:#fff;border:none;}
+.examcard .topics{color:#C9C9C4;}
+.examcard h2{color:#fff;}
+
+/* chapter view */
+.chap-head{border-radius:13px;padding:18px;color:#fff;margin-bottom:14px;}
+.chap-head .ub{background:rgba(255,255,255,.22);font-family:'Archivo',sans-serif;font-weight:900;font-size:14px;padding:2px 9px;border-radius:4px;}
+.chap-head h2{font-family:'Archivo',sans-serif;font-stretch:112%;font-weight:800;font-size:23px;margin-top:8px;}
+.chap-head .ct{font-size:13.5px;opacity:.92;margin-top:4px;line-height:1.5;}
+
+details.spick{background:#fff;border:1px solid var(--line);border-radius:13px;margin-bottom:14px;overflow:hidden;}
+details.spick summary{
+  list-style:none;cursor:pointer;padding:14px 16px;
+  font-family:'Archivo',sans-serif;font-stretch:108%;font-weight:800;font-size:15px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+details.spick summary::-webkit-details-marker{display:none;}
+details.spick summary:after{content:"+";font-size:20px;color:var(--muted);}
+details.spick[open] summary:after{content:"–";}
+.spick-body{padding:0 16px 16px;font-size:14px;line-height:1.6;}
+.spick-body h4{font-size:13px;margin:14px 0 5px;font-family:'Spline Sans Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.spick-body h4:first-child{margin-top:0;}
+.spick-body table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0;}
+.spick-body td,.spick-body th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;}
+.spick-body th{background:var(--paper);font-weight:600;}
+.spick-body .es{color:var(--muted);font-style:italic;}
+.spick-body b{font-weight:700;}
+.spick-body code{font-family:'Spline Sans Mono',monospace;font-size:12.5px;background:var(--paper);padding:1px 5px;border-radius:4px;}
+
+/* exercise cards */
+.excard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 16px;margin-bottom:13px;box-shadow:0 1px 3px rgba(20,20,20,.04);}
+.excard .num{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.excard .num .badge{font-size:14px;}
+.excard .q{font-size:16.5px;font-weight:600;line-height:1.5;margin-bottom:13px;}
+.excard .q .gap{display:inline-block;min-width:56px;border-bottom:2.5px solid var(--amber);text-align:center;}
+.excard .hint{font-size:12.5px;color:var(--muted);margin:-7px 0 12px;font-style:italic;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{
+  text-align:left;font:inherit;font-size:15.5px;font-weight:500;
+  background:var(--paper);border:2px solid var(--line);border-radius:10px;
+  padding:11px 14px;cursor:pointer;transition:all .15s;touch-action:manipulation;
+}
+.opt:active{transform:scale(.985);}
+.opt.correct{border-color:var(--ok);background:#EDF8F0;}
+.opt.wrong{border-color:var(--bad);background:#FCEDEF;}
+.opt.dim{opacity:.45;}
+.opt:disabled{cursor:default;}
+
+.gaprow{display:flex;gap:8px;}
+.gapinput{
+  flex:1;font:inherit;font-size:16px;padding:11px 13px;
+  border:2px solid var(--line);border-radius:10px;background:var(--paper);
+  min-width:0;
+}
+.gapinput:focus{outline:none;border-color:var(--amber);}
+.gapinput.good{border-color:var(--ok);background:#EDF8F0;}
+.gapinput.nope{border-color:var(--bad);background:#FCEDEF;}
+.checkbtn{
+  font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;
+  background:var(--ink);color:#fff;border:none;border-radius:10px;
+  padding:0 18px;cursor:pointer;flex:none;touch-action:manipulation;
+}
+
+/* builder */
+.built{
+  min-height:48px;border:2px dashed var(--line);border-radius:10px;
+  padding:8px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;
+  align-items:center;
+}
+.built.good{border-style:solid;border-color:var(--ok);background:#EDF8F0;}
+.built.nope{border-style:solid;border-color:var(--bad);background:#FCEDEF;}
+.pool{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.chiptok{
+  font:inherit;font-size:15px;font-weight:500;
+  background:var(--paper);border:2px solid var(--line);border-radius:8px;
+  padding:7px 11px;cursor:pointer;touch-action:manipulation;
+}
+.built .chiptok{background:#fff;}
+.chiptok:active{transform:scale(.95);}
+.chiptok.used{opacity:.25;pointer-events:none;}
+.buildrow{display:flex;gap:8px;}
+.ghostbtn{
+  font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;
+  background:transparent;color:var(--ink);border:2px solid var(--line);
+  border-radius:10px;padding:9px 16px;cursor:pointer;touch-action:manipulation;
+}
+
+/* match */
+.matchgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mitem{
+  font:inherit;font-size:13.5px;font-weight:500;line-height:1.4;text-align:left;
+  background:var(--paper);border:2px solid var(--line);border-radius:10px;
+  padding:10px 11px;cursor:pointer;transition:all .15s;touch-action:manipulation;
+}
+.mitem.sel{border-color:var(--amber);background:#FFF7E6;}
+.mitem.locked{border-color:var(--ok);background:#EDF8F0;opacity:.75;pointer-events:none;}
+.mitem.flash{border-color:var(--bad);background:#FCEDEF;}
+
+.explain{
+  margin-top:13px;border-left:4px solid var(--ok);background:#F2F9F4;
+  border-radius:0 10px 10px 0;padding:11px 13px;font-size:13.5px;line-height:1.55;
+  animation:slidein .25s ease;
+}
+.explain.bad{border-left-color:var(--bad);background:#FBF1F2;}
+.explain .es{display:block;margin-top:5px;color:var(--muted);font-style:italic;}
+@keyframes slidein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+.chapfoot{
+  background:#fff;border:1px solid var(--line);border-radius:13px;
+  padding:16px;text-align:center;font-size:14.5px;line-height:1.6;
+}
+.chapfoot .big{font-family:'Archivo',sans-serif;font-stretch:115%;font-weight:900;font-size:30px;}
+
+/* exam */
+.exam-progress{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;}
+.exam-bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:16px;}
+.exam-bar i{display:block;height:100%;background:var(--ink);transition:width .4s;}
+.btn-primary{
+  font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;
+  background:var(--ink);color:#fff;border:none;border-radius:10px;
+  padding:13px 26px;cursor:pointer;touch-action:manipulation;
+}
+.nextrow{display:flex;justify-content:flex-end;margin-top:14px;}
+.score-hero{font-family:'Archivo',sans-serif;font-stretch:120%;font-weight:900;font-size:clamp(42px,13vw,60px);line-height:1;}
+.hidden{display:none!important;}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <button class="backbtn" id="backBtn">Netzplan</button>
+
+  <div class="tophead" id="topHead">
+    <div class="netz" aria-hidden="true">
+      <i style="background:var(--u1)"></i><i style="background:var(--u2)"></i>
+      <i style="background:var(--u3)"></i><i style="background:var(--u4)"></i>
+      <i style="background:var(--u5)"></i><i style="background:var(--u6)"></i>
+    </div>
+    <div>
+      <h1>Netzplan A2</h1>
+      <div class="sub">Studyguide · Netzwerk neu A2 · Kapitel 7–12</div>
+    </div>
+  </div>
+
+  <div id="home"></div>
+  <div id="chapView" class="hidden"></div>
+  <div id="examView" class="hidden"></div>
+
+</div>
+
+<script>
+/* ============ DATA ============ */
+const CH = [
+{id:7,line:"U1",color:"var(--u1)",hex:"#E2002A",name:"Ganz schön mobil",
+ topics:"Indirekte Fragen (W-Fragen & ob) · Verkehr · Wegbeschreibung",
+ notes:[
+  {t:"Indirekte Fragesätze",h:`
+   <h4>Regel</h4>
+   <p>Das konjugierte Verb geht <b>ans Ende</b>. Trennbare Verben werden wieder <b>zusammengesetzt</b>.</p>
+   <table>
+   <tr><th>Direkt</th><th>Indirekt</th></tr>
+   <tr><td>Wann kommt der Zug <b>an</b>?</td><td>Wissen Sie, wann der Zug <b>ankommt</b>?</td></tr>
+   <tr><td>Gibt es WLAN?</td><td>Ich frage mich, <b>ob</b> es WLAN gibt.</td></tr>
+   </table>
+   <p><b>ob</b> = bei Ja-/Nein-Fragen. <span class="es">ob = "si" (pregunta indirecta); el verbo va al final.</span></p>
+   <h4>Typische Einleitungen</h4>
+   <p><code>Wissen Sie, …</code> <code>Könnten Sie mir sagen, …</code> <code>Darf ich Sie fragen, …</code> <code>Ich wollte noch fragen, …</code></p>`}
+ ],
+ ex:[
+  {t:"mc",q:"Eine Frau möchte wissen, …",o:["wann der Zug in Stuttgart ankommt.","wann der Zug kommt in Stuttgart an.","wann kommt der Zug in Stuttgart an.","wann der Zug an in Stuttgart kommt."],a:0,
+   de:"Im Nebensatz steht das Verb am Ende — und das trennbare Verb wird zusammengesetzt: <b>ankommt</b>.",es:"En la subordinada el verbo va al final, reunificado: \u201cankommt\u201d."},
+  {t:"mc",q:"Ein Mann fragt den Schaffner, …",o:["wohin er sein Gepäck kann stellen.","wohin er sein Gepäck stellen kann.","wohin kann er sein Gepäck stellen.","wohin er kann sein Gepäck stellen."],a:1,
+   de:"Modalverb ganz am Ende: <b>… stellen kann</b>.",es:"El verbo modal conjugado va al final absoluto: \u201c… stellen kann\u201d."},
+  {t:"gap",q:"Weißt du, ___ man in Ulm Fahrräder leihen kann?",ans:["ob"],
+   de:"Ja-/Nein-Frage → indirekte Frage mit <b>ob</b>.",es:"Pregunta de sí/no → \u201cob\u201d (= si)."},
+  {t:"gap",q:"Ich wollte noch fragen, ___ es im Bus WLAN gibt.",ans:["ob"],
+   de:"\u201eGibt es WLAN?\u201c ist eine Ja-/Nein-Frage → <b>ob</b>.",es:"\u201c¿Hay wifi?\u201d es pregunta cerrada → \u201cob\u201d."},
+  {t:"build",q:"Baue die indirekte Frage:",w:["Könnten","Sie","mir","sagen,","wo","der","Bus","abfährt?"],
+   de:"Höfliche Einleitung + W-Wort + Subjekt + Verb am Ende (zusammengesetzt: <b>abfährt</b>).",es:"Introducción cortés + palabra interrogativa + sujeto + verbo al final."},
+  {t:"build",q:"Baue die indirekte Frage:",w:["Wissen","Sie,","wo","ich","einen","Parkplatz","finde?"],
+   de:"W-Wort <b>wo</b>, dann Subjekt, das Verb <b>finde</b> ans Ende.",es:"\u201cwo\u201d + sujeto + objeto + verbo al final."},
+  {t:"build",q:"Baue die indirekte Frage:",w:["Können","Sie","mir","bitte","sagen,","wann","wir","in","Bonn","ankommen?"],
+   de:"Trennbares Verb am Ende wieder zusammen: <b>ankommen</b>.",es:"El verbo separable se reunifica al final: \u201cankommen\u201d."},
+  {t:"mc",q:"Was brauchst du für die Orientierung im Auto?",o:["das Navi","die Bremse","der Kofferraum","die Versicherung"],a:0,
+   de:"<b>das Navi</b> (das Navigationsgerät) zeigt den Weg.",es:"\u201cdas Navi\u201d = el GPS / navegador."}
+ ]},
+
+{id:8,line:"U2",color:"var(--u2)",hex:"#9462A6",name:"Gelernt ist gelernt!",
+ topics:"Ratschläge mit sollte · Was für ein(e)? · Lernen & Prüfungen",
+ notes:[
+  {t:"Konjunktiv II: sollte (Ratschläge)",h:`
+   <h4>Formen</h4>
+   <table>
+   <tr><td>ich/er/sie <b>sollte</b></td><td>wir/sie/Sie <b>sollten</b></td></tr>
+   <tr><td>du <b>solltest</b></td><td>ihr <b>solltet</b></td></tr>
+   </table>
+   <p>Struktur: <code>Person + sollte + … + Infinitiv (Ende)</code><br>
+   <b>Mario sollte Zeit mit Freunden einplanen.</b>
+   <span class="es">\u201csollte\u201d = debería. El infinitivo va al final.</span></p>
+   <h4>Was für ein(e)?</h4>
+   <p>Fragt nach der Art/dem Typ: <b>Was für ein</b> Auto hast du? — Der Kasus kommt vom Satz, nicht von \u201efür\u201c!
+   <span class="es">\u201c¿Qué tipo de…?\u201d — el caso lo decide el verbo, no la preposición \u201cfür\u201d.</span></p>`}
+ ],
+ ex:[
+  {t:"match",q:"Lernprobleme: Wie kann man es anders sagen?",pairs:[
+    ["Ich möchte Prüfungen immer sehr gut machen.","Ich will perfekt sein."],
+    ["Ich lerne auch in der Nacht.","Ich lerne zu viel und schlafe zu wenig."],
+    ["Ich fange immer zu spät mit dem Lernen an.","Ich bereite mich nie rechtzeitig vor."],
+    ["Ich verschiebe das Lernen oft.","Ich halte meinen Zeitplan nicht ein."],
+    ["Ich kann mich nicht konzentrieren.","Ich denke beim Lernen oft an andere Dinge."]]},
+  {t:"gap",q:"Was hilft? den Zeitplan ___",hint:"Silben: HAL · TEN · EIN",ans:["einhalten"],
+   de:"<b>einhalten</b> = einen Plan respektieren und befolgen.",es:"\u201ceinhalten\u201d = cumplir (un plan, una cita)."},
+  {t:"gap",q:"Was hilft? das Lernen nicht immer ___",hint:"Silben: SCHIE · VER · BEN",ans:["verschieben"],
+   de:"<b>verschieben</b> = auf später/morgen schieben.",es:"\u201cverschieben\u201d = posponer, aplazar."},
+  {t:"gap",q:"Was hilft? sich in den Pausen ___",hint:"Silben: SPAN · ENT · NEN",ans:["entspannen"],
+   de:"<b>sich entspannen</b> = relaxen, ruhig werden.",es:"\u201csich entspannen\u201d = relajarse."},
+  {t:"gap",q:"Was hilft? sich beim Lernen gut ___",hint:"Silben: TRIE · KON · REN · ZEN",ans:["konzentrieren"],
+   de:"<b>sich konzentrieren</b> (auf + Akkusativ).",es:"\u201csich konzentrieren\u201d = concentrarse."},
+  {t:"build",q:"Schreib den Tipp mit sollte: (du – auch mal nichts tun)",w:["Du","solltest","auch","mal","nichts","tun."],
+   de:"du → <b>solltest</b>; Infinitiv <b>tun</b> am Ende.",es:"\u201cdu solltest\u201d + infinitivo al final."},
+  {t:"build",q:"Schreib den Tipp mit sollte: (Sie – vor Prüfungen tief durchatmen)",w:["Sie","sollten","vor","Prüfungen","tief","durchatmen."],
+   de:"Sie (formal) → <b>sollten</b>.",es:"Forma de cortesía \u201cSie\u201d → \u201csollten\u201d."},
+  {t:"build",q:"Schreib den Tipp mit sollte: (Leon – nicht so streng zu sich sein)",w:["Leon","sollte","nicht","so","streng","zu","sich","sein."],
+   de:"er/Leon → <b>sollte</b>; \u201esein\u201c am Ende.",es:"Tercera persona → \u201csollte\u201d; el infinitivo \u201csein\u201d cierra."},
+  {t:"mc",q:"___ Auto hast du? — Einen alten BMW.",o:["Was für ein","Was für einen","Welches für ein","Wie ein"],a:0,
+   de:"\u201ehaben\u201c + Akkusativ, \u201eAuto\u201c ist Neutrum → Akkusativ Neutrum = <b>ein</b> (wie Nominativ).",es:"\u201cAuto\u201d es neutro; acusativo neutro = \u201cein\u201d (sin cambio)."}
+ ]},
+
+{id:9,line:"U3",color:"var(--u3)",hex:"#F07C00",name:"Sportlich, sportlich",
+ topics:"deshalb & trotzdem · Verben mit Dativ + Akkusativ · Pronomen-Position",
+ notes:[
+  {t:"deshalb / trotzdem & zwei Objekte",h:`
+   <h4>Sätze verbinden</h4>
+   <table>
+   <tr><th>deshalb</th><td>Konsequenz (logisch) <span class="es">= por eso</span><br><code>Sie ist müde, deshalb schläft sie.</code></td></tr>
+   <tr><th>trotzdem</th><td>Kontrast (unerwartet) <span class="es">= sin embargo / a pesar de eso</span><br><code>Sie ist müde, trotzdem arbeitet sie.</code></td></tr>
+   </table>
+   <p>Beide stehen auf Position 1 → danach kommt sofort das <b>Verb</b>.</p>
+   <h4>Dativ + Akkusativ</h4>
+   <p>Verben wie <b>geben, zeigen, erklären, schenken, leihen, empfehlen, bringen, schicken</b>:</p>
+   <table>
+   <tr><th>Nomen + Nomen</th><td>Dativ vor Akkusativ:<br><code>Sie gibt <b>den Schülern</b> (D) <b>ein Spiel</b> (A).</code></td></tr>
+   <tr><th>Mit Pronomen (Akk.)</th><td>Akkusativ-Pronomen zuerst:<br><code>Sie gibt <b>es</b> (A) <b>ihnen</b> (D).</code></td></tr>
+   </table>
+   <p><span class="es">Con dos sustantivos: dativo primero. Si el acusativo es pronombre: el pronombre va primero.</span></p>`}
+ ],
+ ex:[
+  {t:"mc",q:"Frau Polgar hat sich über fünf Stunden konzentriert, ___ ist sie müde.",o:["deshalb","trotzdem","ob","weil"],a:0,
+   de:"Logische Konsequenz → <b>deshalb</b>.",es:"Consecuencia lógica → \u201cdeshalb\u201d (por eso)."},
+  {t:"mc",q:"Katrin hatte Schmerzen im Arm, ___ hat sie gewonnen.",o:["deshalb","trotzdem","denn","dass"],a:1,
+   de:"Unerwarteter Kontrast → <b>trotzdem</b>.",es:"Resultado inesperado → \u201ctrotzdem\u201d (a pesar de eso)."},
+  {t:"mc",q:"Das Wetter war schrecklich, ___ ist Silvia zwei Stunden gelaufen.",o:["deshalb","trotzdem","weil","ob"],a:1,
+   de:"Schlechtes Wetter, aber sie läuft → Kontrast: <b>trotzdem</b>.",es:"Contraste: mal tiempo pero corre igual → \u201ctrotzdem\u201d."},
+  {t:"mc",q:"Faustino hat nicht aufgepasst, ___ hat er jetzt ein blaues Auge.",o:["trotzdem","deshalb","ob","aber"],a:1,
+   de:"Direkte Folge → <b>deshalb</b>.",es:"Consecuencia directa → \u201cdeshalb\u201d."},
+  {t:"build",q:"Kommentar für Lenas Fanseite: \u201eEs ist großartig, …\u201c",w:["dass","ich","dich","nächste","Woche","live","sehe."],
+   de:"Nach <b>dass</b>: Verb ans Ende. Pronomen: erst Nominativ (ich), dann Akkusativ (dich).",es:"Tras \u201cdass\u201d el verbo va al final."},
+  {t:"build",q:"\u201eIch wohne in Dresden, …\u201c (trotzdem)",w:["trotzdem","gehe","ich","in","Köln","auf","dein","Konzert."],
+   de:"<b>trotzdem</b> auf Position 1 → Verb direkt danach.",es:"\u201ctrotzdem\u201d ocupa la posición 1 → el verbo va justo después."},
+  {t:"build",q:"Ordne den Satz: (ihren Schülern / ein Spiel)",w:["Heute","hat","die","Lehrerin","ihren","Schülern","ein","Spiel","mitgebracht."],
+   de:"Zwei Nomen: <b>Dativ</b> (ihren Schülern) vor <b>Akkusativ</b> (ein Spiel).",es:"Dos sustantivos: dativo antes que acusativo."},
+  {t:"mc",q:"Sie erklärt ___ . (die Regeln / ihnen)",o:["die Regeln ihnen","ihnen die Regeln","sie ihnen die Regeln","ihnen sie die Regeln"],a:1,
+   de:"Pronomen (ihnen) vor Nomen (die Regeln).",es:"El pronombre va antes que el sustantivo."},
+  {t:"mc",q:"Die Lehrerin hat ihren Schülern ein Spiel mitgebracht. Sie erklärt ___.",o:["ihnen es","es ihnen","sie es","ihnen ihn"],a:1,
+   de:"Zwei Pronomen: <b>Akkusativ vor Dativ</b> → es ihnen.",es:"Dos pronombres: acusativo antes que dativo → \u201ces ihnen\u201d."},
+  {t:"mc",q:"\u201eKannst du mir einen Stift geben?\u201c — \u201eKlar, ich schenke ___!\u201c",o:["dir ihn","ihn dir","ihm dich","es dir"],a:1,
+   de:"der Stift → <b>ihn</b> (Akk.) vor <b>dir</b> (Dat.).",es:"\u201cder Stift\u201d → \u201cihn\u201d; el acusativo primero: \u201cihn dir\u201d."},
+  {t:"match",q:"Verabredungen: Was passt zusammen?",pairs:[
+    ["Wir können doch morgen ins Kino gehen.","Ja, gute Idee. Welche Filme gibt es denn?"],
+    ["Wir können Pizza essen gehen.","Wollen wir nicht lieber selbst kochen?"],
+    ["Sollen wir heute Abend zum Sport gehen?","Nein, ich war erst gestern im Fitness-Studio."],
+    ["Ich gehe morgen schwimmen. Kommst du mit?","Da habe ich leider keine Zeit. Ich muss arbeiten."]]}
+ ]},
+
+{id:10,line:"U4",color:"var(--u4)",hex:"#009A3D",name:"Zusammen leben",
+ topics:"Wechselpräpositionen · legen/liegen, stellen/stehen · könnte-Bitten · als/wenn",
+ notes:[
+  {t:"Wechselpräpositionen & Verben",h:`
+   <h4>Wo? vs. Wohin?</h4>
+   <table>
+   <tr><th>Wo? → Dativ (Position)</th><th>Wohin? → Akkusativ (Bewegung)</th></tr>
+   <tr><td>liegen · stehen · hängen · sitzen · sein</td><td>legen · stellen · hängen · setzen</td></tr>
+   <tr><td><code>Das Buch <b>liegt auf dem</b> Tisch.</code></td><td><code>Ich <b>lege</b> es <b>auf den</b> Tisch.</code></td></tr>
+   </table>
+   <p><span class="es">¿Dónde está? → dativo. ¿Adónde lo pones? → acusativo.</span></p>
+   <h4>Höflich bitten: könnte</h4>
+   <p><code>Könnten Sie …? / Könntest du …? / Könntet ihr …?</code>
+   <span class="es">\u201c¿Podría(s)…?\u201d — más cortés que \u201ckannst du\u201d.</span></p>
+   <h4>als vs. wenn</h4>
+   <table>
+   <tr><th>als</th><td>einmaliges Ereignis in der Vergangenheit<br><code><b>Als</b> ich Kind war, …</code></td></tr>
+   <tr><th>wenn</th><td>wiederholt oder Gegenwart/Zukunft<br><code>Immer <b>wenn</b> ich müde bin, …</code></td></tr>
+   </table>`}
+ ],
+ ex:[
+  {t:"gap",q:"Die Kochbücher liegen auf ___ Boden. (der Boden)",ans:["dem"],
+   de:"<b>liegen</b> = Position (Wo?) → Dativ: auf <b>dem</b> Boden.",es:"Posición (¿dónde?) → dativo."},
+  {t:"gap",q:"Niklas hat den Teppich auf ___ Boden gelegt.",ans:["den"],
+   de:"<b>legen</b> = Bewegung (Wohin?) → Akkusativ: auf <b>den</b> Boden.",es:"Movimiento (¿adónde?) → acusativo."},
+  {t:"mc",q:"Der Stuhl ___ vor dem Herd.",o:["steht","stellt","legt","setzt"],a:0,
+   de:"Position ohne Bewegung → <b>stehen</b>. (stellen = etwas irgendwohin bewegen)",es:"\u201cstehen\u201d = estar de pie (posición); \u201cstellen\u201d = colocar."},
+  {t:"mc",q:"Er hat den Stuhl an die Wand ___.",o:["gestanden","gestellt","gelegen","gesessen"],a:1,
+   de:"Bewegung → <b>stellen</b> → Partizip: <b>gestellt</b>. \u201ean die Wand\u201c = Akkusativ!",es:"Acción de colocar → \u201cgestellt\u201d; \u201can die Wand\u201d en acusativo."},
+  {t:"mc",q:"Die Katze sitzt ___ Schrank.",o:["auf dem","auf den","in den","über den"],a:0,
+   de:"Wo sitzt sie? Position → Dativ: <b>auf dem</b> Schrank.",es:"¿Dónde está sentada? → dativo."},
+  {t:"build",q:"Höflich bitten: (mir / Ihr Werkzeug / leihen / kurz / Sie)",w:["Könnten","Sie","mir","kurz","Ihr","Werkzeug","leihen?"],
+   de:"<b>Könnten Sie</b> + Dativ (mir) + Akkusativ (Ihr Werkzeug) + Infinitiv.",es:"\u201c¿Podría prestarme…?\u201d — infinitivo al final."},
+  {t:"build",q:"Höflich bitten: (du / die Fische / morgen / füttern)",w:["Könntest","du","morgen","die","Fische","füttern?"],
+   de:"du → <b>Könntest</b>; Zeit (morgen) vor Objekt.",es:"\u201cdu\u201d → \u201ckönntest\u201d; el tiempo antes del objeto."},
+  {t:"mc",q:"Ihre Nachbarin bittet Sie, ihre Blumen zu gießen. Sie sind aber im Urlaub. Was passt?",o:["Schade, das geht leider nicht. Ich bin nicht da.","Das kommt nicht mehr vor.","Verzeihung, das tut mir leid.","Natürlich, das mache ich gern."],a:0,
+   de:"Höflich ablehnen + Grund nennen.",es:"Rechazar con cortesía y dar el motivo."},
+  {t:"mc",q:"___ ich ein Kind war, hatte ich einen Hund.",o:["Wenn","Als","Ob","Weil"],a:1,
+   de:"Einmalige Phase in der Vergangenheit → <b>als</b>.",es:"Período único del pasado → \u201cals\u201d."},
+  {t:"mc",q:"Immer ___ Frau Moreno ihre Nachbarn sieht, grüßt sie freundlich.",o:["als","wenn","ob","dass"],a:1,
+   de:"Wiederholte Handlung (immer) → <b>wenn</b>.",es:"Acción repetida (\u201csiempre que\u201d) → \u201cwenn\u201d."}
+ ]},
+
+{id:11,line:"U5",color:"var(--u5)",hex:"#00B5AD",name:"Wie die Zeit vergeht!",
+ topics:"Konjunktiv II (würde/könnte/sollte) · Verben mit Präposition · Worauf? Woran? …",
+ notes:[
+  {t:"Ratschläge & Verben mit Präposition",h:`
+   <h4>Ratschläge geben (Konjunktiv II)</h4>
+   <p><code>Ich würde an deiner Stelle …</code> · <code>Du könntest doch …</code> · <code>Du solltest …</code>
+   <span class="es">\u201cYo en tu lugar…\u201d / \u201cPodrías…\u201d / \u201cDeberías…\u201d</span></p>
+   <h4>Verben mit fester Präposition</h4>
+   <table>
+   <tr><td>sich freuen <b>auf</b> + A</td><td class="es">esperar con ilusión (futuro)</td></tr>
+   <tr><td>sich freuen <b>über</b> + A</td><td class="es">alegrarse de (presente)</td></tr>
+   <tr><td>sich interessieren <b>für</b> + A</td><td class="es">interesarse por</td></tr>
+   <tr><td>träumen <b>von</b> + D</td><td class="es">soñar con</td></tr>
+   <tr><td>sich erinnern <b>an</b> + A</td><td class="es">acordarse de</td></tr>
+   <tr><td>sich kümmern <b>um</b> + A</td><td class="es">ocuparse de</td></tr>
+   <tr><td>sich ärgern <b>über</b> + A</td><td class="es">enfadarse por</td></tr>
+   <tr><td>sprechen <b>mit</b> + D / <b>über</b> + A</td><td class="es">hablar con / sobre</td></tr>
+   </table>
+   <h4>W-Fragen mit Präposition</h4>
+   <p>Sache → <b>wo(r) + Präposition</b>: Worauf? Woran? Worüber? Wofür? Wovon? Worum?<br>
+   Person → <b>Präposition + wen/wem</b>: Über wen? Mit wem? An wen?
+   <span class="es">Cosa → \u201cwor-\u201d; persona → preposición + wen/wem.</span></p>`}
+ ],
+ ex:[
+  {t:"gap",q:"Aylin freut sich so ___ . (ihr Urlaub, nächsten Monat)",hint:"Präposition + Artikel im richtigen Kasus",ans:["auf ihren urlaub"],
+   de:"sich freuen <b>auf</b> + Akkusativ (etwas in der Zukunft): auf ihr<b>en</b> Urlaub.",es:"\u201cfreuen auf\u201d + acusativo (algo futuro)."},
+  {t:"gap",q:"Ahmet interessiert sich nur ___ . (seine Arbeit)",ans:["für seine arbeit"],
+   de:"sich interessieren <b>für</b> + Akkusativ.",es:"\u201cinteressieren für\u201d + acusativo."},
+  {t:"gap",q:"Ines träumt ___ in Spanien. (ihre Ferien)",ans:["von ihren ferien"],
+   de:"träumen <b>von</b> + Dativ: von ihr<b>en</b> Ferien (Plural Dativ + n).",es:"\u201cträumen von\u201d + dativo; plural dativo añade -n."},
+  {t:"gap",q:"Esther verbringt viel Zeit ___ . (ihr Hund)",ans:["mit ihrem hund"],
+   de:"Zeit verbringen <b>mit</b> + Dativ: mit ihr<b>em</b> Hund.",es:"\u201cmit\u201d siempre dativo."},
+  {t:"gap",q:"Emil erinnert sich gern ___ . (seine Hochzeit)",ans:["an seine hochzeit"],
+   de:"sich erinnern <b>an</b> + Akkusativ.",es:"\u201cerinnern an\u201d + acusativo."},
+  {t:"mc",q:"Du warst doch mal in Hamburg. ___ erinnerst du dich noch? — An den Hafen.",o:["Woran","Worauf","Worüber","An wen"],a:0,
+   de:"Sache (der Hafen) + erinnern an → <b>Woran</b>.",es:"Cosa + \u201can\u201d → \u201cWoran\u201d."},
+  {t:"mc",q:"Fritz interessiert sich sehr für Musik. — ___? — Für Musik.",o:["Wovon","Wofür","Worum","Für wen"],a:1,
+   de:"Sache + für → <b>Wofür</b>.",es:"Cosa + \u201cfür\u201d → \u201cWofür\u201d."},
+  {t:"mc",q:"Pinar hat vergessen, ___ sie sich für das Fest kümmern sollte. — Ums Essen.",o:["worauf","worum","woran","um wen"],a:1,
+   de:"sich kümmern <b>um</b> + Sache → <b>worum</b>.",es:"\u201ckümmern um\u201d + cosa → \u201cworum\u201d."},
+  {t:"mc",q:"___ ärgerst du dich so? — Ach, über eine unzufriedene Kundin!",o:["Worüber","Über wen","Worauf","Wovon"],a:1,
+   de:"Eine Kundin ist eine <b>Person</b> → Präposition + wen: <b>Über wen</b>.",es:"¡Es una persona! → \u201cÜber wen\u201d, no \u201cworüber\u201d."},
+  {t:"mc",q:"Warum seid ihr so laut? ___ diskutiert ihr? — Über das Fußballspiel.",o:["Worüber","Über wen","Worum","Womit"],a:0,
+   de:"Sache (das Spiel) → <b>Worüber</b>.",es:"Cosa → \u201cWorüber\u201d."},
+  {t:"build",q:"Gib einen Rat: (Frau Kovacic steht immer im Stau)",w:["Ich","würde","an","Ihrer","Stelle","mit","der","U-Bahn","fahren."],
+   de:"<b>Ich würde an Ihrer Stelle</b> + Infinitiv am Ende.",es:"\u201cYo en su lugar iría en metro\u201d — infinitivo al final."},
+  {t:"build",q:"Gib einen Rat: (Eva glaubt, sie schafft die Prüfung nicht)",w:["Du","könntest","doch","mit","einer","Kollegin","gemeinsam","lernen."],
+   de:"<b>Du könntest doch</b> … — \u201edoch\u201c macht den Rat freundlicher.",es:"\u201cdoch\u201d suaviza el consejo."}
+ ]},
+
+{id:12,line:"U6",color:"var(--u6)",hex:"#9E6B2E",name:"Gute Unterhaltung!",
+ topics:"Relativsätze (Nominativ & Akkusativ) · Indefinitpronomen · Musik",
+ notes:[
+  {t:"Relativsätze & Indefinitpronomen",h:`
+   <h4>Relativpronomen (Nom. & Akk.)</h4>
+   <table>
+   <tr><th></th><th>mask.</th><th>fem.</th><th>neutr.</th><th>Pl.</th></tr>
+   <tr><th>Nom.</th><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+   <tr><th>Akk.</th><td><b>den</b></td><td>die</td><td>das</td><td>die</td></tr>
+   </table>
+   <p>Das Verb geht ans Ende: <code>Das ist der Song, <b>den</b> ich liebe.</code><br>
+   Tipp: Nominativ oder Akkusativ? Schau, ob das Pronomen im Relativsatz <b>Subjekt</b> (Nom.) oder <b>Objekt</b> (Akk.) ist.
+   <span class="es">El pronombre relativo = artículo definido; solo cambia el masculino acusativo (\u201cden\u201d). Verbo al final.</span></p>
+   <h4>Indefinitpronomen</h4>
+   <table>
+   <tr><td><b>jemand / niemand</b></td><td class="es">alguien / nadie</td></tr>
+   <tr><td><b>etwas / nichts</b></td><td class="es">algo / nada</td></tr>
+   <tr><td><b>alles / viele / einige</b></td><td class="es">todo / muchos / algunos</td></tr>
+   </table>`}
+ ],
+ ex:[
+  {t:"mc",q:"Das ist der Musiker, ___ aus Wien kommt.",o:["der","den","das","dem"],a:0,
+   de:"Der Musiker ist <b>Subjekt</b> im Relativsatz (er kommt) → Nominativ: <b>der</b>.",es:"Es el sujeto de la subordinada → nominativo."},
+  {t:"mc",q:"Das ist die Band, ___ ich super finde.",o:["der","die","den","das"],a:1,
+   de:"\u201eich finde <b>sie</b>\u201c → Akkusativ feminin = <b>die</b>.",es:"Objeto del verbo \u201cfinden\u201d → acusativo femenino \u201cdie\u201d."},
+  {t:"mc",q:"Das Lied, ___ wir gestern gehört haben, ist neu.",o:["den","die","das","dem"],a:2,
+   de:"das Lied (Neutrum), Objekt von \u201ehören\u201c → Akkusativ Neutrum = <b>das</b>.",es:"Neutro acusativo = \u201cdas\u201d."},
+  {t:"mc",q:"Der Sänger, ___ du so magst, gibt morgen ein Konzert.",o:["der","den","dem","das"],a:1,
+   de:"\u201edu magst <b>ihn</b>\u201c → Maskulin Akkusativ = <b>den</b>. Der einzige Fall, der sich ändert!",es:"Masculino acusativo → \u201cden\u201d, ¡el único que cambia!"},
+  {t:"build",q:"Baue den Relativsatz:",w:["Das","ist","ein","Lied,","das","ich","sehr","gut","finde."],
+   de:"Relativpronomen <b>das</b> + Subjekt + … + Verb am Ende.",es:"Pronombre relativo + sujeto + verbo al final."},
+  {t:"mc",q:"Hast du ___ gehört? — Nein, nichts.",o:["etwas","nichts","jemand","alles"],a:0,
+   de:"Frage positiv: <b>etwas</b>; Antwort negativ: nichts.",es:"\u201cetwas\u201d = algo; \u201cnichts\u201d = nada."},
+  {t:"mc",q:"___ hat angerufen, aber ich weiß nicht, wer.",o:["Niemand","Jemand","Etwas","Alles"],a:1,
+   de:"<b>Jemand</b> = eine unbekannte Person.",es:"\u201cjemand\u201d = alguien."},
+  {t:"mc",q:"Im Kühlschrank ist ___ mehr. Wir müssen einkaufen.",o:["etwas","alles","nichts","jemand"],a:2,
+   de:"<b>nichts mehr</b> = der Kühlschrank ist leer.",es:"\u201cnichts mehr\u201d = ya no queda nada."}
+ ]}
+];
+
+/* ============ STATE ============ */
+const progress = {}; // chapId -> {done:Set(idx), correct:Set(idx)}
+CH.forEach(c=>progress[c.id]={done:new Set(),correct:new Set()});
+
+const $=id=>document.getElementById(id);
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function norm(s){return s.toLowerCase().trim().replace(/\s+/g," ").replace(/[.!?,]+$/,"");}
+
+/* ============ HOME ============ */
+function renderHome(){
+  $("backBtn").style.display="none";
+  $("chapView").classList.add("hidden");
+  $("examView").classList.add("hidden");
+  const home=$("home");home.classList.remove("hidden");home.innerHTML="";
+  CH.forEach(c=>{
+    const p=progress[c.id], total=c.ex.length;
+    const pct=Math.round(p.done.size/total*100);
+    const card=el("button","linecard");
+    card.innerHTML=`
+      <div class="rail" style="background:${c.hex}"></div>
+      <div class="body">
+        <div class="row1"><span class="ub" style="background:${c.hex}">${c.line}</span><span class="kap">Kapitel ${c.id}</span></div>
+        <h2>${c.name}</h2>
+        <div class="topics">${c.topics}</div>
+        <div class="prog"><i style="background:${c.hex};width:${pct}%"></i></div>
+        <div class="pct">${p.done.size}/${total} Übungen · ${p.correct.size} richtig</div>
+      </div>`;
+    card.onclick=()=>renderChapter(c);
+    home.appendChild(card);
+  });
+  const exam=el("button","linecard examcard");
+  exam.innerHTML=`
+    <div class="rail" style="background:linear-gradient(180deg,#E2002A,#9462A6,#F07C00,#009A3D,#00B5AD,#9E6B2E)"></div>
+    <div class="body">
+      <div class="row1"><span class="ub" style="background:rgba(255,255,255,.2)">★</span><span class="kap" style="color:#C9C9C4">Prüfungsmodus</span></div>
+      <h2>Große Testfahrt</h2>
+      <div class="topics">15 zufällige Fragen aus allen Kapiteln — wie in der echten Prüfung.</div>
+    </div>`;
+  exam.onclick=startExam;
+  home.appendChild(exam);
+}
+
+/* ============ EXERCISE RENDERERS ============ */
+function makeExplain(ok,q){
+  const ex=el("div","explain"+(ok?"":" bad"));
+  ex.innerHTML=(ok?"✅ <b>Richtig!</b> ":"❌ <b>Leider nein.</b> ")+(q.de||"")+(q.es?'<span class="es">🇪🇸 '+q.es+"</span>":"");
+  return ex;
+}
+
+function renderExercise(c,q,idx,onDone){
+  const card=el("div","excard");
+  const typeLabel={mc:"Auswahl",gap:"Lücke",build:"Satzbau",match:"Zuordnen"}[q.t];
+  card.appendChild(el("div","num",`<span>Übung ${idx+1} · ${typeLabel}</span><span class="badge" data-b></span>`));
+  const badge=card.querySelector("[data-b]");
+  const fin=(ok)=>{badge.textContent=ok?"✅":"❌";onDone&&onDone(ok);};
+
+  if(q.t==="mc"){
+    card.appendChild(el("div","q",q.q.replace("___",'<span class="gap">___</span>')));
+    const box=el("div","opts");card.appendChild(box);
+    shuffle(q.o.map((o,i)=>({o,i}))).forEach(({o,i})=>{
+      const b=el("button","opt",o);
+      b.onclick=()=>{
+        [...box.children].forEach(x=>{x.disabled=true;
+          if(x.textContent===q.o[q.a])x.classList.add("correct");
+          else if(x===b)x.classList.add("wrong");
+          else x.classList.add("dim");});
+        const ok=i===q.a;
+        card.appendChild(makeExplain(ok,q));fin(ok);
+      };
+      box.appendChild(b);
+    });
+  }
+
+  else if(q.t==="gap"){
+    card.appendChild(el("div","q",q.q.replace("___",'<span class="gap">___</span>')));
+    if(q.hint)card.appendChild(el("div","hint","💡 "+q.hint));
+    const row=el("div","gaprow");
+    const inp=document.createElement("input");
+    inp.className="gapinput";inp.type="text";inp.autocomplete="off";inp.autocapitalize="off";
+    inp.placeholder="Deine Antwort …";
+    const btn=el("button","checkbtn","OK");
+    let tries=0;
+    const check=()=>{
+      if(!inp.value.trim())return;
+      const ok=q.ans.some(a=>norm(a)===norm(inp.value));
+      tries++;
+      if(ok){
+        inp.className="gapinput good";inp.disabled=true;btn.disabled=true;
+        card.appendChild(makeExplain(true,q));fin(true);
+      }else if(tries>=2){
+        inp.className="gapinput nope";inp.disabled=true;btn.disabled=true;
+        const ex=makeExplain(false,q);
+        ex.innerHTML="❌ <b>Die Lösung:</b> „"+q.ans[0]+"“ — "+(q.de||"")+(q.es?'<span class="es">🇪🇸 '+q.es+"</span>":"");
+        card.appendChild(ex);fin(false);
+      }else{
+        inp.className="gapinput nope";
+        if(!card.querySelector(".hint2"))card.appendChild(el("div","hint hint2","Noch nicht ganz — ein zweiter Versuch!"));
+      }
+    };
+    btn.onclick=check;
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")check();});
+    inp.addEventListener("input",()=>{if(!inp.disabled)inp.className="gapinput";});
+    row.appendChild(inp);row.appendChild(btn);card.appendChild(row);
+  }
+
+  else if(q.t==="build"){
+    card.appendChild(el("div","q",q.q));
+    const built=el("div","built");
+    const pool=el("div","pool");
+    card.appendChild(built);card.appendChild(pool);
+    let seq=[];
+    const chips=shuffle(q.w.map((w,i)=>({w,i})));
+    chips.forEach(({w,i})=>{
+      const b=el("button","chiptok",w);
+      b.onclick=()=>{
+        if(b.classList.contains("used"))return;
+        b.classList.add("used");seq.push({w,i,src:b});
+        const placed=el("button","chiptok",w);
+        placed.onclick=()=>{
+          const k=seq.findIndex(s=>s.src===b);
+          if(k>-1){seq.splice(k,1);b.classList.remove("used");placed.remove();}
+        };
+        built.appendChild(placed);
+      };
+      pool.appendChild(b);
+    });
+    const row=el("div","buildrow");
+    const chk=el("button","checkbtn","Prüfen");
+    const rst=el("button","ghostbtn","Zurücksetzen");
+    let tries=0;
+    chk.onclick=()=>{
+      if(seq.length!==q.w.length)return;
+      const ok=seq.every((s,k)=>s.w===q.w[k]);
+      tries++;
+      if(ok){
+        built.className="built good";chk.disabled=true;rst.disabled=true;
+        [...built.children].forEach(x=>x.onclick=null);
+        card.appendChild(makeExplain(true,q));fin(true);
+      }else if(tries>=2){
+        built.className="built nope";chk.disabled=true;rst.disabled=true;
+        const ex=makeExplain(false,q);
+        ex.innerHTML="❌ <b>Richtige Reihenfolge:</b> „"+q.w.join(" ")+"“ — "+(q.de||"")+(q.es?'<span class="es">🇪🇸 '+q.es+"</span>":"");
+        card.appendChild(ex);fin(false);
+      }else{
+        built.className="built nope";
+        setTimeout(()=>built.className="built",700);
+      }
+    };
+    rst.onclick=()=>{
+      seq=[];built.innerHTML="";built.className="built";
+      [...pool.children].forEach(x=>x.classList.remove("used"));
+    };
+    row.appendChild(chk);row.appendChild(rst);card.appendChild(row);
+  }
+
+  else if(q.t==="match"){
+    card.appendChild(el("div","q",q.q));
+    const grid=el("div","matchgrid");card.appendChild(grid);
+    const left=q.pairs.map((p,i)=>({txt:p[0],pair:i,side:"L"}));
+    const right=shuffle(q.pairs.map((p,i)=>({txt:p[1],pair:i,side:"R"})));
+    let sel=null,locked=0,errors=0;
+    const all=[];
+    function make(item){
+      const b=el("button","mitem",item.txt);
+      b.onclick=()=>{
+        if(b.classList.contains("locked"))return;
+        if(!sel){sel={item,b};b.classList.add("sel");return;}
+        if(sel.b===b){b.classList.remove("sel");sel=null;return;}
+        if(sel.item.side===item.side){sel.b.classList.remove("sel");sel={item,b};b.classList.add("sel");return;}
+        // attempt pair
+        if(sel.item.pair===item.pair){
+          sel.b.classList.remove("sel");
+          sel.b.classList.add("locked");b.classList.add("locked");
+          locked++;sel=null;
+          if(locked===q.pairs.length){
+            const ok=errors===0;
+            card.appendChild(makeExplain(ok,{de:ok?"Alle Paare gefunden — ohne Fehler!":"Alle Paare gefunden, aber mit "+errors+" Fehlversuch(en). Schau dir die Paare noch einmal an.",es:ok?"¡Todas las parejas a la primera!":"Completado con algunos intentos fallidos."}));
+            fin(ok);
+          }
+        }else{
+          errors++;
+          sel.b.classList.remove("sel");
+          sel.b.classList.add("flash");b.classList.add("flash");
+          const a=sel.b;sel=null;
+          setTimeout(()=>{a.classList.remove("flash");b.classList.remove("flash");},550);
+        }
+      };
+      all.push(b);return b;
+    }
+    // interleave rows: left[i], right[i]
+    for(let i=0;i<q.pairs.length;i++){grid.appendChild(make(left[i]));grid.appendChild(make(right[i]));}
+  }
+
+  return card;
+}
+
+/* ============ CHAPTER VIEW ============ */
+function renderChapter(c){
+  $("home").classList.add("hidden");
+  $("examView").classList.add("hidden");
+  $("backBtn").style.display="block";
+  const v=$("chapView");v.classList.remove("hidden");v.innerHTML="";
+
+  const head=el("div","chap-head");
+  head.style.background=c.hex;
+  head.innerHTML=`<span class="ub">${c.line}</span><h2>Kapitel ${c.id} · ${c.name}</h2><div class="ct">${c.topics}</div>`;
+  v.appendChild(head);
+
+  c.notes.forEach(n=>{
+    const d=el("details","spick");
+    d.innerHTML=`<summary>📋 Spickzettel: ${n.t}</summary><div class="spick-body">${n.h}</div>`;
+    v.appendChild(d);
+  });
+
+  const foot=el("div","chapfoot");
+  const updateFoot=()=>{
+    const p=progress[c.id];
+    foot.innerHTML=`<div class="big" style="color:${c.hex}">${p.correct.size} / ${c.ex.length}</div>
+    <div>richtig beantwortet (${p.done.size} von ${c.ex.length} gemacht)</div>`;
+  };
+
+  c.ex.forEach((q,i)=>{
+    v.appendChild(renderExercise(c,q,i,(ok)=>{
+      progress[c.id].done.add(i);
+      if(ok)progress[c.id].correct.add(i);
+      updateFoot();
+    }));
+  });
+
+  updateFoot();
+  v.appendChild(foot);
+  window.scrollTo({top:0});
+}
+
+/* ============ EXAM ============ */
+let examQ=[],examIdx=0,examScore=0;
+function startExam(){
+  $("home").classList.add("hidden");
+  $("chapView").classList.add("hidden");
+  $("backBtn").style.display="block";
+  const pool=[];
+  CH.forEach(c=>c.ex.forEach(q=>{if(q.t!=="match")pool.push({c,q});}));
+  examQ=shuffle(pool).slice(0,15);
+  examIdx=0;examScore=0;
+  renderExamQ();
+}
+function renderExamQ(){
+  const v=$("examView");v.classList.remove("hidden");v.innerHTML="";
+  if(examIdx>=examQ.length){
+    const card=el("div","excard");
+    const pct=examScore/examQ.length;
+    let verdict;
+    if(pct>=0.9)verdict="Ausgezeichnet — du bist bereit für die Prüfung! 🏆";
+    else if(pct>=0.7)verdict="Sehr gut — noch ein bisschen Feinschliff bei den schwachen Themen.";
+    else if(pct>=0.5)verdict="Solide Basis — wiederhole die Spickzettel der Kapitel mit Fehlern.";
+    else verdict="Guter Anfang — arbeite die Kapitel der Reihe nach durch und versuch es nochmal.";
+    card.innerHTML=`<div class="num">Endstation · Ergebnis</div>
+      <div class="score-hero">${examScore} / ${examQ.length}</div>
+      <p style="margin-top:10px;font-size:15px;line-height:1.6">${verdict}</p>`;
+    const row=el("div","nextrow");
+    const b=el("button","btn-primary","Noch eine Testfahrt");
+    b.onclick=startExam;
+    row.appendChild(b);card.appendChild(row);
+    v.appendChild(card);
+    window.scrollTo({top:0});
+    return;
+  }
+  const {c,q}=examQ[examIdx];
+  v.appendChild(el("div","exam-progress",`<span>Frage ${examIdx+1} / ${examQ.length}</span><span>${c.line} · Kapitel ${c.id}</span>`));
+  const bar=el("div","exam-bar",`<i style="width:${examIdx/examQ.length*100}%"></i>`);
+  v.appendChild(bar);
+  let answered=false;
+  const card=renderExercise(c,q,examIdx,(ok)=>{
+    if(answered)return;answered=true;
+    if(ok)examScore++;
+    const row=el("div","nextrow");
+    const b=el("button","btn-primary",examIdx===examQ.length-1?"Zum Ergebnis →":"Weiter →");
+    b.onclick=()=>{examIdx++;renderExamQ();};
+    row.appendChild(b);card.appendChild(row);
+    b.focus({preventScroll:true});
+  });
+  v.appendChild(card);
+  window.scrollTo({top:0});
+}
+
+$("backBtn").onclick=renderHome;
+renderHome();
+</script>
+</body>
+</html>
