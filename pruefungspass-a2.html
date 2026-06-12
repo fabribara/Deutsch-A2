@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prüfungspass A2 · Der große Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F4ED; --card:#FFFFFF; --ink:#1D1A16; --muted:#6E675C; --line:#E0DBD0;
+  --rot:#C8102E; --rotdark:#9E0B22; --stampblue:#2B4C7E;
+  --ok:#2D7A3F; --okbg:#EDF6EF; --bad:#C8102E; --badbg:#FBEDEF; --amber:#C98A1B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{background:var(--paper);color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;min-height:100svh;}
+.shell{max-width:680px;margin:0 auto;padding:18px 16px 70px;}
+
+/* ===== passport header ===== */
+.passhead{
+  background:var(--rot);color:#fff;border-radius:16px;padding:20px 20px 18px;
+  position:relative;overflow:hidden;margin-bottom:16px;
+  background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 12px,transparent 12px 24px);
+}
+.passhead .ribbon{display:flex;gap:0;height:6px;border-radius:3px;overflow:hidden;margin-bottom:14px;width:90px;}
+.passhead .ribbon i{flex:1;}
+.passhead h1{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(24px,7vw,32px);letter-spacing:-.01em;line-height:1.05;}
+.passhead .sub{font-family:'Spline Sans Mono',monospace;font-size:11px;opacity:.85;margin-top:6px;letter-spacing:.08em;text-transform:uppercase;}
+.passhead .holder{margin-top:12px;font-family:'Spline Sans Mono',monospace;font-size:12px;opacity:.95;}
+
+/* stamps row */
+.stamps{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.stamp{
+  font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.05em;
+  border:2px dashed rgba(255,255,255,.4);color:rgba(255,255,255,.55);
+  border-radius:8px;padding:6px 9px;transform:rotate(-2deg);
+  text-transform:uppercase;
+}
+.stamp:nth-child(2n){transform:rotate(1.5deg);}
+.stamp.got{border-style:solid;border-color:#fff;color:#fff;background:rgba(255,255,255,.14);}
+
+.backbtn{font-family:'Spline Sans Mono',monospace;font-size:13px;background:none;border:none;color:var(--muted);cursor:pointer;padding:6px 0;margin-bottom:10px;display:none;}
+.backbtn:before{content:"← ";}
+
+/* ===== module cards ===== */
+.modgrid{display:flex;flex-direction:column;gap:11px;}
+.modcard{
+  display:flex;align-items:center;gap:14px;text-align:left;width:100%;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:15px 16px;cursor:pointer;font:inherit;
+  box-shadow:0 1px 3px rgba(29,26,22,.05);transition:transform .08s;
+}
+.modcard:active{transform:scale(.985);}
+.modcard .ic{font-size:26px;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--paper);border:1px solid var(--line);border-radius:11px;}
+.modcard h2{font-family:'Fraunces',serif;font-weight:700;font-size:17.5px;}
+.modcard p{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45;}
+.modcard .st{margin-left:auto;flex:none;font-family:'Spline Sans Mono',monospace;font-size:10px;color:var(--rot);border:1.5px solid var(--rot);border-radius:6px;padding:3px 6px;transform:rotate(-4deg);display:none;}
+.modcard.done .st{display:block;}
+.seclabel{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:18px 0 9px;}
+
+/* ===== generic view ===== */
+.vhead{margin-bottom:14px;}
+.vhead h2{font-family:'Fraunces',serif;font-weight:800;font-size:25px;}
+.vhead p{font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.5;}
+
+.tabs{display:flex;gap:6px;background:#EDE9DF;border-radius:11px;padding:4px;margin-bottom:14px;overflow-x:auto;}
+.tab{flex:1;white-space:nowrap;font:inherit;font-size:13px;font-weight:600;padding:8px 13px;border:none;background:transparent;border-radius:8px;color:var(--muted);cursor:pointer;}
+.tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.09);}
+
+/* cheat sheet */
+.cheat{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--rot);border-radius:0 12px 12px 0;padding:14px 15px;margin-bottom:14px;font-size:14px;line-height:1.6;}
+.cheat h4{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--rot);margin:12px 0 5px;font-weight:600;}
+.cheat h4:first-child{margin-top:0;}
+.cheat table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0;}
+.cheat td,.cheat th{border:1px solid var(--line);padding:5px 7px;text-align:left;}
+.cheat th{background:var(--paper);font-weight:600;}
+.cheat .es{color:var(--muted);font-style:italic;}
+.cheat code{font-family:'Spline Sans Mono',monospace;font-size:12px;background:var(--paper);padding:1px 5px;border-radius:4px;}
+
+/* exercise cards (engine) */
+.excard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:17px 16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(29,26,22,.04);}
+.excard .num{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between;}
+.excard .q{font-size:16px;font-weight:600;line-height:1.5;margin-bottom:12px;}
+.excard .q .gap{display:inline-block;min-width:52px;border-bottom:2.5px solid var(--amber);text-align:center;}
+.excard .hint{font-size:12.5px;color:var(--muted);margin:-6px 0 11px;font-style:italic;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opts.inlinegrid{flex-direction:row;flex-wrap:wrap;}
+.opts.inlinegrid .opt{flex:1 1 40%;}
+.opt{text-align:left;font:inherit;font-size:15px;font-weight:500;background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;transition:all .15s;touch-action:manipulation;}
+.opt:active{transform:scale(.985);}
+.opt.correct{border-color:var(--ok);background:var(--okbg);}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);}
+.opt.dim{opacity:.45;}
+.opt:disabled{cursor:default;}
+.gaprow{display:flex;gap:8px;}
+.gapinput{flex:1;font:inherit;font-size:16px;padding:11px 13px;border:2px solid var(--line);border-radius:10px;background:var(--paper);min-width:0;}
+.gapinput:focus{outline:none;border-color:var(--amber);}
+.gapinput.good{border-color:var(--ok);background:var(--okbg);}
+.gapinput.nope{border-color:var(--bad);background:var(--badbg);}
+.checkbtn{font-family:'Fraunces',serif;font-weight:700;font-size:15px;background:var(--ink);color:#fff;border:none;border-radius:10px;padding:0 18px;cursor:pointer;flex:none;touch-action:manipulation;}
+.built{min-height:46px;border:2px dashed var(--line);border-radius:10px;padding:7px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;align-items:center;}
+.built.good{border-style:solid;border-color:var(--ok);background:var(--okbg);}
+.built.nope{border-style:solid;border-color:var(--bad);background:var(--badbg);}
+.pool{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;}
+.chiptok{font:inherit;font-size:14.5px;font-weight:500;background:var(--paper);border:2px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer;touch-action:manipulation;}
+.built .chiptok{background:#fff;}
+.chiptok.used{opacity:.25;pointer-events:none;}
+.buildrow{display:flex;gap:8px;}
+.ghostbtn{font:inherit;font-weight:600;font-size:13.5px;background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:10px;padding:9px 15px;cursor:pointer;touch-action:manipulation;}
+.explain{margin-top:12px;border-left:4px solid var(--ok);background:var(--okbg);border-radius:0 10px 10px 0;padding:10px 13px;font-size:13.5px;line-height:1.55;animation:slidein .25s ease;}
+.explain.bad{border-left-color:var(--bad);background:var(--badbg);}
+.explain .es{display:block;margin-top:4px;color:var(--muted);font-style:italic;}
+@keyframes slidein{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+/* flashcards */
+.fcwrap{perspective:1200px;margin-bottom:12px;}
+.fcinner{position:relative;width:100%;min-height:210px;transform-style:preserve-3d;transition:transform .45s;cursor:pointer;}
+.fcinner.flip{transform:rotateY(180deg);}
+.fcface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center;}
+.fcfront{background:var(--card);}
+.fcback{background:var(--ink);color:#F7F4ED;transform:rotateY(180deg);}
+.fctag{font-family:'Spline Sans Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.55;margin-bottom:10px;}
+.fcmain{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(22px,6.5vw,30px);line-height:1.2;}
+.fcsub{font-size:14px;color:var(--muted);margin-top:8px;}
+.fcback .fcsub{color:#C9C2B4;}
+.fcex{font-size:14px;margin-top:12px;font-style:italic;line-height:1.5;}
+.fcnav{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
+.fcbtn{font:inherit;font-weight:700;font-size:15px;border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px 18px;cursor:pointer;touch-action:manipulation;}
+.fccount{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;}
+
+/* vocab theme chips */
+.themegrid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.themechip{font:inherit;font-size:13px;font-weight:600;border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;touch-action:manipulation;}
+.themechip.active{border-color:var(--rot);background:var(--rot);color:#fff;}
+
+/* word list */
+.wlist{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:12px;}
+.wrow{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px;}
+.wrow:last-child{border-bottom:none;}
+.wrow .de{font-weight:600;}
+.wrow .es{color:var(--muted);text-align:right;}
+
+/* writing section */
+.letter{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 17px;margin-bottom:13px;font-size:14.5px;line-height:1.75;}
+.letter .lt{font-family:'Fraunces',serif;font-weight:700;font-size:17px;margin-bottom:10px;}
+.letter .frag{background:var(--paper);border-radius:8px;padding:2px 7px;font-weight:600;}
+.letter .note{font-size:12.5px;color:var(--muted);font-style:italic;}
+.checklist{list-style:none;}
+.checklist li{padding:7px 0 7px 28px;position:relative;font-size:14px;line-height:1.5;border-bottom:1px dashed var(--line);}
+.checklist li:last-child{border-bottom:none;}
+.checklist li:before{content:"☑";position:absolute;left:2px;color:var(--ok);font-size:16px;}
+
+/* exam */
+.exam-progress{font-family:'Spline Sans Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:9px;display:flex;justify-content:space-between;}
+.exam-bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:15px;}
+.exam-bar i{display:block;height:100%;background:var(--rot);transition:width .4s;}
+.btn-primary{font-family:'Fraunces',serif;font-weight:700;font-size:17px;background:var(--rot);color:#fff;border:none;border-radius:11px;padding:13px 28px;cursor:pointer;touch-action:manipulation;}
+.btn-dark{background:var(--ink);}
+.nextrow{display:flex;justify-content:flex-end;margin-top:13px;}
+.score-hero{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(44px,14vw,64px);line-height:1;color:var(--rot);}
+.bigstamp{
+  display:inline-block;font-family:'Spline Sans Mono',monospace;font-size:13px;letter-spacing:.1em;
+  border:3px solid var(--stampblue);color:var(--stampblue);border-radius:10px;
+  padding:10px 16px;transform:rotate(-6deg);text-transform:uppercase;margin-top:14px;font-weight:600;
+}
+.catline{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 0;border-bottom:1px dashed var(--line);}
+.catline:last-child{border-bottom:none;}
+.catline b{font-family:'Spline Sans Mono',monospace;font-weight:500;}
+.hidden{display:none!important;}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<button class="backbtn" id="backBtn">Prüfungspass</button>
+<div id="root"></div>
+
+</div>
+<script>
+/* ================= DATA ================= */
+
+/* ---- Vocabulary (DE / ES) by theme ---- */
+const VOCAB=[
+{name:"Verkehr & unterwegs",icon:"🚇",words:[
+["das Navi","el GPS"],["der Stau","el atasco"],["die Haltestelle","la parada"],["der Fahrplan","el horario (de transporte)"],
+["das Gleis","el andén / la vía"],["die Verspätung","el retraso"],["umsteigen","hacer transbordo"],["abfahren","salir / partir"],
+["ankommen","llegar"],["der Führerschein","el carnet de conducir"],["die Versicherung","el seguro"],["der Unfall","el accidente"],
+["die Richtung","la dirección"],["geradeaus","todo recto"],["die Kreuzung","el cruce"],["der Fußgänger","el peatón"],
+["das Verkehrsmittel","el medio de transporte"],["der Schaffner","el revisor"],["leihen","prestar / alquilar"],["die Auskunft","la información"]]},
+{name:"Lernen & Arbeit",icon:"📚",words:[
+["der Termin","la cita"],["die Prüfung","el examen"],["die Ausbildung","la formación profesional"],["der Beruf","la profesión"],
+["das Sekretariat","la secretaría"],["die Sprechstunde","el horario de atención"],["der Beitrag","la cuota / aportación"],["unterstützen","apoyar"],
+["sich merken","memorizar"],["ausprobieren","probar / intentar"],["der Stoff","la materia / el contenido"],["schriftlich","por escrito"],
+["mündlich","oral"],["die Pause","la pausa"],["der Zeitplan","el horario / plan de tiempo"],["verschieben","posponer"],
+["einhalten","cumplir (un plan)"],["die Präsentation","la presentación"],["der Ratschlag","el consejo"],["die Bewerbung","la solicitud de empleo"],
+["der Lebenslauf","el currículum"],["das Praktikum","las prácticas"],["der Kollege / die Kollegin","el/la colega"],["die Besprechung","la reunión"]]},
+{name:"Wohnen & Nachbarn",icon:"🏠",words:[
+["die Wohnung","el piso / apartamento"],["der Nachbar / die Nachbarin","el vecino / la vecina"],["die Miete","el alquiler"],["umziehen","mudarse"],
+["der Aufzug","el ascensor"],["das Erdgeschoss","la planta baja"],["der Stock","el piso (nivel)"],["die Unordnung","el desorden"],
+["aufräumen","ordenar / recoger"],["sich beschweren","quejarse"],["der Lärm","el ruido"],["der Müll","la basura"],
+["ein Paket annehmen","recibir un paquete"],["die Blumen gießen","regar las flores"],["der Gefallen","el favor"],["der Eingang","la entrada"],
+["verboten","prohibido"],["abstellen","dejar / aparcar (algo)"],["der Vermieter","el casero"],["der Schlüssel","la llave"]]},
+{name:"Freizeit & Sport",icon:"⚽",words:[
+["der Verein","el club / la asociación"],["die Mannschaft","el equipo"],["gewinnen","ganar"],["verlieren","perder"],
+["der Wettbewerb","la competición"],["das Mitglied","el miembro / socio"],["trainieren","entrenar"],["das Konzert","el concierto"],
+["die Eintrittskarte","la entrada (ticket)"],["sich verabreden","quedar (con alguien)"],["der Vorschlag","la propuesta"],["klettern","escalar"],
+["die Bergtour","la excursión de montaña"],["das Schwimmbad","la piscina"],["sich treffen","encontrarse / reunirse"],["mitkommen","venir también / acompañar"],
+["Lust haben","tener ganas"],["der Fan","el aficionado"],["sich anmelden","inscribirse"],["die Freizeit","el tiempo libre"]]},
+{name:"Essen & Einkaufen",icon:"🛒",words:[
+["günstig","barato / económico"],["teuer","caro"],["das Angebot","la oferta"],["die Rechnung","la cuenta / factura"],
+["bestellen","pedir (en restaurante)"],["empfehlen","recomendar"],["schmecken","saber (bien/mal)"],["der Kühlschrank","el frigorífico"],
+["einkaufen","hacer la compra"],["das Gericht","el plato (comida)"],["die Speisekarte","el menú / la carta"],["das Trinkgeld","la propina"],
+["satt","lleno / saciado"],["lecker","rico / delicioso"],["frisch","fresco"],["die Verpackung","el envase"],
+["süß","dulce"],["sauer","ácido / agrio"],["salzig","salado"],["reservieren","reservar"]]},
+{name:"Gesundheit",icon:"🩺",words:[
+["die Schmerzen","los dolores"],["der Husten","la tos"],["die Erkältung","el resfriado"],["das Rezept","la receta médica"],
+["die Apotheke","la farmacia"],["das Medikament","el medicamento"],["gesund","sano"],["krank","enfermo"],
+["Gute Besserung!","¡Que te mejores!"],["sich erholen","recuperarse / descansar"],["müde","cansado"],["der Zahnarzt","el dentista"],
+["das Fieber","la fiebre"],["wehtun","doler"],["die Versichertenkarte","la tarjeta sanitaria"],["der Notfall","la emergencia"],
+["die Sprechstunde beim Arzt","la consulta médica"],["sich ausruhen","descansar"],["der Kopf","la cabeza"],["der Bauch","la barriga / el vientre"]]},
+{name:"Zeit & Alltag",icon:"⏰",words:[
+["der Alltag","la vida cotidiana"],["der Wunsch","el deseo"],["der Plan","el plan"],["der Traum","el sueño"],
+["pünktlich","puntual"],["dauern","durar"],["das Wochenende","el fin de semana"],["manchmal","a veces"],
+["oft","a menudo"],["nie","nunca"],["immer","siempre"],["der Stress","el estrés"],
+["sich beeilen","darse prisa"],["Zeit verbringen","pasar tiempo"],["der Feierabend","el fin de la jornada"],["früh","temprano"],
+["spät","tarde"],["gleichzeitig","al mismo tiempo"],["das Sprichwort","el refrán"],["die Gewohnheit","la costumbre"]]}
+];
+
+/* ---- Verbs + prepositions ---- */
+const VP=[
+["sich freuen","auf","A","esperar con ilusión (futuro)","Ich freue mich auf das Wochenende."],
+["sich freuen","über","A","alegrarse de (presente)","Sie freut sich über das Geschenk."],
+["sich erinnern","an","A","acordarse de","Erinnerst du dich an den Urlaub?"],
+["sich beschweren","über","A","quejarse de","Er beschwert sich über den Lärm."],
+["sich kümmern","um","A","ocuparse de","Ich kümmere mich um die Blumen."],
+["sich interessieren","für","A","interesarse por","Sie interessiert sich für Musik."],
+["denken","an","A","pensar en","Ich denke oft an meine Familie."],
+["sich ärgern","über","A","enfadarse por","Wir ärgern uns über die Verspätung."],
+["berichten","von","D","informar sobre","Er berichtet von seiner Reise."],
+["träumen","von","D","soñar con","Ines träumt von ihren Ferien."],
+["sich vorbereiten","auf","A","prepararse para","Ich bereite mich auf die Prüfung vor."],
+["warten","auf","A","esperar (a alguien/algo)","Wir warten auf den Bus."],
+["Zeit verbringen","mit","D","pasar tiempo con","Esther verbringt viel Zeit mit ihrem Hund."],
+["sprechen","mit","D","hablar con","Lara spricht mit ihrem Chef."],
+["sprechen","über","A","hablar sobre","Wir sprechen über das Projekt."],
+["sich unterhalten","über","A","conversar sobre","Sie unterhalten sich über den Film."],
+["sich konzentrieren","auf","A","concentrarse en","Konzentrier dich auf die Aufgabe!"],
+["telefonieren","mit","D","hablar por teléfono con","Ich telefoniere mit meiner Mutter."],
+["nachdenken","über","A","reflexionar sobre","Denk über das Angebot nach."],
+["Angst haben","vor","D","tener miedo de","Hast du Angst vor Spinnen?"]
+];
+
+/* ---- Verb Juggling: Alltagsverben mit Beispielsätzen ---- */
+/* [verb DE, verb EN, sentence EN, sentence DE] */
+const VJ=[
+["sagen","to say","I told her that I love her.","Ich habe ihr gesagt, dass ich sie liebe."],
+["tragen","to wear","I always wear a suit at work.","Ich trage bei der Arbeit immer einen Anzug."],
+["teilnehmen an (+D)","to take part in","I took part in the meeting.","Ich habe an der Besprechung teilgenommen."],
+["vergessen","to forget","I forgot to call you.","Ich habe vergessen, dich anzurufen."],
+["abkaufen","to buy sth. from sbd.","I bought the mobile phone from him.","Ich habe ihm das Handy abgekauft."],
+["einkaufen","to go shopping","I still have to buy potatoes in the supermarket.","Ich muss noch Kartoffeln im Supermarkt einkaufen."],
+["verkaufen","to sell","I need money, that's why I'm selling the car.","Ich brauche Geld, deshalb verkaufe ich das Auto."],
+["kaufen","to buy","I'm going to buy her a gift tomorrow.","Ich kaufe ihr morgen ein Geschenk."],
+["kosten","to cost","How much did your car cost?","Wie viel hat dein Auto gekostet?"],
+["abwarten","to wait and see","I'm going to wait until you come home.","Ich warte ab, bis du nach Hause kommst."],
+["warten auf (+A)","to wait for","What are you waiting for?","Worauf wartest du?"],
+["aufmachen","to open","Who opened the door?","Wer hat die Tür aufgemacht?"],
+["antworten","to answer","I haven't replied to you because I had no time.","Ich habe dir nicht geantwortet, weil ich keine Zeit hatte."],
+["fragen","to ask","I would like to ask when the meeting is.","Ich möchte fragen, wann die Besprechung ist."],
+["sparen","to save","How much money do you save each month?","Wie viel Geld sparst du jeden Monat?"],
+["bestellen","to order","I ordered the coffee 10 minutes ago.","Ich habe den Kaffee vor 10 Minuten bestellt."],
+["fahren","to drive","I go to work by car.","Ich fahre mit dem Auto zur Arbeit."],
+["sich bedanken bei (+D)","to thank someone","Why didn't you thank him?","Warum hast du dich nicht bei ihm bedankt?"],
+["danken (+D)","to thank","I'd like to thank you for your help.","Ich möchte dir für deine Hilfe danken."],
+["aufhören","to stop/quit","10 years ago, I quit smoking.","Vor 10 Jahren habe ich aufgehört zu rauchen."],
+["ankommen","to arrive","When did you arrive at work?","Wann bist du bei der Arbeit angekommen?"],
+["bezahlen","to pay","Who paid for the drinks?","Wer hat die Getränke bezahlt?"],
+["stattfinden","to take place","The meeting takes place tomorrow at 10 in room 101.","Die Besprechung findet morgen um 10 Uhr in Raum 101 statt."],
+["sich treffen mit (+D)","to meet with","This is the woman with whom I meet.","Das ist die Frau, mit der ich mich treffe."],
+["treffen","to meet","Last weekend I met my parents.","Letztes Wochenende habe ich meine Eltern getroffen."],
+["leiten","to manage/lead","I've been managing the team for 2 years now.","Ich leite das Team seit 2 Jahren."],
+["üben","to practice","With whom will you practice German today?","Mit wem übst du heute Deutsch?"],
+["zustimmen (+D)","to agree","I agree with you.","Ich stimme dir zu."],
+["sich vordrängeln","to jump the queue","She's jumping the queue.","Sie drängelt sich vor."],
+["überlegen","to think/plan","We're thinking about what to do on Saturday.","Wir überlegen, was wir am Samstag machen."],
+["benutzen","to use","I use the tram to go to work.","Ich benutze die Straßenbahn, um zur Arbeit zu fahren."],
+["erwarten","to expect","I expect you to be punctual.","Ich erwarte, dass du pünktlich bist."],
+["ankommen auf (+A)","to depend on","It depends on it.","Es kommt darauf an."],
+["schaffen","to accomplish","I'll not achieve that alone.","Das schaffe ich nicht allein."],
+["anrufen","to call","I can call you tomorrow at 3 o'clock.","Ich kann dich morgen um 3 Uhr anrufen."],
+["denken an (+A)","to think of","What are you thinking of?","Woran denkst du?"],
+["versuchen","to try","I tried to call you yesterday.","Ich habe gestern versucht, dich anzurufen."],
+["buchen","to book","We booked a flight which was very cheap.","Wir haben einen Flug gebucht, der sehr günstig war."],
+["sich verändern","to change","She has changed a lot.","Sie hat sich sehr verändert."],
+["heiraten","to marry","I got married when I was 30 years old.","Ich habe geheiratet, als ich 30 Jahre alt war."],
+["frühstücken","to have breakfast","I always have breakfast at home.","Ich frühstücke immer zu Hause."],
+["nachdenken über (+A)","to think about","Have you thought about your future?","Hast du über deine Zukunft nachgedacht?"],
+["ausschlafen","to sleep in","Could you sleep in on Saturday?","Konntest du am Samstag ausschlafen?"],
+["schmecken","to taste","The food wasn't tasty because it was too salty.","Das Essen hat nicht geschmeckt, weil es zu salzig war."],
+["ausgeben","to spend (money)","How much money do you spend on holidays?","Wie viel Geld gibst du im Urlaub aus?"],
+["sich erinnern an (+A)","to remember","Do you remember me?","Erinnerst du dich an mich?"],
+["dauern","to last/take","How long did your flight take?","Wie lange hat dein Flug gedauert?"],
+["arbeiten an (+D)","to work on","Currently I'm working on a new project.","Zurzeit arbeite ich an einem neuen Projekt."],
+["vertrauen (+D)","to trust","I can't trust you if you don't tell the truth.","Ich kann dir nicht vertrauen, wenn du nicht die Wahrheit sagst."],
+["vermissen","to miss (sbd.)","I miss my family since I've been living abroad.","Ich vermisse meine Familie, seit ich im Ausland wohne."],
+["wechseln","to change/switch","I changed my job two months ago.","Ich habe vor zwei Monaten meinen Job gewechselt."],
+["sich fühlen","to feel","How are you feeling today?","Wie fühlst du dich heute?"],
+["abschalten","to disconnect","When I'm on vacation, I disconnect from work.","Wenn ich im Urlaub bin, schalte ich von der Arbeit ab."],
+["kündigen","to quit (a job)","When did you quit your job?","Wann hast du gekündigt?"],
+["anfangen","to start","When did you start to learn German?","Wann hast du angefangen, Deutsch zu lernen?"],
+["umziehen","to move/relocate","5 years ago, we moved to Austria.","Vor 5 Jahren sind wir nach Österreich umgezogen."],
+["aufpassen auf (+A)","to take care of","I took care of the children yesterday.","Ich habe gestern auf die Kinder aufgepasst."],
+["fliegen","to fly","Have you ever flown to Switzerland?","Bist du schon mal in die Schweiz geflogen?"],
+["beantworten","to answer (sth.)","I didn't answer your call because I had no time.","Ich habe deinen Anruf nicht beantwortet, weil ich keine Zeit hatte."],
+["zuhören (+D)","to listen to","I don't listen to you.","Ich höre dir nicht zu."],
+["antworten auf (+A)","to reply to","I didn't reply to your email.","Ich habe auf deine E-Mail nicht geantwortet."],
+["helfen (+D)","to help","I often help my wife at home.","Ich helfe meiner Frau oft zu Hause."],
+["verbringen","to spend (time)","I spend a lot of time with my children.","Ich verbringe viel Zeit mit meinen Kindern."],
+["sich vorbereiten auf (+A)","to prepare for","I'm very well-prepared for my meeting.","Ich bin sehr gut auf meine Besprechung vorbereitet."],
+["sich erholen","to recover/rest","You need to have a rest.","Du musst dich erholen."],
+["verpassen","to miss (bus, train)","I missed the bus.","Ich habe den Bus verpasst."],
+["aufstehen","to get up","I got up at 6 o'clock.","Ich bin um 6 Uhr aufgestanden."],
+["vorziehen","to prefer","I prefer to work in Germany.","Ich ziehe es vor, in Deutschland zu arbeiten."],
+["sich verspäten","to be late","Usually, I'm not late.","Normalerweise verspäte ich mich nicht."],
+["gehen","to go","I'm not going to work today because I'm sick.","Ich gehe heute nicht zur Arbeit, weil ich krank bin."],
+["bleiben","to stay","I stayed at home yesterday.","Ich bin gestern zu Hause geblieben."],
+["verdienen","to earn","I earn more money than you.","Ich verdiene mehr Geld als du."],
+["verfehlen","to miss (a goal)","I won't miss my goals this year.","Ich werde meine Ziele dieses Jahr nicht verfehlen."],
+["stärken","to strengthen","He has to strengthen his self-confidence.","Er muss sein Selbstbewusstsein stärken."],
+["fehlen (+D)","to be missed by","I miss you!","Du fehlst mir!"],
+["zusammenfassen","to summarize","I'll summarize the most important points again.","Ich fasse die wichtigsten Punkte noch einmal zusammen."],
+["entsprechen (+D)","to match/meet","The salary doesn't match my expectations.","Das Gehalt entspricht nicht meinen Erwartungen."],
+["folgen (+D)","to follow","Why don't you follow my advice?","Warum folgst du nicht meinem Rat?"],
+["übertreffen","to exceed","You exceeded our expectations by far.","Du hast unsere Erwartungen bei weitem übertroffen."]
+];
+
+/* ---- Grammar topics ---- */
+const GR=[
+{id:"faelle",name:"Fälle: Dativ & Akkusativ",icon:"🎯",
+ cheat:`<h4>Die zwei größten Stolpersteine</h4>
+ <p><b>1. Maskulin Akkusativ:</b> der → <b>den</b> · mein → <b>meinen</b> (der einzige Fall, der sich beim Maskulinum ändert!)</p>
+ <p><b>2. Dativ Plural:</b> die → <b>den</b> + Nomen bekommt <b>-n</b>: den Kinder<b>n</b>, den Eltern, den Gäste<b>n</b>.</p>
+ <h4>Verben mit zwei Objekten</h4>
+ <p>geben, schenken, bringen, zeigen, erklären, empfehlen: <b>Dativ</b> = Person, <b>Akkusativ</b> = Sache.<br>
+ <code>Er schenkt <b>den Eltern</b> (D) <b>etwas</b> (A).</code>
+ <span class="es">Dativo = a quién; acusativo = qué. \u201cden Eltern\u201d = a los padres.</span></p>`,
+ ex:[
+  {t:"mc",q:"Er bringt ___ Kindern die Geschenke.",o:["die","den","der","das"],a:1,
+   de:"bringen + Person im <b>Dativ</b>. Plural Dativ: die → <b>den</b> (+ -n).",es:"\u201ca los niños\u201d → dativo plural \u201cden Kindern\u201d."},
+  {t:"mc",q:"___ Eltern schenkt er manchmal etwas.",o:["Die","Den","Der","Dem"],a:1,
+   de:"Die Eltern sind die <b>Empfänger</b> → Dativ Plural: <b>Den</b> Eltern.",es:"\u201cA los padres les regala algo a veces\u201d → dativo."},
+  {t:"mc",q:"Ich gebe den Gästen ___ Kaffee.",o:["der","dem","den","das"],a:2,
+   de:"der Kaffee (maskulin!) ist die Sache → Akkusativ: <b>den</b> Kaffee. Zweimal \u201eden\u201c, aber zwei verschiedene Fälle!",es:"\u201cKaffee\u201d es masculino → acusativo \u201cden\u201d. ¡Mismo artículo, caso distinto!"},
+  {t:"mc",q:"Siehst du ___ Mann dort?",o:["der","den","dem","das"],a:1,
+   de:"sehen + Akkusativ, maskulin → <b>den</b>.",es:"Objeto directo masculino → \u201cden\u201d."},
+  {t:"mc",q:"Ich helfe ___ Nachbarin.",o:["die","der","den","dem"],a:1,
+   de:"<b>helfen</b> ist ein Dativverb. Feminin Dativ: die → <b>der</b>.",es:"\u201chelfen\u201d siempre rige dativo."},
+  {t:"mc",q:"Das Auto gehört ___ Lehrer.",o:["der","den","dem","des"],a:2,
+   de:"<b>gehören</b> + Dativ. Maskulin Dativ: der → <b>dem</b>.",es:"\u201cgehören\u201d (pertenecer) rige dativo."},
+  {t:"mc",q:"Ich besuche ___ Großvater.",o:["mein","meinen","meinem","meiner"],a:1,
+   de:"besuchen + Akkusativ, maskulin → mein<b>en</b>.",es:"Acusativo masculino: \u201cmeinen\u201d."},
+  {t:"gap",q:"Gibst du ___ bitte das Buch? (ich)",ans:["mir"],
+   de:"geben + Person im Dativ: ich → <b>mir</b>.",es:"\u201c¿Me das el libro?\u201d → dativo \u201cmir\u201d."},
+  {t:"gap",q:"Wir danken ___ Lehrern. (Plural!)",ans:["den"],
+   de:"danken + Dativ; Plural → <b>den</b> Lehrern.",es:"\u201cdanken\u201d rige dativo; plural \u201cden\u201d + -n."},
+  {t:"mc",q:"\u201eIch gebe den Gästen den Kaffee\u201c — warum zweimal \u201eden\u201c?",o:["Beide sind Akkusativ","Beide sind Dativ","Dativ Plural und Akkusativ Maskulin sehen gleich aus","Es ist ein Fehler"],a:2,
+   de:"<b>den Gästen</b> = Dativ Plural; <b>den Kaffee</b> = Akkusativ Maskulin. Zwei Fälle, gleiche Form!",es:"Dativo plural y acusativo masculino coinciden en \u201cden\u201d."}
+ ]},
+{id:"adj",name:"Adjektivdeklination",icon:"🎨",
+ cheat:`<h4>Die wichtigste Logik</h4>
+ <p>Genus und Kasus müssen <b>irgendwo</b> markiert sein: entweder im Artikel <b>oder</b> im Adjektiv.</p>
+ <h4>Nach ein/kein/mein (gemischt)</h4>
+ <table><tr><th></th><th>mask.</th><th>fem.</th><th>neutr.</th></tr>
+ <tr><th>Nom.</th><td>ein gut<b>er</b> Film</td><td>eine gut<b>e</b> Idee</td><td>ein gut<b>es</b> Buch</td></tr>
+ <tr><th>Akk.</th><td>einen gut<b>en</b> Film</td><td>eine gut<b>e</b> Idee</td><td>ein gut<b>es</b> Buch</td></tr></table>
+ <h4>Nach der/die/das (schwach)</h4>
+ <p>Nur <b>-e</b> oder <b>-en</b>: der gut<b>e</b> Film → den gut<b>en</b> Film. Im Dativ und im Plural: immer <b>-en</b>.</p>
+ <p><span class="es">El error más común: el masculino acusativo necesita <b>-en</b> (\u201ceinen neuen Computer\u201d). ¡Ojo ahí!</span></p>`,
+ ex:[
+  {t:"mc",q:"Ich habe einen neu___ Computer gekauft.",o:["-er","-en","-e","-es"],a:1,
+   de:"Maskulin <b>Akkusativ</b> nach \u201eeinen\u201c → <b>-en</b>. Der klassische Stolperstein!",es:"Masculino acusativo → \u201cneuen\u201d."},
+  {t:"mc",q:"Der schwarz___ Mantel gefällt mir.",o:["-e","-en","-er","-es"],a:0,
+   de:"Nominativ nach \u201eder\u201c (schwach) → <b>-e</b>.",es:"Tras \u201cder\u201d en nominativo → \u201c-e\u201d."},
+  {t:"mc",q:"Ich mag den schwarz___ Mantel.",o:["-e","-er","-en","-es"],a:2,
+   de:"Akkusativ Maskulin nach \u201eden\u201c → <b>-en</b>.",es:"Acusativo masculino → \u201c-en\u201d."},
+  {t:"mc",q:"Das ist ein gut___ Film.",o:["-e","-er","-en","-es"],a:1,
+   de:"Nominativ Maskulin nach \u201eein\u201c: das Adjektiv markiert das Genus → <b>-er</b>.",es:"\u201cein\u201d no marca el género → lo hace el adjetivo: \u201cguter\u201d."},
+  {t:"mc",q:"Das ist ein gut___ Buch.",o:["-er","-es","-en","-e"],a:1,
+   de:"Neutrum nach \u201eein\u201c → <b>-es</b> (das Adjektiv zeigt: Neutrum!).",es:"Neutro → \u201cgutes\u201d."},
+  {t:"mc",q:"Wir wohnen in einer klein___ Wohnung.",o:["-e","-er","-en","-es"],a:2,
+   de:"<b>Dativ</b> (in + Wo?) → immer <b>-en</b>.",es:"En dativo el adjetivo siempre lleva \u201c-en\u201d."},
+  {t:"mc",q:"Sie trinkt gern kalt___ Wasser.",o:["-es","-er","-en","-e"],a:0,
+   de:"Kein Artikel (stark): das Adjektiv übernimmt die Endung von \u201edas\u201c → kalt<b>es</b> Wasser.",es:"Sin artículo, el adjetivo toma la terminación del artículo: \u201ckaltes\u201d."},
+  {t:"mc",q:"Er trägt eine blau___ Jacke.",o:["-en","-e","-er","-es"],a:1,
+   de:"Feminin Nominativ/Akkusativ nach \u201eeine\u201c → <b>-e</b>.",es:"Femenino con \u201ceine\u201d → \u201cblaue\u201d."},
+  {t:"mc",q:"Mit dem alt___ Auto fahren wir nicht.",o:["-e","-es","-en","-er"],a:2,
+   de:"mit + Dativ → <b>-en</b>.",es:"\u201cmit\u201d rige dativo → \u201c-en\u201d siempre."},
+  {t:"mc",q:"Die rot___ Schuhe gefallen mir. Ich kaufe die rot___ Schuhe.",o:["-en / -en","-e / -en","-en / -e","-e / -e"],a:0,
+   de:"Plural nach bestimmtem Artikel: <b>immer -en</b> — in allen Fällen.",es:"Plural con artículo definido: siempre \u201c-en\u201d."}
+ ]},
+{id:"wechsel",name:"Wechselpräpositionen",icon:"📦",
+ cheat:`<h4>Wo? oder Wohin?</h4>
+ <table><tr><th>Wo? → Dativ</th><th>Wohin? → Akkusativ</th></tr>
+ <tr><td>liegen · stehen · hängen · sitzen</td><td>legen · stellen · hängen · setzen</td></tr>
+ <tr><td><code>Das Bild hängt an <b>der</b> Wand.</code></td><td><code>Ich hänge das Bild an <b>die</b> Wand.</code></td></tr></table>
+ <p>9 Präpositionen: an, auf, hinter, in, neben, über, unter, vor, zwischen.
+ <span class="es">Posición → dativo; movimiento hacia → acusativo.</span></p>`,
+ ex:[
+  {t:"mc",q:"Das Bild hängt an ___ Wand.",o:["die","der","den","dem"],a:1,
+   de:"Wo hängt es? Position → Dativ feminin: <b>der</b>.",es:"Posición → dativo."},
+  {t:"mc",q:"Ich hänge das Bild an ___ Wand.",o:["die","der","den","das"],a:0,
+   de:"Wohin? Bewegung → Akkusativ feminin: <b>die</b>.",es:"Movimiento → acusativo."},
+  {t:"mc",q:"Die Katze schläft unter ___ Tisch.",o:["den","dem","der","das"],a:1,
+   de:"Wo schläft sie? → Dativ maskulin: <b>dem</b>.",es:"¿Dónde duerme? → dativo."},
+  {t:"mc",q:"Stell die Flasche in ___ Kühlschrank!",o:["dem","der","den","das"],a:2,
+   de:"Wohin stellst du sie? → Akkusativ maskulin: <b>den</b>.",es:"¿Adónde la pones? → acusativo."},
+  {t:"mc",q:"Der Hund sitzt zwischen ___ Stuhl und ___ Tür.",o:["den / die","dem / der","den / der","dem / die"],a:1,
+   de:"sitzen = Position → Dativ: zwischen <b>dem</b> Stuhl und <b>der</b> Tür.",es:"Posición → dativo en ambos."},
+  {t:"mc",q:"Niklas hat die Kochbücher in ___ Regal gestellt.",o:["dem","das","den","der"],a:1,
+   de:"stellen = Wohin? → Akkusativ Neutrum: in <b>das</b> Regal.",es:"Colocar → acusativo neutro \u201cdas\u201d."},
+  {t:"gap",q:"Die Lampe steht neben ___ Sofa. (das Sofa)",ans:["dem"],
+   de:"stehen = Wo? → Dativ Neutrum: <b>dem</b>.",es:"Posición → dativo."},
+  {t:"gap",q:"Leg das Handy auf ___ Tisch! (der Tisch)",ans:["den"],
+   de:"legen = Wohin? → Akkusativ Maskulin: <b>den</b>.",es:"Movimiento → acusativo."}
+ ]},
+{id:"konj",name:"Konjunktiv II: höflich & Ratschläge",icon:"🎩",
+ cheat:`<h4>Höfliche Bitten</h4>
+ <p><code>Könnten Sie / Könntest du / Könntet ihr …?</code> · <code>Würden Sie / Würdest du / Würdet ihr …?</code> · <code>Ich hätte gern …</code> · <code>Ich würde gern …</code></p>
+ <p><b>Achtung:</b> \u201eIch <b>würde</b> gern zahlen\u201c ✓ — nicht \u201ewäre\u201c! \u201ewäre\u201c steht nie mit einem zweiten Infinitiv.
+ <span class="es">\u201cwürde\u201d + infinitivo; \u201cwäre\u201d solo sin otro verbo.</span></p>
+ <h4>Ratschläge</h4>
+ <p><code>Du solltest …</code> · <code>Ich würde an deiner Stelle …</code> · <code>Du könntest doch …</code></p>`,
+ ex:[
+  {t:"mc",q:"Ich ___ gern zahlen, bitte.",o:["wäre","würde","hätte","möchtet"],a:1,
+   de:"Mit Infinitiv (zahlen) → <b>würde</b>. \u201ewäre\u201c geht hier nicht!",es:"Con infinitivo se usa \u201cwürde\u201d, nunca \u201cwäre\u201d."},
+  {t:"mc",q:"___ Sie mir bitte helfen?",o:["Könnten","Könntet","Konnten","Könntest"],a:0,
+   de:"Formelle Anrede Sie → <b>Könnten</b>.",es:"Forma de cortesía → \u201cKönnten Sie\u201d."},
+  {t:"mc",q:"___ ihr eine Fotokopie für mich machen?",o:["Würden","Würdest","Würdet","Würde"],a:2,
+   de:"ihr (informell, Plural) → <b>Würdet</b>.",es:"\u201cihr\u201d → \u201cwürdet\u201d."},
+  {t:"mc",q:"Ich ___ gern einen Kaffee, bitte.",o:["würde","hätte","wäre","könnte"],a:1,
+   de:"Ohne zweiten Infinitiv: <b>Ich hätte gern</b> + Nomen.",es:"\u201cIch hätte gern\u201d = quisiera (pedir algo)."},
+  {t:"mc",q:"An deiner Stelle ___ ich früher ins Bett gehen.",o:["werde","würde","wurde","will"],a:1,
+   de:"Ratschlag: <b>würde</b> + Infinitiv am Ende.",es:"\u201cYo en tu lugar…\u201d → \u201cwürde\u201d."},
+  {t:"mc",q:"Du ___ mehr Wasser trinken.",o:["solltest","sollten","solltet","sollst ihr"],a:0,
+   de:"du → <b>solltest</b>.",es:"\u201cdu\u201d → \u201csolltest\u201d (deberías)."},
+  {t:"build",q:"Höfliche Bitte: (Sie / das Fenster / öffnen / bitte)",w:["Könnten","Sie","bitte","das","Fenster","öffnen?"],
+   de:"Könnten Sie + bitte + Objekt + Infinitiv.",es:"Estructura de petición cortés."},
+  {t:"build",q:"Gib einen Rat: (du / dich / mehr / ausruhen)",w:["Du","solltest","dich","mehr","ausruhen."],
+   de:"sollte + Reflexivpronomen (dich) + Infinitiv am Ende.",es:"Verbo reflexivo: \u201cdich\u201d después del verbo conjugado."}
+ ]},
+{id:"perfekt",name:"Perfekt: haben oder sein?",icon:"⏳",
+ cheat:`<h4>sein bei …</h4>
+ <p>Bewegung (gehen, fahren, fliegen, kommen), Zustandswechsel (aufstehen, einschlafen) + <b>bleiben, sein, passieren</b>.</p>
+ <h4>haben bei …</h4>
+ <p>Allen Verben mit Akkusativobjekt + allen Reflexivverben.
+ <span class="es">Movimiento/cambio → \u201csein\u201d; con objeto directo o reflexivo → \u201chaben\u201d.</span></p>`,
+ ex:[
+  {t:"mc",q:"Gestern ___ ich um 6 Uhr aufgestanden.",o:["habe","bin","ist","war"],a:1,
+   de:"Zustandswechsel → <b>sein</b>.",es:"Cambio de estado → \u201csein\u201d."},
+  {t:"mc",q:"Wir ___ den ganzen Tag zu Hause geblieben.",o:["haben","sind","waren","ist"],a:1,
+   de:"<b>bleiben</b> nimmt immer <b>sein</b> — obwohl keine Bewegung! Ausnahme merken.",es:"\u201cbleiben\u201d siempre con \u201csein\u201d, aunque no haya movimiento."},
+  {t:"mc",q:"Was ___ denn hier passiert?",o:["hat","ist","sind","habt"],a:1,
+   de:"<b>passieren</b> → immer mit <b>sein</b>.",es:"\u201cpassieren\u201d (ocurrir) siempre con \u201csein\u201d."},
+  {t:"mc",q:"Ich ___ mich auf die Prüfung vorbereitet.",o:["bin","habe","ist","war"],a:1,
+   de:"Reflexive Verben → immer <b>haben</b>.",es:"Verbos reflexivos siempre con \u201chaben\u201d."},
+  {t:"mc",q:"Sie ___ nach Wien gefahren.",o:["hat","ist","haben","wart"],a:1,
+   de:"Bewegung von A nach B → <b>sein</b>.",es:"Desplazamiento → \u201csein\u201d."},
+  {t:"mc",q:"Er ___ das Auto in die Garage gefahren.",o:["ist","hat","sind","wäre"],a:1,
+   de:"Achtung: hier hat \u201efahren\u201c ein <b>Akkusativobjekt</b> (das Auto) → <b>haben</b>!",es:"Con objeto directo, \u201cfahren\u201d usa \u201chaben\u201d."},
+  {t:"gap",q:"Wir ___ gestern einen Film gesehen.",ans:["haben"],
+   de:"sehen + Akkusativobjekt → <b>haben</b>.",es:"Objeto directo → \u201chaben\u201d."},
+  {t:"gap",q:"Der Zug ___ pünktlich abgefahren.",ans:["ist"],
+   de:"abfahren = Bewegung → <b>sein</b>.",es:"Movimiento → \u201cist abgefahren\u201d."}
+ ]},
+{id:"konnekt",name:"Konnektoren & Wortstellung",icon:"🔗",
+ cheat:`<h4>Die vier wichtigsten</h4>
+ <table>
+ <tr><th>deshalb</th><td>Konsequenz · Verb direkt danach <span class="es">= por eso</span></td></tr>
+ <tr><th>trotzdem</th><td>Kontrast · Verb direkt danach <span class="es">= sin embargo</span></td></tr>
+ <tr><th>weil</th><td>Grund · Verb ans <b>Ende</b> <span class="es">= porque</span></td></tr>
+ <tr><th>dass</th><td>Inhalt · Verb ans <b>Ende</b> <span class="es">= que</span></td></tr></table>
+ <h4>finden + Objekt + Adjektiv</h4>
+ <p><code>Ich finde <b>Reiten toll</b>.</code> — Objekt vor Adjektiv! (nicht \u201etoll Reiten\u201c)</p>`,
+ ex:[
+  {t:"build",q:"Baue den Satz: (sie / Reiten / toll / finden / trotzdem)",w:["trotzdem","finden","sie","Reiten","toll."],
+   de:"finden + Objekt (Reiten) + Adjektiv (toll).",es:"El objeto va antes del adjetivo: \u201cReiten toll\u201d, no \u201ctoll Reiten\u201d."},
+  {t:"mc",q:"Ich bin müde, ___ gehe ich früh ins Bett.",o:["deshalb","trotzdem","weil","dass"],a:0,
+   de:"Konsequenz → <b>deshalb</b>.",es:"Consecuencia → \u201cdeshalb\u201d."},
+  {t:"mc",q:"Es regnet, ___ gehen wir spazieren.",o:["deshalb","trotzdem","weil","denn"],a:1,
+   de:"Unerwartet → <b>trotzdem</b>.",es:"Contraste → \u201ctrotzdem\u201d."},
+  {t:"mc",q:"Ich bleibe zu Hause, ___ ich krank bin.",o:["deshalb","trotzdem","weil","also"],a:2,
+   de:"Grund → <b>weil</b> + Verb am Ende.",es:"\u201cporque\u201d → \u201cweil\u201d, verbo al final."},
+  {t:"build",q:"Baue den Satz: (weil)",w:["Ich","lerne","Deutsch,","weil","ich","in","Wien","wohne."],
+   de:"Nach <b>weil</b>: Subjekt … Verb am Ende.",es:"Tras \u201cweil\u201d el verbo conjugado cierra la frase."},
+  {t:"build",q:"Baue den Satz: (dass)",w:["Ich","glaube,","dass","du","die","Prüfung","schaffst."],
+   de:"Nach <b>dass</b>: Verb (schaffst) ans Ende.",es:"Tras \u201cdass\u201d el verbo va al final."},
+  {t:"mc",q:"Welcher Satz ist richtig?",o:["Ich finde toll deine Lieder.","Ich finde deine Lieder toll.","Ich toll finde deine Lieder.","Deine Lieder ich finde toll."],a:1,
+   de:"finden + Objekt + Adjektiv: deine Lieder <b>toll</b>.",es:"\u201cfinden\u201d: objeto antes del adjetivo."}
+ ]},
+{id:"saetze",name:"Indirekte Fragen & Relativsätze",icon:"🧩",
+ cheat:`<h4>Indirekte Fragen</h4>
+ <p>Verb ans Ende; Ja/Nein-Frage → <b>ob</b>: <code>Wissen Sie, wann der Zug ankommt?</code> · <code>Ich frage mich, ob es klappt.</code></p>
+ <h4>Relativsätze (Nom./Akk.)</h4>
+ <p>Relativpronomen = bestimmter Artikel; nur Maskulin Akkusativ ändert sich: <b>den</b>.<br>
+ <code>Der Film, <b>der</b> läuft … / Der Film, <b>den</b> ich sehe …</code>
+ <span class="es">Solo cambia el masculino acusativo: \u201cden\u201d. Verbo al final.</span></p>`,
+ ex:[
+  {t:"mc",q:"Wissen Sie, wann der Zug ___?",o:["kommt an","ankommt","an kommt","ankommen"],a:1,
+   de:"Indirekte Frage: trennbares Verb zusammengesetzt ans Ende → <b>ankommt</b>.",es:"Verbo separable reunificado al final."},
+  {t:"gap",q:"Ich weiß nicht, ___ das Geschäft heute offen ist.",ans:["ob"],
+   de:"Ja/Nein-Frage → <b>ob</b>.",es:"Pregunta de sí/no → \u201cob\u201d."},
+  {t:"mc",q:"Das ist der Kollege, ___ mir immer hilft.",o:["der","den","dem","das"],a:0,
+   de:"Er hilft = Subjekt → Nominativ: <b>der</b>.",es:"Sujeto de la subordinada → nominativo."},
+  {t:"mc",q:"Das ist der Film, ___ ich gestern gesehen habe.",o:["der","den","dem","das"],a:1,
+   de:"ich habe <b>ihn</b> gesehen → Akkusativ Maskulin: <b>den</b>.",es:"Objeto → acusativo masculino \u201cden\u201d."},
+  {t:"mc",q:"Die Wohnung, ___ wir gemietet haben, liegt im Zentrum.",o:["der","die","das","den"],a:1,
+   de:"die Wohnung, Objekt von mieten → Akkusativ feminin = <b>die</b>.",es:"Femenino acusativo = \u201cdie\u201d (no cambia)."},
+  {t:"build",q:"Baue den Relativsatz:",w:["Das","ist","das","Buch,","das","ich","dir","empfehle."],
+   de:"Relativpronomen <b>das</b> + Dativ (dir) + Verb am Ende.",es:"Pronombre relativo neutro + verbo al final."},
+  {t:"mc",q:"Könnten Sie mir sagen, ___?",o:["wo ist die Haltestelle","wo die Haltestelle ist","die Haltestelle wo ist","ist wo die Haltestelle"],a:1,
+   de:"Indirekte Frage: Verb <b>ist</b> ans Ende.",es:"El verbo va al final en la pregunta indirecta."}
+ ]}
+];
+
+/* ================= STATE ================= */
+const state={vp:false,vocab:false,vj:false,hoer:false,exam:false,gr:{}};
+GR.forEach(g=>state.gr[g.id]={done:new Set()});
+
+const $=id=>document.getElementById(id);
+function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function norm(s){return s.toLowerCase().trim().replace(/\s+/g," ").replace(/[.!?,]+$/,"");}
+
+/* ================= EXERCISE ENGINE ================= */
+function makeExplain(ok,q){
+  const ex=el("div","explain"+(ok?"":" bad"));
+  ex.innerHTML=(ok?"✅ <b>Richtig!</b> ":"❌ <b>Leider nein.</b> ")+(q.de||"")+(q.es?'<span class="es">🇪🇸 '+q.es+"</span>":"");
+  return ex;
+}
+function renderExercise(q,idx,label,onDone){
+  const card=el("div","excard");
+  card.appendChild(el("div","num",`<span>${label||"Übung "+(idx+1)}</span><span data-b></span>`));
+  const badge=card.querySelector("[data-b]");
+  const fin=ok=>{badge.textContent=ok?"✅":"❌";onDone&&onDone(ok);};
+  if(q.t==="mc"){
+    card.appendChild(el("div","q",q.q.replace("___",'<span class="gap">___</span>').replace("___",'<span class="gap">___</span>')));
+    const short=q.o.every(o=>o.length<=10);
+    const box=el("div","opts"+(short?" inlinegrid":""));card.appendChild(box);
+    shuffle(q.o.map((o,i)=>({o,i}))).forEach(({o,i})=>{
+      const b=el("button","opt",o);
+      b.onclick=()=>{
+        [...box.children].forEach(x=>{x.disabled=true;
+          if(x.textContent===q.o[q.a])x.classList.add("correct");
+          else if(x===b)x.classList.add("wrong");
+          else x.classList.add("dim");});
+        const ok=i===q.a;card.appendChild(makeExplain(ok,q));fin(ok);
+      };
+      box.appendChild(b);
+    });
+  }else if(q.t==="gap"){
+    card.appendChild(el("div","q",q.q.replace("___",'<span class="gap">___</span>')));
+    if(q.hint)card.appendChild(el("div","hint","💡 "+q.hint));
+    const row=el("div","gaprow");
+    const inp=document.createElement("input");
+    inp.className="gapinput";inp.type="text";inp.autocomplete="off";inp.autocapitalize="off";inp.placeholder="Deine Antwort …";
+    const btn=el("button","checkbtn","OK");
+    let tries=0;
+    const check=()=>{
+      if(!inp.value.trim())return;
+      const ok=q.ans.some(a=>norm(a)===norm(inp.value));
+      tries++;
+      if(ok){inp.className="gapinput good";inp.disabled=true;btn.disabled=true;card.appendChild(makeExplain(true,q));fin(true);}
+      else if(tries>=2){
+        inp.className="gapinput nope";inp.disabled=true;btn.disabled=true;
+        const ex=makeExplain(false,q);
+        ex.innerHTML="❌ <b>Lösung:</b> „"+q.ans[0]+"“ — "+(q.de||"")+(q.es?'<span class="es">🇪🇸 '+q.es+"</span>":"");
+        card.appendChild(ex);fin(false);
+      }else{inp.className="gapinput nope";}
+    };
+    btn.onclick=check;
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")check();});
+    inp.addEventListener("input",()=>{if(!inp.disabled)inp.className="gapinput";});
+    row.appendChild(inp);row.appendChild(btn);card.appendChild(row);
+  }else if(q.t==="build"){
+    card.appendChild(el("div","q",q.q));
+    const built=el("div","built"),pool=el("div","pool");
+    card.appendChild(built);card.appendChild(pool);
+    let seq=[];
+    shuffle(q.w.map((w,i)=>({w,i}))).forEach(({w})=>{
+      const b=el("button","chiptok",w);
+      b.onclick=()=>{
+        if(b.classList.contains("used"))return;
+        b.classList.add("used");
+        const placed=el("button","chiptok",w);
+        seq.push({w,src:b,node:placed});
+        placed.onclick=()=>{const k=seq.findIndex(s=>s.node===placed);if(k>-1){seq.splice(k,1);b.classList.remove("used");placed.remove();}};
+        built.appendChild(placed);
+      };
+      pool.appendChild(b);
+    });
+    const row=el("div","buildrow");
+    const chk=el("button","checkbtn","Prüfen"),rst=el("button","ghostbtn","Zurücksetzen");
+    let tries=0;
+    chk.onclick=()=>{
+      if(seq.length!==q.w.length)return;
+      const ok=seq.every((s,k)=>s.w===q.w[k]);
+      tries++;
+      if(ok){built.className="built good";chk.disabled=true;rst.disabled=true;
+        [...built.children].forEach(x=>x.onclick=null);
+        card.appendChild(makeExplain(true,q));fin(true);}
+      else if(tries>=2){built.className="built nope";chk.disabled=true;rst.disabled=true;
+        const ex=makeExplain(false,q);
+        ex.innerHTML="❌ <b>Richtig:</b> „"+q.w.join(" ")+"“ — "+(q.de||"")+(q.es?'<span class="es">🇪🇸 '+q.es+"</span>":"");
+        card.appendChild(ex);fin(false);}
+      else{built.className="built nope";setTimeout(()=>built.className="built",650);}
+    };
+    rst.onclick=()=>{seq=[];built.innerHTML="";built.className="built";[...pool.children].forEach(x=>x.classList.remove("used"));};
+    row.appendChild(chk);row.appendChild(rst);card.appendChild(row);
+  }
+  return card;
+}
+
+/* ================= HOME ================= */
+const ROOT=$("root");
+function stampsHtml(){
+  const items=[
+    ["Vokabeln",state.vocab],["Verben+Präp.",state.vp],
+    ["Verb Juggling",state.vj],["Hören",state.hoer],
+    ...GR.map(g=>[g.name.split(":")[0].split("&")[0].trim(),state.gr[g.id].done.size===g.ex.length]),
+    ["Prüfung",state.exam]];
+  return items.map(([n,got])=>`<span class="stamp${got?" got":""}">${got?"✓ ":""}${n}</span>`).join("");
+}
+function renderHome(){
+  $("backBtn").style.display="none";
+  ROOT.innerHTML="";
+  const head=el("div","passhead",`
+    <div class="ribbon"><i style="background:#fff"></i><i style="background:rgba(255,255,255,.25)"></i><i style="background:#fff"></i></div>
+    <h1>Prüfungspass A2</h1>
+    <div class="sub">Der große Deutsch-Trainer · Wien Edition</div>
+    <div class="holder">Sammle alle Stempel! 🛂</div>
+    <div class="stamps">${stampsHtml()}</div>`);
+  ROOT.appendChild(head);
+
+  const grid=el("div","modgrid");
+  ROOT.appendChild(grid);
+
+  grid.appendChild(el("div","seclabel","Wortschatz"));
+  const v1=el("button","modcard"+(state.vocab?" done":""),`<span class="ic">🗂️</span><span><h2>Vokabeltrainer</h2><p>${VOCAB.reduce((s,t)=>s+t.words.length,0)} Wörter in ${VOCAB.length} Themen · Karten + Quiz · DE → ES</p></span><span class="st">GEPRÜFT</span>`);
+  v1.onclick=()=>renderVocab();grid.appendChild(v1);
+  const v2=el("button","modcard"+(state.vp?" done":""),`<span class="ic">🔗</span><span><h2>Verben mit Präpositionen</h2><p>${VP.length} wichtige Verben · Karten, Präpositions- &amp; Kasus-Quiz</p></span><span class="st">GEPRÜFT</span>`);
+  v2.onclick=()=>renderVP();grid.appendChild(v2);
+  const v3=el("button","modcard"+(state.vj?" done":""),`<span class="ic">🤹</span><span><h2>Verb Juggling</h2><p>${VJ.length} Alltagsverben mit Beispielsätzen · Karten, Satz-Karten &amp; Übersetzungs-Quiz</p></span><span class="st">GEPRÜFT</span>`);
+  v3.onclick=()=>renderVJ();grid.appendChild(v3);
+
+  grid.appendChild(el("div","seclabel","Hören"));
+  const v4=el("button","modcard"+(state.hoer?" done":""),`<span class="ic">🎧</span><span><h2>Hörverstehen</h2><p>Sätze, Vokabeln &amp; Zahlen anhören (deutsche Stimme) — wie im Hörteil der Prüfung</p></span><span class="st">GEPRÜFT</span>`);
+  v4.onclick=()=>renderHoeren();grid.appendChild(v4);
+
+  grid.appendChild(el("div","seclabel","Grammatik"));
+  GR.forEach(g=>{
+    const done=state.gr[g.id].done.size===g.ex.length;
+    const c=el("button","modcard"+(done?" done":""),`<span class="ic">${g.icon}</span><span><h2>${g.name}</h2><p>${g.ex.length} Übungen mit Spickzettel${g.id==="adj"?" · das schwierigste Thema für die meisten Lernenden":g.id==="faelle"?" · die häufigsten Stolpersteine":""}</p></span><span class="st">GEPRÜFT</span>`);
+    c.onclick=()=>renderGrammar(g);grid.appendChild(c);
+  });
+
+  grid.appendChild(el("div","seclabel","Schreiben & Prüfung"));
+  const w=el("button","modcard",`<span class="ic">✉️</span><span><h2>Schreiben: der formelle Brief</h2><p>Musterbrief, Bausteine &amp; Checkliste für den Schreibteil</p></span>`);
+  w.onclick=()=>renderWriting();grid.appendChild(w);
+  const e=el("button","modcard"+(state.exam?" done":""),`<span class="ic">🎓</span><span><h2>Prüfungssimulation</h2><p>20 zufällige Fragen aus allen Bereichen · Auswertung nach Thema · Stempel ab 80&nbsp;%</p></span><span class="st">BESTANDEN</span>`);
+  e.onclick=()=>startExam();grid.appendChild(e);
+  window.scrollTo({top:0});
+}
+
+/* ================= VOCAB ================= */
+let vTheme=0,vMode="cards",vIdx=0,vFlip=false,vDeck=[];
+function renderVocab(){
+  $("backBtn").style.display="block";
+  ROOT.innerHTML="";
+  ROOT.appendChild(el("div","vhead","<h2>🗂️ Vokabeltrainer</h2><p>Wähle ein Thema. Lerne mit Karten, prüfe dich im Quiz (Stempel ab 8/10) oder schau in die Liste.</p>"));
+  const tg=el("div","themegrid");
+  VOCAB.forEach((t,i)=>{
+    const c=el("button","themechip"+(i===vTheme?" active":""),t.icon+" "+t.name);
+    c.onclick=()=>{vTheme=i;vIdx=0;vFlip=false;vDeck=[];renderVocab();};
+    tg.appendChild(c);
+  });
+  ROOT.appendChild(tg);
+  const tabs=el("div","tabs");
+  [["cards","Karten"],["quiz","Quiz"],["list","Liste"]].forEach(([m,lab])=>{
+    const t=el("button","tab"+(vMode===m?" active":""),lab);
+    t.onclick=()=>{vMode=m;vIdx=0;vFlip=false;renderVocab();};
+    tabs.appendChild(t);
+  });
+  ROOT.appendChild(tabs);
+  const box=el("div");ROOT.appendChild(box);
+  const theme=VOCAB[vTheme];
+
+  if(vMode==="cards"){
+    if(!vDeck.length||vDeck.theme!==vTheme){vDeck=shuffle(theme.words);vDeck.theme=vTheme;vIdx=0;}
+    const w=vDeck[vIdx];
+    box.appendChild(el("div","fccount",(vIdx+1)+" / "+vDeck.length));
+    const wrap=el("div","fcwrap");
+    const inner=el("div","fcinner"+(vFlip?" flip":""));
+    inner.innerHTML=`<div class="fcface fcfront"><div class="fctag">Deutsch</div><div class="fcmain">${w[0]}</div><div class="fcsub">tippen zum Umdrehen</div></div>
+    <div class="fcface fcback"><div class="fctag">Español</div><div class="fcmain">${w[1]}</div></div>`;
+    inner.onclick=()=>{vFlip=!vFlip;inner.classList.toggle("flip");};
+    wrap.appendChild(inner);box.appendChild(wrap);
+    const nav=el("div","fcnav");
+    const p=el("button","fcbtn","←"),s=el("button","fcbtn","⇄ Mischen"),n=el("button","fcbtn","→");
+    p.onclick=()=>{vIdx=(vIdx-1+vDeck.length)%vDeck.length;vFlip=false;renderVocab();};
+    n.onclick=()=>{vIdx=(vIdx+1)%vDeck.length;vFlip=false;renderVocab();};
+    s.onclick=()=>{vDeck=shuffle(theme.words);vDeck.theme=vTheme;vIdx=0;vFlip=false;renderVocab();};
+    nav.appendChild(p);nav.appendChild(s);nav.appendChild(n);box.appendChild(nav);
+  }
+  else if(vMode==="quiz"){
+    const qs=shuffle(theme.words).slice(0,10);
+    let i=0,score=0;
+    const ask=()=>{
+      box.innerHTML="";
+      if(i>=qs.length){
+        const ok=score>=8;
+        if(ok)state.vocab=true;
+        box.appendChild(el("div","excard",`<div class="score-hero">${score} / ${qs.length}</div>
+          <p style="margin-top:8px;font-size:14.5px;line-height:1.6">${ok?"Stark! Der Wortschatz sitzt.":"Wiederhole die Karten und versuch es nochmal — ab 8 richtigen gibt es den Stempel."}</p>
+          ${ok?'<div class="bigstamp">✓ Wortschatz geprüft</div>':""}`));
+        const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Nochmal");
+        b.onclick=()=>renderVocab();row.appendChild(b);box.appendChild(row);
+        return;
+      }
+      const w=qs[i];
+      const distract=shuffle(theme.words.filter(x=>x!==w)).slice(0,3).map(x=>x[1]);
+      const q={t:"mc",q:`Was bedeutet: „${w[0]}“?`,o:[w[1],...distract],a:0,
+        de:`<b>${w[0]}</b> = ${w[1]}`,es:""};
+      box.appendChild(el("div","exam-progress",`<span>Frage ${i+1}/${qs.length}</span><span>${theme.name}</span>`));
+      const card=renderExercise(q,i,"Vokabel-Quiz",ok=>{
+        if(ok)score++;
+        const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Weiter →");
+        b.onclick=()=>{i++;ask();window.scrollTo({top:0});};
+        row.appendChild(b);card.appendChild(row);
+      });
+      box.appendChild(card);
+    };
+    ask();
+  }
+  else{
+    const list=el("div","wlist");
+    theme.words.forEach(w=>list.appendChild(el("div","wrow",`<span class="de">${w[0]}</span><span class="es">${w[1]}</span>`)));
+    box.appendChild(list);
+  }
+  window.scrollTo({top:0});
+}
+
+/* ================= VERB+PREP ================= */
+let vpMode="cards",vpIdx=0,vpFlip=false,vpDeck=[];
+function renderVP(){
+  $("backBtn").style.display="block";
+  ROOT.innerHTML="";
+  ROOT.appendChild(el("div","vhead","<h2>🔗 Verben mit Präpositionen</h2><p>Die wichtigsten A2-Verben mit fester Präposition. Merke: Verb + Präposition + Kasus gehören zusammen wie ein Wort.</p>"));
+  const tabs=el("div","tabs");
+  [["cards","Karten"],["prep","Quiz: Präposition"],["case","Quiz: Kasus"],["list","Liste"]].forEach(([m,lab])=>{
+    const t=el("button","tab"+(vpMode===m?" active":""),lab);
+    t.onclick=()=>{vpMode=m;vpIdx=0;vpFlip=false;renderVP();};
+    tabs.appendChild(t);
+  });
+  ROOT.appendChild(tabs);
+  const box=el("div");ROOT.appendChild(box);
+
+  if(vpMode==="cards"){
+    if(!vpDeck.length){vpDeck=shuffle(VP);}
+    const v=vpDeck[vpIdx];
+    box.appendChild(el("div","fccount",(vpIdx+1)+" / "+vpDeck.length));
+    const wrap=el("div","fcwrap");
+    const inner=el("div","fcinner"+(vpFlip?" flip":""));
+    inner.innerHTML=`<div class="fcface fcfront"><div class="fctag">Verb</div><div class="fcmain">${v[0]} …?</div><div class="fcsub">Welche Präposition? Welcher Kasus?</div></div>
+    <div class="fcface fcback"><div class="fctag">${v[2]==="A"?"+ Akkusativ":"+ Dativ"}</div><div class="fcmain">${v[0]} <u>${v[1]}</u></div><div class="fcsub">${v[3]}</div><div class="fcex">„${v[4]}“</div></div>`;
+    inner.onclick=()=>{vpFlip=!vpFlip;inner.classList.toggle("flip");};
+    wrap.appendChild(inner);box.appendChild(wrap);
+    const nav=el("div","fcnav");
+    const p=el("button","fcbtn","←"),s=el("button","fcbtn","⇄ Mischen"),n=el("button","fcbtn","→");
+    p.onclick=()=>{vpIdx=(vpIdx-1+vpDeck.length)%vpDeck.length;vpFlip=false;renderVP();};
+    n.onclick=()=>{vpIdx=(vpIdx+1)%vpDeck.length;vpFlip=false;renderVP();};
+    s.onclick=()=>{vpDeck=shuffle(VP);vpIdx=0;vpFlip=false;renderVP();};
+    nav.appendChild(p);nav.appendChild(s);nav.appendChild(n);box.appendChild(nav);
+  }
+  else if(vpMode==="prep"||vpMode==="case"){
+    const qs=shuffle(VP).slice(0,10);
+    let i=0,score=0;
+    const ask=()=>{
+      box.innerHTML="";
+      if(i>=qs.length){
+        const ok=score>=8;
+        if(ok)state.vp=true;
+        box.appendChild(el("div","excard",`<div class="score-hero">${score} / ${qs.length}</div>
+          <p style="margin-top:8px;font-size:14.5px;line-height:1.6">${ok?"Sehr gut — die Präpositionen sitzen!":"Übe weiter mit den Karten; ab 8 richtigen gibt es den Stempel."}</p>
+          ${ok?'<div class="bigstamp">✓ Verben geprüft</div>':""}`));
+        const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Nochmal");
+        b.onclick=()=>renderVP();row.appendChild(b);box.appendChild(row);
+        return;
+      }
+      const v=qs[i];
+      let q;
+      if(vpMode==="prep"){
+        const preps=["auf","über","an","um","für","von","mit","vor"];
+        const distract=shuffle(preps.filter(p=>p!==v[1])).slice(0,3);
+        q={t:"mc",q:`${v[0]} ___ ?`,o:[v[1],...distract],a:0,
+          de:`<b>${v[0]} ${v[1]}</b> (+ ${v[2]==="A"?"Akkusativ":"Dativ"}): „${v[4]}“`,es:v[3]};
+      }else{
+        q={t:"mc",q:`${v[0]} ${v[1]} + ___ ?`,o:["Akkusativ","Dativ"],a:v[2]==="A"?0:1,
+          de:`<b>${v[0]} ${v[1]} + ${v[2]==="A"?"Akkusativ":"Dativ"}</b>: „${v[4]}“`,es:v[3]};
+      }
+      box.appendChild(el("div","exam-progress",`<span>Frage ${i+1}/${qs.length}</span><span>${vpMode==="prep"?"Präposition":"Kasus"}</span>`));
+      const card=renderExercise(q,i,"Verb-Quiz",ok=>{
+        if(ok)score++;
+        const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Weiter →");
+        b.onclick=()=>{i++;ask();window.scrollTo({top:0});};
+        row.appendChild(b);card.appendChild(row);
+      });
+      box.appendChild(card);
+    };
+    ask();
+  }
+  else{
+    const list=el("div","wlist");
+    VP.forEach(v=>list.appendChild(el("div","wrow",`<span class="de">${v[0]} <u>${v[1]}</u> <small style="color:var(--rot)">${v[2]==="A"?"+Akk":"+Dat"}</small></span><span class="es">${v[3]}</span>`)));
+    box.appendChild(list);
+  }
+  window.scrollTo({top:0});
+}
+
+/* ================= VERB JUGGLING ================= */
+let vjMode="verbs",vjIdx=0,vjFlip=false,vjDeck=[];
+function renderVJ(){
+  $("backBtn").style.display="block";
+  ROOT.innerHTML="";
+  ROOT.appendChild(el("div","vhead","<h2>🤹 Verb Juggling</h2><p>"+VJ.length+" wichtige Alltagsverben. Jede Karte hat einen typischen Beispielsatz.</p>"));
+  const tabs=el("div","tabs");
+  [["verbs","Verb-Karten"],["sents","Satz-Karten"],["quiz","Satzbau-Quiz"],["list","Liste"]].forEach(([m,lab])=>{
+    const t=el("button","tab"+(vjMode===m?" active":""),lab);
+    t.onclick=()=>{vjMode=m;vjIdx=0;vjFlip=false;vjDeck=[];renderVJ();};
+    tabs.appendChild(t);
+  });
+  ROOT.appendChild(tabs);
+  const box=el("div");ROOT.appendChild(box);
+
+  if(vjMode==="verbs"||vjMode==="sents"){
+    if(!vjDeck.length){vjDeck=shuffle(VJ);}
+    const v=vjDeck[vjIdx];
+    box.appendChild(el("div","fccount",(vjIdx+1)+" / "+vjDeck.length));
+    const wrap=el("div","fcwrap");
+    const inner=el("div","fcinner"+(vjFlip?" flip":""));
+    if(vjMode==="verbs"){
+      inner.innerHTML=`<div class="fcface fcfront"><div class="fctag">Verb</div><div class="fcmain">${v[0]}</div><div class="fcsub">tippen für die Bedeutung</div></div>
+      <div class="fcface fcback"><div class="fctag">English</div><div class="fcmain">${v[1]}</div><div class="fcex">„${v[3]}“</div></div>`;
+    }else{
+      inner.innerHTML=`<div class="fcface fcfront"><div class="fctag">How'd you say in German…</div><div class="fcmain" style="font-size:clamp(17px,5vw,22px)">“${v[2]}”</div><div class="fcsub">tippen für die Lösung</div></div>
+      <div class="fcface fcback"><div class="fctag">${v[0]}</div><div class="fcmain" style="font-size:clamp(17px,5vw,22px)">${v[3]}</div></div>`;
+    }
+    inner.onclick=()=>{vjFlip=!vjFlip;inner.classList.toggle("flip");};
+    wrap.appendChild(inner);box.appendChild(wrap);
+    const nav=el("div","fcnav");
+    const p=el("button","fcbtn","←"),s=el("button","fcbtn","⇄ Mischen"),sp=el("button","fcbtn","🔊"),n=el("button","fcbtn","→");
+    p.onclick=()=>{vjIdx=(vjIdx-1+vjDeck.length)%vjDeck.length;vjFlip=false;renderVJ();};
+    n.onclick=()=>{vjIdx=(vjIdx+1)%vjDeck.length;vjFlip=false;renderVJ();};
+    s.onclick=()=>{vjDeck=shuffle(VJ);vjIdx=0;vjFlip=false;renderVJ();};
+    sp.onclick=e=>{e.stopPropagation();speak(v[3]);};
+    nav.appendChild(p);nav.appendChild(s);nav.appendChild(sp);nav.appendChild(n);box.appendChild(nav);
+  }
+  else if(vjMode==="quiz"){
+    // sentence builder: EN prompt -> build the German sentence (only sentences with <=9 tokens)
+    const pool=VJ.filter(v=>v[3].split(" ").length<=9);
+    const qs=shuffle(pool).slice(0,8);
+    let i=0,score=0;
+    const ask=()=>{
+      box.innerHTML="";
+      if(i>=qs.length){
+        const ok=score>=6;
+        if(ok)state.vj=true;
+        box.appendChild(el("div","excard",`<div class="score-hero">${score} / ${qs.length}</div>
+          <p style="margin-top:8px;font-size:14.5px;line-height:1.6">${ok?"Du jonglierst die Verben wie ein Profi! 🤹":"Übe weiter mit den Satz-Karten — ab 6 richtigen gibt es den Stempel."}</p>
+          ${ok?'<div class="bigstamp">✓ Verb Juggling geprüft</div>':""}`));
+        const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Nochmal");
+        b.onclick=()=>renderVJ();row.appendChild(b);box.appendChild(row);
+        return;
+      }
+      const v=qs[i];
+      const q={t:"build",q:`Übersetze: “${v[2]}”`,w:v[3].split(" "),
+        de:`<b>${v[0]}</b> (${v[1]}).`,es:""};
+      box.appendChild(el("div","exam-progress",`<span>Satz ${i+1}/${qs.length}</span><span>Verb Juggling</span>`));
+      const card=renderExercise(q,i,"Übersetzungs-Quiz",ok=>{
+        if(ok)score++;
+        const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Weiter →");
+        b.onclick=()=>{i++;ask();window.scrollTo({top:0});};
+        row.appendChild(b);card.appendChild(row);
+      });
+      box.appendChild(card);
+    };
+    ask();
+  }
+  else{
+    const list=el("div","wlist");
+    VJ.forEach(v=>list.appendChild(el("div","wrow",`<span class="de">${v[0]}</span><span class="es">${v[1]}</span>`)));
+    box.appendChild(list);
+  }
+  window.scrollTo({top:0});
+}
+
+/* ================= HÖREN (TTS) ================= */
+function speak(t){
+  try{
+    const u=new SpeechSynthesisUtterance(t);
+    u.lang="de-DE";u.rate=0.92;
+    speechSynthesis.cancel();speechSynthesis.speak(u);
+  }catch(e){}
+}
+let hoMode="sents";
+function renderHoeren(){
+  $("backBtn").style.display="block";
+  ROOT.innerHTML="";
+  ROOT.appendChild(el("div","vhead","<h2>🎧 Hörverstehen</h2><p>Tippe auf 🔊, hör gut zu und antworte — wie im Hörteil der A2-Prüfung. (Der Ton kommt von der deutschen Stimme deines Geräts.)</p>"));
+  const tabs=el("div","tabs");
+  [["sents","Sätze"],["words","Vokabeln"],["nums","Zahlen"]].forEach(([m,lab])=>{
+    const t=el("button","tab"+(hoMode===m?" active":""),lab);
+    t.onclick=()=>{hoMode=m;renderHoeren();};
+    tabs.appendChild(t);
+  });
+  ROOT.appendChild(tabs);
+  const box=el("div");ROOT.appendChild(box);
+
+  let i=0,score=0;const N=10;
+  const finish=()=>{
+    box.innerHTML="";
+    const ok=score>=8;
+    if(ok)state.hoer=true;
+    box.appendChild(el("div","excard",`<div class="score-hero">${score} / ${N}</div>
+      <p style="margin-top:8px;font-size:14.5px;line-height:1.6">${ok?"Ausgezeichnetes Gehör! 👂":"Hör die Sätze ruhig mehrmals an — ab 8 richtigen gibt es den Stempel."}</p>
+      ${ok?'<div class="bigstamp">✓ Hören geprüft</div>':""}`));
+    const row=el("div","nextrow"),b=el("button","btn-primary btn-dark","Nochmal");
+    b.onclick=()=>renderHoeren();row.appendChild(b);box.appendChild(row);
+  };
+
+  if(hoMode==="sents"||hoMode==="words"){
+    const data=hoMode==="sents"
+      ? shuffle(VJ).slice(0,N).map(v=>({say:v[3],right:v[2],wrongs:()=>shuffle(VJ.filter(x=>x!==v)).slice(0,3).map(x=>x[2])}))
+      : shuffle(VOCAB.flatMap(t=>t.words.map(w=>({w,t})))).slice(0,N).map(({w,t})=>({say:w[0],right:w[1],wrongs:()=>shuffle(t.words.filter(x=>x!==w)).slice(0,3).map(x=>x[1])}));
+    const ask=()=>{
+      box.innerHTML="";
+      if(i>=data.length){finish();return;}
+      const d=data[i];
+      box.appendChild(el("div","exam-progress",`<span>Aufgabe ${i+1}/${N}</span><span>${hoMode==="sents"?"Sätze":"Vokabeln"}</span>`));
+      const card=el("div","excard");
+      card.appendChild(el("div","num","<span>Hörverstehen</span><span data-b></span>"));
+      const badge=card.querySelector("[data-b]");
+      const play=el("button","btn-primary btn-dark","🔊 Anhören");
+      play.style.marginBottom="14px";
+      play.onclick=()=>speak(d.say);
+      card.appendChild(play);
+      card.appendChild(el("div","q","Was hast du gehört?"));
+      const opts=shuffle([{o:d.right,ok:true},...d.wrongs().map(o=>({o,ok:false}))]);
+      const obox=el("div","opts");card.appendChild(obox);
+      opts.forEach(({o,ok})=>{
+        const b=el("button","opt",o);
+        b.onclick=()=>{
+          [...obox.children].forEach(x=>{x.disabled=true;
+            if(x.textContent===d.right)x.classList.add("correct");
+            else if(x===b)x.classList.add("wrong");
+            else x.classList.add("dim");});
+          badge.textContent=ok?"✅":"❌";
+          if(ok)score++;
+          card.appendChild(el("div","explain"+(ok?"":" bad"),(ok?"✅ <b>Richtig!</b> ":"❌ <b>Leider nein.</b> ")+"Gesagt wurde: „<b>"+d.say+"</b>“"));
+          const row=el("div","nextrow"),nb=el("button","btn-primary btn-dark","Weiter →");
+          nb.onclick=()=>{i++;ask();window.scrollTo({top:0});};
+          row.appendChild(nb);card.appendChild(row);
+        };
+        obox.appendChild(b);
+      });
+      box.appendChild(card);
+      setTimeout(()=>speak(d.say),350);
+    };
+    ask();
+  }
+  else{ // numbers
+    const ask=()=>{
+      box.innerHTML="";
+      if(i>=N){finish();return;}
+      const kind=Math.random();
+      let num,label;
+      if(kind<0.4){num=Math.floor(Math.random()*87)+13;label="Zahl";}
+      else if(kind<0.7){num=(Math.floor(Math.random()*989)+11);label="Zahl";}
+      else{num=(Math.floor(Math.random()*95)+5)+",-"+"";num=Math.floor(Math.random()*95)+5;label="Preis (Euro)";}
+      const sayTxt=label==="Preis (Euro)"?num+" Euro":String(num);
+      box.appendChild(el("div","exam-progress",`<span>Aufgabe ${i+1}/${N}</span><span>Zahlen</span>`));
+      const card=el("div","excard");
+      card.appendChild(el("div","num","<span>"+label+"</span><span data-b></span>"));
+      const badge=card.querySelector("[data-b]");
+      const play=el("button","btn-primary btn-dark","🔊 Anhören");
+      play.style.marginBottom="14px";
+      play.onclick=()=>speak(sayTxt);
+      card.appendChild(play);
+      card.appendChild(el("div","q","Welche Zahl hast du gehört? (Ziffern eingeben)"));
+      const row=el("div","gaprow");
+      const inp=document.createElement("input");
+      inp.className="gapinput";inp.type="tel";inp.inputMode="numeric";inp.placeholder="z. B. 47";
+      const btn=el("button","checkbtn","OK");
+      const check=()=>{
+        if(!inp.value.trim())return;
+        const ok=parseInt(inp.value.replace(/\D/g,""),10)===num;
+        inp.disabled=true;btn.disabled=true;
+        inp.className="gapinput "+(ok?"good":"nope");
+        badge.textContent=ok?"✅":"❌";
+        if(ok)score++;
+        card.appendChild(el("div","explain"+(ok?"":" bad"),(ok?"✅ <b>Richtig!</b> ":"❌ <b>Leider nein.</b> ")+"Die Zahl war <b>"+num+"</b>."));
+        const r2=el("div","nextrow"),nb=el("button","btn-primary btn-dark","Weiter →");
+        nb.onclick=()=>{i++;ask();window.scrollTo({top:0});};
+        r2.appendChild(nb);card.appendChild(r2);
+      };
+      btn.onclick=check;
+      inp.addEventListener("keydown",e=>{if(e.key==="Enter")check();});
+      row.appendChild(inp);row.appendChild(btn);card.appendChild(row);
+      box.appendChild(card);
+      setTimeout(()=>speak(sayTxt),350);
+    };
+    ask();
+  }
+  window.scrollTo({top:0});
+}
+
+/* ================= GRAMMAR ================= */
+function renderGrammar(g){
+  $("backBtn").style.display="block";
+  ROOT.innerHTML="";
+  ROOT.appendChild(el("div","vhead",`<h2>${g.icon} ${g.name}</h2>`));
+  ROOT.appendChild(el("div","cheat",g.cheat));
+  const foot=el("div","excard");
+  const upd=()=>{
+    const st=state.gr[g.id];
+    const all=st.done.size===g.ex.length;
+    foot.innerHTML=`<div style="text-align:center"><div class="score-hero" style="font-size:34px">${st.done.size} / ${g.ex.length}</div>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:4px">Übungen bearbeitet</p>
+    ${all?'<div class="bigstamp">✓ Thema geprüft</div>':""}</div>`;
+  };
+  g.ex.forEach((q,i)=>{
+    ROOT.appendChild(renderExercise(q,i,null,()=>{state.gr[g.id].done.add(i);upd();}));
+  });
+  upd();ROOT.appendChild(foot);
+  window.scrollTo({top:0});
+}
+
+/* ================= WRITING ================= */
+function renderWriting(){
+  $("backBtn").style.display="block";
+  ROOT.innerHTML="";
+  ROOT.appendChild(el("div","vhead","<h2>✉️ Schreiben: der formelle Brief</h2><p>Diese Struktur funktioniert für fast jede A2-Schreibaufgabe (Anfrage, Anmeldung, Entschuldigung).</p>"));
+  ROOT.appendChild(el("div","letter",`
+    <div class="lt">Musterstruktur</div>
+    <p><span class="frag">Sehr geehrte Damen und Herren,</span> <span class="note">← formelle Anrede, danach klein weiterschreiben!</span></p>
+    <p><span class="frag">ich habe Ihre Anzeige gelesen und interessiere mich sehr für …</span> <span class="note">← Warum schreibst du?</span></p>
+    <p><span class="frag">Ich hätte einige Fragen:</span> <span class="note">← Konjunktiv II = höflich</span><br>
+    <span class="frag">Wann findet der Kurs statt?</span> · <span class="frag">Was kostet …?</span> · <span class="frag">Brauche ich eine Ausrüstung?</span> · <span class="frag">Muss man Mitglied sein?</span></p>
+    <p><span class="frag">Ich würde gern im September anfangen.</span> <span class="note">← ein persönlicher Satz</span></p>
+    <p><span class="frag">Ich freue mich auf Ihre Antwort.</span> <span class="note">← sich freuen auf + Akk.!</span></p>
+    <p><span class="frag">Mit freundlichen Grüßen</span><br>[Dein Name]</p>`));
+  ROOT.appendChild(el("div","letter",`
+    <div class="lt">Informelle E-Mail (du-Form)</div>
+    <p><span class="frag">Liebe Anna, / Lieber Max,</span> → <span class="frag">vielen Dank für deine Nachricht!</span> → Inhalt → <span class="frag">Viele Grüße / Liebe Grüße</span></p>`));
+  ROOT.appendChild(el("div","letter",`
+    <div class="lt">Checkliste vor dem Abgeben</div>
+    <ul class="checklist">
+      <li><b>Alle Leitpunkte</b> beantwortet? (In der Prüfung gibt es meist 3–4 Punkte — jeder zählt!)</li>
+      <li>Anrede <b>und</b> Grußformel vorhanden? Nach der Anrede ein Komma, dann klein weiter.</li>
+      <li>Verben an <b>Position 2</b> im Hauptsatz? Am <b>Ende</b> nach weil/dass/ob?</li>
+      <li>Höflichkeitsformen benutzt? (Könnten Sie …, Ich hätte gern …, Ich würde gern …)</li>
+      <li>Mindestens ~30–40 Wörter geschrieben?</li>
+      <li>Einmal komplett durchlesen: Großschreibung der Nomen, Endungen (-en im Akkusativ Maskulin!).</li>
+    </ul>`));
+  window.scrollTo({top:0});
+}
+
+/* ================= EXAM ================= */
+function startExam(){
+  $("backBtn").style.display="block";
+  const pool=[];
+  GR.forEach(g=>g.ex.forEach(q=>pool.push({cat:g.name,q})));
+  shuffle(VOCAB.flatMap(t=>t.words.map(w=>({t,w})))).slice(0,12).forEach(({t,w})=>{
+    const d=shuffle(t.words.filter(x=>x!==w)).slice(0,3).map(x=>x[1]);
+    pool.push({cat:"Wortschatz",q:{t:"mc",q:`Was bedeutet: „${w[0]}“?`,o:[w[1],...d],a:0,de:`<b>${w[0]}</b> = ${w[1]}`,es:""}});
+  });
+  shuffle(VP).slice(0,8).forEach(v=>{
+    const preps=["auf","über","an","um","für","von","mit","vor"];
+    const d=shuffle(preps.filter(p=>p!==v[1])).slice(0,3);
+    pool.push({cat:"Verben+Präp.",q:{t:"mc",q:`${v[0]} ___ ?`,o:[v[1],...d],a:0,de:`<b>${v[0]} ${v[1]}</b>: „${v[4]}“`,es:v[3]}});
+  });
+  shuffle(VJ).slice(0,10).forEach(v=>{
+    const d=shuffle(VJ.filter(x=>x!==v)).slice(0,3).map(x=>x[1]);
+    pool.push({cat:"Verb Juggling",q:{t:"mc",q:`Was bedeutet: „${v[0]}“?`,o:[v[1],...d],a:0,de:`<b>${v[0]}</b> = ${v[1]} — „${v[3]}“`,es:""}});
+  });
+  const qs=shuffle(pool).slice(0,20);
+  let i=0,score=0;const cats={};
+  const ask=()=>{
+    ROOT.innerHTML="";
+    if(i>=qs.length){
+      const ok=score>=16;
+      if(ok)state.exam=true;
+      const card=el("div","excard");
+      card.innerHTML=`<div class="num">Prüfungssimulation · Ergebnis</div>
+        <div class="score-hero">${score} / ${qs.length}</div>
+        <p style="margin-top:8px;font-size:15px;line-height:1.6">${ok?"Bestanden! Du bist auf einem sehr guten Weg zur A2-Prüfung. 🇦🇹":"Noch nicht bestanden (du brauchst 16/20) — die Auswertung zeigt dir, wo du üben solltest."}</p>
+        ${ok?'<div class="bigstamp">✓ Prüfung bestanden</div>':""}
+        <div style="margin-top:18px">${Object.entries(cats).map(([c,v])=>`<div class="catline"><span>${c}</span><b>${v.ok}/${v.n}</b></div>`).join("")}</div>`;
+      const row=el("div","nextrow"),b=el("button","btn-primary","Neue Simulation");
+      b.onclick=startExam;row.appendChild(b);card.appendChild(row);
+      ROOT.appendChild(card);window.scrollTo({top:0});
+      return;
+    }
+    const {cat,q}=qs[i];
+    ROOT.appendChild(el("div","exam-progress",`<span>Frage ${i+1} / ${qs.length}</span><span>${cat}</span>`));
+    ROOT.appendChild(el("div","exam-bar",`<i style="width:${i/qs.length*100}%"></i>`));
+    let answered=false;
+    const card=renderExercise(q,i,"Prüfung",ok=>{
+      if(answered)return;answered=true;
+      cats[cat]=cats[cat]||{ok:0,n:0};cats[cat].n++;
+      if(ok){score++;cats[cat].ok++;}
+      const row=el("div","nextrow"),b=el("button","btn-primary",i===qs.length-1?"Zum Ergebnis →":"Weiter →");
+      b.onclick=()=>{i++;ask();};
+      row.appendChild(b);card.appendChild(row);
+      b.focus({preventScroll:true});
+    });
+    ROOT.appendChild(card);
+    window.scrollTo({top:0});
+  };
+  ask();
+}
+
+$("backBtn").onclick=renderHome;
+renderHome();
+</script>
+</body>
+</html>
