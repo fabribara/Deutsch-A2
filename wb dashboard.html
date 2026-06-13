@@ -350,6 +350,37 @@ td:not(:first-child) { text-align:right; }
 .loader-msg   { font-size:10px; color:rgba(255,255,255,.25); margin-top:10px; }
 
 .no-data { text-align:center; padding:36px; color:var(--text3); font-size:11px; }
+
+/* ── MODELED-DATA BADGE & NOTES ── */
+.model-badge {
+  display:inline-flex; align-items:center; gap:4px; font-size:9px; font-weight:600;
+  color:var(--orange); background:rgba(217,137,37,.1);
+  border:1px solid rgba(217,137,37,.3); padding:1px 7px; border-radius:20px;
+  letter-spacing:.04em; text-transform:uppercase; vertical-align:middle;
+}
+.model-note {
+  font-size:9px; color:var(--text3); font-style:italic;
+  margin-top:6px; line-height:1.45;
+}
+.methodology {
+  background:var(--white); border:1px solid var(--border); border-radius:var(--r);
+  box-shadow:var(--shadow); padding:12px 16px; margin-bottom:8px;
+}
+.methodology summary {
+  font-size:10px; font-weight:600; color:var(--text2); text-transform:uppercase;
+  letter-spacing:.07em; cursor:pointer; outline:none; user-select:none;
+}
+.methodology summary::marker { color:var(--text3); }
+.methodology p { font-size:11px; color:var(--text2); line-height:1.6; margin-top:8px; }
+.methodology .live  { color:var(--green); font-weight:600; }
+.methodology .modeled { color:var(--orange); font-weight:600; }
+.export-btn {
+  font-family:'IBM Plex Sans',sans-serif; font-size:11px; font-weight:500;
+  border:1px solid var(--border); border-radius:5px; padding:5px 12px;
+  background:var(--white); color:var(--text2); cursor:pointer; transition:all .12s;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.export-btn:hover { background:var(--blue); color:#fff; border-color:var(--blue); }
 </style>
 </head>
 <body>
@@ -373,6 +404,22 @@ td:not(:first-child) { text-align:right; }
 
 <div class="page">
 
+  <!-- METHODOLOGY / DATA PROVENANCE -->
+  <details class="methodology" id="methodology">
+    <summary>Data sources & methodology — please read before using figures</summary>
+    <p>
+      <span class="live">Live (World Bank API):</span> project name, ID, country, region, sector, total commitment,
+      IBRD/IDA split, approval &amp; closing dates, lending instrument, borrower, and development objective (PDO).
+      These are fetched in real time from the World Bank Projects API.
+      <br><br>
+      <span class="modeled">Modeled / illustrative:</span> disbursement %, lending spread, arrears,
+      quarterly cashflows, and repayment schedules are <strong>not published per-project by the API</strong>.
+      They are generated deterministically from each project's commitment and dates to demonstrate the dashboard's
+      analytics layer. <strong>Do not treat these as actual World Bank financial figures.</strong> Wire them to your
+      internal SAP / Redshift loan views to make them authoritative.
+    </p>
+  </details>
+
   <!-- ROW 1 KPIs -->
   <div class="sec-label" style="margin-top:4px">Portfolio Size</div>
   <div class="kpi-row" id="kpiRow1">
@@ -383,7 +430,7 @@ td:not(:first-child) { text-align:right; }
   </div>
 
   <!-- ROW 2 KPIs -->
-  <div class="sec-label">Performance & Risk</div>
+  <div class="sec-label">Performance &amp; Risk <span class="model-badge">Modeled</span></div>
   <div class="kpi2-row" id="kpiRow2">
     <div class="kpi"><div class="kpi-label">Disbursement Rate</div><div class="kpi-val">—</div><div class="kpi-sub">% of commitment</div></div>
     <div class="kpi teal"><div class="kpi-label">Avg. Spread (wgt.)</div><div class="kpi-val">—</div><div class="kpi-sub">% weighted by disbursed</div></div>
@@ -405,8 +452,8 @@ td:not(:first-child) { text-align:right; }
   <div class="cf-overview" id="cfOverview">
     <div class="cf-ov-header">
       <div>
-        <div class="cf-ov-title">Aggregate Cashflow Forecast · Next 12 Months</div>
-        <div class="cf-ov-subtitle">Disbursements out to borrowers vs. repayments & interest in — across all active projects</div>
+        <div class="cf-ov-title">Aggregate Cashflow Forecast · Next 12 Months <span class="model-badge">Modeled</span></div>
+        <div class="cf-ov-subtitle">Disbursements out to borrowers vs. repayments &amp; interest in — across all active projects</div>
       </div>
     </div>
     <div class="cf-ov-body">
@@ -446,7 +493,7 @@ td:not(:first-child) { text-align:right; }
       <div class="chart-wrap"><canvas id="regionChart"></canvas></div>
     </div>
     <div class="panel">
-      <div class="panel-title">Spread Distribution (weighted $M disbursed)</div>
+      <div class="panel-title">Spread Distribution (weighted $M disbursed) · Modeled</div>
       <div class="chart-wrap"><canvas id="spreadChart"></canvas></div>
     </div>
   </div>
@@ -463,6 +510,7 @@ td:not(:first-child) { text-align:right; }
         <input class="f-input f-search" id="searchBox" placeholder="Search project / country…" oninput="filterTbl()">
         <select class="f-input" id="regionFilter" onchange="filterTbl()"><option value="">All Regions</option></select>
         <select class="f-input" id="sectorFilter" onchange="filterTbl()"><option value="">All Sectors</option></select>
+        <button class="export-btn" onclick="exportCSV()" title="Export the filtered list to CSV">↓ CSV</button>
       </div>
     </div>
     <div id="tblWrap">
@@ -491,7 +539,7 @@ td:not(:first-child) { text-align:right; }
 </div><!-- /page -->
 
 <!-- DETAIL DRAWER -->
-<div class="overlay" id="overlay" onclick="maybeClose(event)">
+<div class="overlay" id="overlay" onclick="maybeClose(event)" role="dialog" aria-modal="true" aria-label="Project details" aria-hidden="true">
   <div class="drawer" id="drawer">
     <div class="drawer-head">
       <button class="drawer-close" onclick="closeDrawer()">✕</button>
@@ -512,6 +560,13 @@ const PG = 15;
 let charts = {};
 let cfMode = 'disbursements';
 window._cfCountryData = {};
+
+/* Chart.js cannot parse CSS custom properties (var(--x)); use real hex values */
+const C = {
+  navy:'#1b2a3b', blue:'#1f77b4', blue2:'#4e9fd6', teal:'#17a99e',
+  orange:'#d98925', red:'#c0392b', green:'#27a05a', amber:'#e5a823',
+  purple:'#7b61b8', grid:'#f0f2f5', axis:'#8fa0b2', text2:'#546678'
+};
 
 /* ══════════════════════════════════════════════════════════
    HELPERS
@@ -721,7 +776,7 @@ function renderCfOverview(projects){
         {label:'Disbursements Out',data:aggOut.map(v=>-v),backgroundColor:'rgba(192,57,43,.7)',borderRadius:3,stack:'s'},
         {label:'Repayments In',    data:aggIn, backgroundColor:'rgba(39,160,90,.7)', borderRadius:3,stack:'s'},
         {label:'Net',type:'line',  data:aggIn.map((v,i)=>v-aggOut[i]),
-          borderColor:'var(--blue)',backgroundColor:'rgba(31,119,180,.08)',
+          borderColor:C.blue,backgroundColor:'rgba(31,119,180,.08)',
           borderWidth:2,pointRadius:4,tension:.3,fill:true,yAxisID:'y'}
       ]
     },
@@ -991,7 +1046,7 @@ function openDrawer(id){
     </div>
     ${p.pdo?`<div class="d-sec"><div class="d-sec-title">Development Objective (PDO)</div><div class="d-pdo">${p.pdo}</div></div>`:''}
     <div class="d-sec">
-      <div class="d-sec-title">Project Cashflows & Liquidity</div>
+      <div class="d-sec-title">Project Cashflows &amp; Liquidity <span class="model-badge">Modeled</span></div>
       <div class="d-tabs">
         <div class="d-tab active" onclick="switchDTab(this,'disbursements')">Disbursements</div>
         <div class="d-tab" onclick="switchDTab(this,'repayments')">Repayments</div>
@@ -1023,13 +1078,13 @@ function openDrawer(id){
         <div class="liq-grid">
           <div class="liq-card"><div class="liq-label">Next Quarter</div><div class="liq-val in">+$${cfs[0]?(cfs[0].repayIn+cfs[0].intIn).toFixed(1):0}M</div><div class="liq-sub">Principal + interest</div></div>
           <div class="liq-card"><div class="liq-label">Next 12 Months</div><div class="liq-val in">+$${cfs.reduce((s,q)=>s+q.repayIn+q.intIn,0).toFixed(1)}M</div><div class="liq-sub">Total inflow</div></div>
-          <div class="liq-card"><div class="liq-label">Outstanding</div><div class="liq-val" style="color:var(--blue)">$${sim.disb}M</div><div class="liq-sub">Current balance</div></div>
+          <div class="liq-card"><div class="liq-label">Outstanding</div><div class="liq-val net">$${sim.disb}M</div><div class="liq-sub">Current balance</div></div>
         </div>
         <div class="d-chart-wrap"><canvas id="dChartRep"></canvas></div>
         <table class="cf-tbl" id="repTbl">
           <thead><tr><th>Due Date</th><th>Principal</th><th>Interest</th><th>Total</th><th>Balance</th><th>Status</th></tr></thead>
           <tbody id="repTblBody">
-            ${repSched.map(r=>`<tr>
+            ${repSched.map(r=>`<tr data-date="${r.date}">
               <td>${r.date}</td>
               <td class="cf-neg">$${r.principal.toFixed(1)}M</td>
               <td class="cf-neg">$${r.interest.toFixed(1)}M</td>
@@ -1037,11 +1092,11 @@ function openDrawer(id){
               <td class="td-mono">$${r.balance.toFixed(1)}M</td>
               <td><span class="rep-status rs-${r.status}">${r.status}</span></td>
             </tr>`).join('')}
-            <tr class="tot">
-              <td>Total</td>
-              <td class="cf-neg">$${repSched.reduce((s,r)=>s+r.principal,0).toFixed(1)}M</td>
-              <td class="cf-neg">$${repSched.reduce((s,r)=>s+r.interest,0).toFixed(1)}M</td>
-              <td class="cf-neg">$${repSched.reduce((s,r)=>s+r.principal+r.interest,0).toFixed(1)}M</td>
+            <tr class="tot" data-total="1">
+              <td>Total (visible)</td>
+              <td class="cf-neg" id="repTotPrin">$${repSched.reduce((s,r)=>s+r.principal,0).toFixed(1)}M</td>
+              <td class="cf-neg" id="repTotInt">$${repSched.reduce((s,r)=>s+r.interest,0).toFixed(1)}M</td>
+              <td class="cf-neg" id="repTotPay">$${repSched.reduce((s,r)=>s+r.principal+r.interest,0).toFixed(1)}M</td>
               <td colspan="2"></td>
             </tr>
           </tbody>
@@ -1072,6 +1127,12 @@ function openDrawer(id){
   `;
 
   document.getElementById('overlay').classList.add('open');
+  document.getElementById('overlay').setAttribute('aria-hidden','false');
+  // apply the default "Next Quarter" repayment horizon filter
+  const defaultPill = document.querySelector('#dtab-repayments .h-pill.active');
+  if(defaultPill) setHorizon(defaultPill,'q1');
+  // move focus to the close button for keyboard users
+  setTimeout(()=>{ const c=document.querySelector('.drawer-close'); if(c) c.focus(); },50);
 
   /* Build charts after DOM is ready */
   requestAnimationFrame(()=>{
@@ -1096,7 +1157,7 @@ function openDrawer(id){
           datasets:[
             {label:'Principal',data:repSched.map(r=>r.principal),backgroundColor:'rgba(31,119,180,.75)',borderRadius:3,stack:'s'},
             {label:'Interest', data:repSched.map(r=>r.interest), backgroundColor:'rgba(217,137,37,.75)',borderRadius:3,stack:'s'},
-            {label:'Balance',  data:repSched.map(r=>r.balance),  type:'line',borderColor:'var(--red)',borderWidth:2,pointRadius:3,tension:.3,yAxisID:'b'}
+            {label:'Balance',  data:repSched.map(r=>r.balance),  type:'line',borderColor:C.red,borderWidth:2,pointRadius:3,tension:.3,yAxisID:'b'}
           ]
         },
         options:{responsive:true,maintainAspectRatio:false,
@@ -1104,7 +1165,7 @@ function openDrawer(id){
           scales:{
             x:{ticks:{font:{size:8},color:'#8fa0b2'},grid:{display:false},stacked:true},
             y:{ticks:{font:{size:9},color:'#8fa0b2',callback:v=>`$${v}M`},grid:{color:'#f0f2f5'},stacked:true,position:'left'},
-            b:{ticks:{font:{size:9},color:'var(--red)',callback:v=>`$${v}M`},grid:{display:false},position:'right'}
+            b:{ticks:{font:{size:9},color:C.red,callback:v=>`$${v}M`},grid:{display:false},position:'right'}
           }
         }
       });
@@ -1121,7 +1182,7 @@ function openDrawer(id){
           labels:cfs.map(q=>q.label),
           datasets:[
             {label:'Net Flow',data:netVals,backgroundColor:netVals.map(v=>v>=0?'rgba(39,160,90,.75)':'rgba(192,57,43,.75)'),borderRadius:4},
-            {label:'Cumulative',data:cumVals,type:'line',borderColor:'var(--blue)',backgroundColor:'rgba(31,119,180,.08)',borderWidth:2,pointRadius:4,tension:.3,fill:true,yAxisID:'y'}
+            {label:'Cumulative',data:cumVals,type:'line',borderColor:C.blue,backgroundColor:'rgba(31,119,180,.08)',borderWidth:2,pointRadius:4,tension:.3,fill:true,yAxisID:'y'}
           ]
         },
         options:{responsive:true,maintainAspectRatio:false,
@@ -1140,10 +1201,59 @@ function switchDTab(el,tab){
   if(body) body.classList.add('active');
 }
 
-function setHorizon(el){ document.querySelectorAll('.h-pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); }
+function setHorizon(el, horizon){
+  document.querySelectorAll('.h-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const now = new Date();
+  const cutoff = new Date(now);
+  if(horizon==='q1') cutoff.setMonth(cutoff.getMonth()+3);
+  else if(horizon==='q4') cutoff.setMonth(cutoff.getMonth()+12);
+  else cutoff.setFullYear(cutoff.getFullYear()+100); // 'all'
 
-function closeDrawer(){ document.getElementById('overlay').classList.remove('open'); }
+  let prin=0, int=0;
+  document.querySelectorAll('#repTblBody tr[data-date]').forEach(tr=>{
+    const d = new Date(tr.getAttribute('data-date')+'-01');
+    const show = horizon==='all' ? true : (d>=now && d<=cutoff);
+    tr.style.display = show ? '' : 'none';
+    if(show){
+      const cells = tr.querySelectorAll('td');
+      prin += parseFloat(cells[1].textContent.replace(/[$M]/g,''))||0;
+      int  += parseFloat(cells[2].textContent.replace(/[$M]/g,''))||0;
+    }
+  });
+  const tp=document.getElementById('repTotPrin'), ti=document.getElementById('repTotInt'), tt=document.getElementById('repTotPay');
+  if(tp){ tp.textContent=`$${prin.toFixed(1)}M`; ti.textContent=`$${int.toFixed(1)}M`; tt.textContent=`$${(prin+int).toFixed(1)}M`; }
+}
+
+function closeDrawer(){ document.getElementById('overlay').classList.remove('open'); document.getElementById('overlay').setAttribute('aria-hidden','true'); }
 function maybeClose(e){ if(e.target===document.getElementById('overlay')) closeDrawer(); }
+
+/* Close drawer on Escape */
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && document.getElementById('overlay').classList.contains('open')) closeDrawer(); });
+
+/* ══════════════════════════════════════════════════════════
+   CSV EXPORT (live API fields only — modeled disbursement % flagged)
+══════════════════════════════════════════════════════════ */
+function exportCSV(){
+  const headers=['Project ID','Project Name','Country','Region','Sector','Commitment USD','IBRD USD','IDA USD','Approval Date','Closing Date','Lending Instrument','Borrower','Disbursed % (modeled)'];
+  const esc=v=>{ const s=(v==null?'':String(v)); return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
+  const lines=[headers.join(',')];
+  FILTERED.forEach(p=>{
+    const sim=projSim(p);
+    lines.push([
+      p.id, p.project_name, p.countryname, p.regionname, getSector(p),
+      Math.round(parseFloat(p.totalamt)||0), Math.round(parseFloat(p.ibrdcommamt)||0), Math.round(parseFloat(p.idacommamt)||0),
+      p.boardapprovaldate?p.boardapprovaldate.slice(0,10):'', p.closingdate?p.closingdate.slice(0,10):'',
+      p.lendinginstr||'', p.borrower||'', sim.disbPct
+    ].map(esc).join(','));
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`wb_projects_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 /* ══════════════════════════════════════════════════════════
    INIT
@@ -1163,11 +1273,13 @@ async function init(){
   populateFilters(projects);
   renderTbl();
 
+  // dismiss loader once render is done (min 900ms so the progress bar reads as intentional)
+  const elapsed = performance.now();
   setTimeout(()=>{
     const l=document.getElementById('loader');
     l.classList.add('gone');
     setTimeout(()=>l.remove(),500);
-  },2000);
+  }, Math.max(0, 900 - (performance.now()-elapsed)));
 }
 init();
 </script>
