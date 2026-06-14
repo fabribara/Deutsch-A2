@@ -11,7 +11,7 @@
   :root{
     --paper:#FBFAF7; --paper-2:#F3F1EA; --ink:#1A1A18; --muted:#6B6B62;
     --line:#E3E0D6; --line-strong:#CFCBBE;
-    --at-red:#C8102E;            /* Austria accent, used sparingly */
+    --at-red:#C8102E;
     --der:#2563EB; --der-bg:#E8EFFD;
     --die:#D6206E; --die-bg:#FCE7F0;
     --das:#15803D; --das-bg:#E4F4E9;
@@ -21,50 +21,29 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{
-    background:var(--paper); color:var(--ink);
-    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
-  }
+  body{background:var(--paper); color:var(--ink); font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif; font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;}
   .serif{font-family:"Newsreader",Georgia,"Times New Roman",serif}
   button{font-family:inherit; cursor:pointer}
   ::selection{background:#FBE7EA}
 
-  /* ---------- Top bar ---------- */
-  header.topbar{
-    position:sticky; top:0; z-index:20;
-    background:rgba(251,250,247,.88); backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-  }
+  header.topbar{position:sticky; top:0; z-index:20; background:rgba(251,250,247,.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
   .topwrap{max-width:1240px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; gap:18px; flex-wrap:wrap}
   .brand{display:flex; align-items:baseline; gap:10px; margin-right:auto}
-  .mark{
-    font-family:"Newsreader",serif; font-weight:600; font-size:30px; letter-spacing:-.01em;
-    line-height:1;
-  }
+  .mark{font-family:"Newsreader",serif; font-weight:600; font-size:30px; letter-spacing:-.01em; line-height:1;}
   .mark .dot{color:var(--at-red)}
   .tagline{font-size:12.5px; color:var(--muted); letter-spacing:.02em}
   .controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
   .seg{display:inline-flex; background:var(--paper-2); border:1px solid var(--line); border-radius:999px; padding:3px}
-  .seg button{
-    border:0; background:transparent; color:var(--muted); font-size:13px; font-weight:600;
-    padding:6px 12px; border-radius:999px; letter-spacing:.01em;
-  }
+  .seg button{border:0; background:transparent; color:var(--muted); font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; letter-spacing:.01em;}
   .seg button.on{background:#fff; color:var(--ink); box-shadow:var(--shadow)}
   .ctl-label{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); margin-right:2px}
-  .ghost{
-    border:1px solid var(--line-strong); background:#fff; color:var(--ink);
-    border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600;
-    display:inline-flex; align-items:center; gap:7px;
-  }
+  .ghost{border:1px solid var(--line-strong); background:#fff; color:var(--ink); border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:7px;}
   .ghost:hover{border-color:var(--ink)}
   .ghost svg{width:15px;height:15px}
 
-  /* ---------- Layout ---------- */
   .shell{max-width:1240px; margin:0 auto; padding:22px; display:grid; grid-template-columns:320px 1fr; gap:24px; align-items:start}
   @media(max-width:920px){ .shell{grid-template-columns:1fr; padding:16px} }
 
-  /* ---------- Headlines column ---------- */
   aside.feed{position:sticky; top:84px}
   @media(max-width:920px){ aside.feed{position:static} }
   .feed-head{display:flex; align-items:baseline; justify-content:space-between; margin:2px 4px 12px}
@@ -72,22 +51,15 @@
   .feed-date{font-size:12px; color:var(--muted)}
   .hlist{display:flex; flex-direction:column; gap:8px; max-height:calc(100vh - 150px); overflow:auto; padding-right:4px}
   @media(max-width:920px){ .hlist{max-height:none} }
-  .hcard{
-    text-align:left; width:100%; background:#fff; border:1px solid var(--line);
-    border-radius:12px; padding:13px 14px; transition:border-color .15s, transform .15s;
-  }
+  .hcard{text-align:left; width:100%; background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px; transition:border-color .15s, transform .15s;}
   .hcard:hover{border-color:var(--line-strong); transform:translateY(-1px)}
   .hcard.active{border-color:var(--at-red); box-shadow:0 0 0 1px var(--at-red) inset}
   .hcat{font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--at-red); font-weight:700}
   .htitle{font-family:"Newsreader",serif; font-size:17px; line-height:1.25; margin:4px 0 4px; font-weight:500}
   .hteaser{font-size:12.5px; color:var(--muted); line-height:1.4}
 
-  /* ---------- Reading area ---------- */
   main.read{min-height:60vh}
-  .empty{
-    background:#fff; border:1px dashed var(--line-strong); border-radius:var(--radius);
-    padding:48px 36px; text-align:center; color:var(--muted);
-  }
+  .empty{background:#fff; border:1px dashed var(--line-strong); border-radius:var(--radius); padding:48px 36px; text-align:center; color:var(--muted);}
   .empty h3{font-family:"Newsreader",serif; color:var(--ink); font-size:24px; margin:0 0 8px; font-weight:500}
   .legend{display:inline-flex; gap:16px; margin-top:22px; flex-wrap:wrap; justify-content:center}
   .legend span{display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--ink)}
@@ -100,12 +72,8 @@
   @media(max-width:560px){ .art-title{font-size:24px} }
   .art-note{margin:12px 0 0; font-size:12.5px; color:var(--muted); font-style:italic}
 
-  /* audio bar */
   .audiobar{display:flex; align-items:center; gap:12px; padding:14px 28px; background:var(--paper-2); border-bottom:1px solid var(--line); flex-wrap:wrap}
-  .playbtn{
-    border:0; background:var(--at-red); color:#fff; border-radius:999px;
-    width:42px; height:42px; display:grid; place-items:center; flex:0 0 auto;
-  }
+  .playbtn{border:0; background:var(--at-red); color:#fff; border-radius:999px; width:42px; height:42px; display:grid; place-items:center; flex:0 0 auto;}
   .playbtn svg{width:18px;height:18px;fill:#fff}
   .playbtn.small{width:28px;height:28px;background:transparent;color:var(--muted)}
   .playbtn.small svg{width:15px;height:15px;fill:var(--muted)}
@@ -114,29 +82,24 @@
   .rate{display:flex; align-items:center; gap:8px; margin-left:auto; font-size:12px; color:var(--muted)}
   .rate input{accent-color:var(--at-red)}
 
-  /* sentences */
   .sentences{padding:6px 0}
-  .srow{
-    display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:14px 28px;
-    border-bottom:1px solid var(--line); align-items:start;
-  }
+  .srow{display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:14px 28px; border-bottom:1px solid var(--line); align-items:start;}
   @media(max-width:680px){ .srow{grid-template-columns:1fr; gap:6px} }
   .srow:last-child{border-bottom:0}
   .srow.speaking{background:#FFFCF4}
-  .s-de{font-family:"Newsreader",serif; font-size:19px; line-height:1.5; position:relative; cursor:default}
+  .s-de{font-family:"Newsreader",serif; font-size:19px; line-height:1.5; position:relative;}
   .s-de .mini{position:absolute; left:-26px; top:3px}
   @media(max-width:680px){ .s-de .mini{position:static; margin-right:6px; display:inline-flex; vertical-align:middle} }
   .s-tr{font-size:15px; color:#4A4A42; line-height:1.55; padding-top:2px}
+  .s-tr.pending{color:var(--muted); font-style:italic}
   .col-tags{display:flex; gap:18px; padding:10px 28px 2px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
   @media(max-width:680px){ .col-tags{display:none} }
 
-  /* gender-colored nouns */
   .n{font-weight:500; border-radius:4px; padding:0 2px}
   .n.der{color:var(--der); background:var(--der-bg)}
   .n.die{color:var(--die); background:var(--die-bg)}
   .n.das{color:var(--das); background:var(--das-bg)}
 
-  /* tabs */
   .tabs{display:flex; gap:4px; padding:16px 28px 0; border-top:1px solid var(--line); background:#fff}
   .tab{border:0; background:transparent; padding:10px 4px; margin-right:20px; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent}
   .tab.on{color:var(--ink); border-bottom-color:var(--at-red)}
@@ -145,13 +108,12 @@
 
   .sec-label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:700; margin:22px 0 10px}
   .sec-label:first-child{margin-top:0}
+  .hint{font-size:12px;color:var(--muted);margin:-4px 0 10px;font-style:italic}
 
-  /* grammar: nouns */
-  .ngrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px}
+  .ngrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
   .ncard{border:1px solid var(--line); border-radius:11px; padding:11px 13px}
   .ncard .art{font-weight:700; font-size:13px}
-  .ncard .word{font-family:"Newsreader",serif; font-size:19px; font-weight:500}
-  .ncard .meta{font-size:12px; color:var(--muted); margin-top:3px}
+  .ncard .word{font-family:"Newsreader",serif; font-size:18px; font-weight:500}
   .ncard.der{border-color:#BFD3FB} .ncard.der .art{color:var(--der)}
   .ncard.die{border-color:#F6C3DA} .ncard.die .art{color:var(--die)}
   .ncard.das{border-color:#BFE5C9} .ncard.das .art{color:var(--das)}
@@ -159,29 +121,29 @@
   .gline{padding:11px 0; border-bottom:1px solid var(--line)}
   .gline:last-child{border-bottom:0}
   .gphrase{font-family:"Newsreader",serif; font-size:18px}
+  .gphrase b{color:var(--at-red); font-weight:600}
   .pill{display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; letter-spacing:.04em; vertical-align:middle; margin-left:8px}
   .pill.akk{background:#FFF1E6; color:#B45309}
   .pill.dat{background:#EEF2FF; color:#4338CA}
-  .pill.nom{background:#ECFDF5; color:#047857}
+  .pill.wex{background:#F3EEFF; color:#6D28D9}
   .pill.gen{background:#FDF2F8; color:#9D174D}
   .gexp{font-size:13px; color:var(--muted); margin-top:4px}
   .gend{display:inline-block; background:var(--paper-2); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-weight:600; font-size:13px; color:var(--at-red)}
 
-  /* exercises */
+  table.decl{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:6px}
+  table.decl th, table.decl td{border:1px solid var(--line); padding:6px 9px; text-align:left}
+  table.decl th{background:var(--paper-2); font-weight:600; font-size:12px}
+  table.decl td b{color:var(--at-red)}
+
   .ex{border:1px solid var(--line); border-radius:12px; padding:15px 16px; margin-bottom:12px}
   .ex-q{font-size:15px; margin:0 0 11px}
   .ex-q .de{font-family:"Newsreader",serif; font-size:18px}
-  .ex-q .gap{border-bottom:2px solid var(--at-red); padding:0 16px; margin:0 2px}
   .opts{display:flex; gap:8px; flex-wrap:wrap}
-  .opt{
-    border:1px solid var(--line-strong); background:#fff; border-radius:9px; padding:8px 14px;
-    font-size:14px; font-weight:600; transition:.12s;
-  }
+  .opt{border:1px solid var(--line-strong); background:#fff; border-radius:9px; padding:8px 14px; font-size:14px; font-weight:600; transition:.12s;}
   .opt:hover:not(:disabled){border-color:var(--ink)}
   .opt:disabled{cursor:default; opacity:1}
   .opt.correct{background:var(--ok-bg); border-color:var(--ok); color:var(--ok)}
   .opt.wrong{background:var(--bad-bg); border-color:var(--bad); color:var(--bad)}
-  .opt.der{} .opt.die{} .opt.das{}
   .feedback{font-size:13px; margin-top:10px; padding:9px 12px; border-radius:8px; display:none}
   .feedback.show{display:block}
   .feedback.good{background:var(--ok-bg); color:#0f5a2c}
@@ -189,24 +151,20 @@
   textarea.trans{width:100%; border:1px solid var(--line-strong); border-radius:9px; padding:10px 12px; font-family:inherit; font-size:15px; resize:vertical; min-height:54px}
   textarea.trans:focus{outline:2px solid var(--at-red); outline-offset:1px; border-color:var(--at-red)}
   .reveal{margin-top:9px}
-  .model-answer{display:none; margin-top:9px; padding:10px 12px; background:var(--das-bg); border-radius:8px; font-size:15px}
+  .model-answer{display:none; margin-top:9px; padding:10px 12px; background:var(--das-bg); border-radius:8px; font-size:15px; font-family:"Newsreader",serif}
   .model-answer.show{display:block}
-  .model-answer .lab{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--das); font-weight:700; display:block; margin-bottom:3px}
+  .model-answer .lab{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--das); font-weight:700; display:block; margin-bottom:3px; font-family:"Inter",sans-serif}
   .scorechip{font-size:12px; font-weight:700; color:var(--muted); float:right}
 
-  /* loading */
   .skel{background:linear-gradient(90deg,#efece4 25%,#f6f4ee 50%,#efece4 75%); background-size:200% 100%; animation:sh 1.3s infinite; border-radius:6px}
   @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
   @media (prefers-reduced-motion: reduce){ .skel{animation:none} *{transition:none!important} }
-  .loadrow{padding:16px 28px; border-bottom:1px solid var(--line)}
   .spinwrap{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; padding:18px 28px}
   .spin{width:16px;height:16px;border:2px solid var(--line-strong);border-top-color:var(--at-red);border-radius:50%;animation:rot .8s linear infinite}
   @keyframes rot{to{transform:rotate(360deg)}}
-
   .errbox{background:var(--bad-bg); border:1px solid #F0C5CC; color:#8c0c20; border-radius:10px; padding:14px 16px; margin:16px 28px; font-size:14px}
   .errbox button{margin-top:8px}
-  .footer{max-width:1240px;margin:0 auto;padding:8px 22px 40px;color:var(--muted);font-size:11.5px}
-  .footer a{color:var(--muted)}
+  .footer{max-width:1240px;margin:0 auto;padding:8px 22px 40px;color:var(--muted);font-size:11.5px;line-height:1.5}
   .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -220,20 +178,9 @@
     </div>
     <div class="controls">
       <span class="ctl-label" id="lblUi"></span>
-      <div class="seg" id="uiSeg">
-        <button data-ui="es" class="on">ES</button>
-        <button data-ui="en">EN</button>
-      </div>
+      <div class="seg" id="uiSeg"><button data-ui="es" class="on">ES</button><button data-ui="en">EN</button></div>
       <span class="ctl-label" id="lblTrans"></span>
-      <div class="seg" id="transSeg">
-        <button data-tr="es" class="on">Español</button>
-        <button data-tr="en">English</button>
-      </div>
-      <span class="ctl-label" id="lblLevel"></span>
-      <div class="seg" id="levelSeg">
-        <button data-lv="original" class="on" id="lvOrig"></button>
-        <button data-lv="simple" id="lvSimple"></button>
-      </div>
+      <div class="seg" id="transSeg"><button data-tr="es" class="on">Español</button><button data-tr="en">English</button></div>
       <button class="ghost" id="refreshBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>
         <span id="refreshLbl"></span>
@@ -244,640 +191,494 @@
 
 <div class="shell">
   <aside class="feed">
-    <div class="feed-head">
-      <h2 id="feedTitle"></h2>
-      <span class="feed-date" id="feedDate"></span>
-    </div>
+    <div class="feed-head"><h2 id="feedTitle"></h2><span class="feed-date" id="feedDate"></span></div>
     <div class="hlist" id="hlist"></div>
   </aside>
-
   <main class="read" id="read"></main>
 </div>
 
 <div class="footer" id="footer"></div>
 
 <script>
-/* ========================================================================
-   Lernblatt — daily ORF news as a German study session
-   Uses the in-app Claude API (web search) for live headlines, translation,
-   grammar analysis and auto-generated exercises. Audio uses the browser's
-   built-in speech engine (no external API).
-   ===================================================================== */
+/* Lernblatt — daily ORF news as a German study session.
+   Open APIs only, no key: ORF RSS (news) · Google Translate (translation)
+   · Wiktionary (noun gender) · browser speech (audio) · client-side rules (cases). */
 
 const I18N = {
   es:{
     tagline:"Noticias del ORF para leer y aprender alemán",
-    ui:"Interfaz", trans:"Traducir a", level:"Nivel",
-    levelOrig:"Original", levelSimple:"Fácil (B1)",
-    refresh:"Actualizar", feed:"Titulares de hoy",
-    loadingHeads:"Buscando los titulares del ORF…",
+    ui:"Interfaz", trans:"Traducir a", refresh:"Actualizar", feed:"Titulares de hoy",
+    loadingHeads:"Cargando los titulares del ORF…",
     emptyH:"Elegí un titular para empezar",
-    emptyP:"Cada artículo se muestra en alemán con traducción al lado, audio, análisis gramatical y ejercicios creados a partir del texto.",
+    emptyP:"Cada artículo se muestra en alemán con traducción al lado, audio, análisis de género y caso, y ejercicios creados a partir del texto.",
     masc:"der · masculino", fem:"die · femenino", neut:"das · neutro",
-    colDe:"Alemán", colTr:"Traducción",
-    listen:"Escuchar", pause:"Pausar", resume:"Seguir", playSentence:"Leer esta frase",
-    speed:"Velocidad",
+    colDe:"Alemán", colTr:"Traducción", translating:"traduciendo…",
+    listen:"Escuchar", pause:"Pausar", resume:"Seguir", playSentence:"Leer esta frase", speed:"Velocidad",
     tabGram:"Gramática", tabEx:"Ejercicios",
     gNouns:"Sustantivos y género", gCases:"Caso: Akkusativ / Dativ", gAdj:"Declinación de adjetivos",
-    exTrans:"Traducción al alemán", exGender:"Identificar el género",
-    exCases:"Akkusativ o Dativ", exDecl:"Declinación del adjetivo",
+    adjFound:"Adjetivos detectados en el texto", adjTable:"Tabla de terminaciones (tras artículo definido)",
+    autoNote:"Detección automática mediante reglas; puede no ser perfecta.",
+    genNote:"Género obtenido de Wiktionary; las palabras no encontradas no se colorean.",
+    exGender:"Identificar el género", exCases:"Akkusativ o Dativ", exTrans:"Traducción al alemán",
     promptTrans:"Traducí al alemán:", yourAnswer:"Escribí tu traducción…",
-    reveal:"Ver solución", model:"Respuesta modelo",
-    whichGender:"¿Qué artículo lleva?", correct:"¡Correcto!", wrong:"No es correcto.",
-    loadingArt:"Cargando el artículo y traduciéndolo…",
-    loadingAnalysis:"Analizando la gramática…",
-    loadingEx:"Creando ejercicios a partir del texto…",
+    reveal:"Ver solución", model:"Frase original",
+    whichGender:"¿Qué artículo lleva?", whichCase:"¿Qué caso rige?",
+    correct:"¡Correcto!", wrong:"No es correcto.",
+    loadingArt:"Cargando el artículo…",
     err:"Algo salió mal al cargar.", retry:"Reintentar",
-    source:"Fuente", openOrf:"Abrir en orf.at",
-    note:"Lernblatt usa noticias reales del ORF. La traducción y los ejercicios se generan automáticamente y pueden contener errores — usalos como apoyo, no como verdad absoluta. El audio usa la voz de tu navegador.",
-    noVoice:"Tu navegador no tiene una voz en alemán instalada, así que el audio puede sonar con otra. En el sistema podés agregar una voz «Deutsch (de-DE)».",
-    score:"aciertos",
-    errFeed:"No se pudieron cargar los titulares del ORF. Tu entorno o tu red pueden estar bloqueando los feeds externos.",
+    errFeed:"No se pudieron cargar los titulares del ORF. Tu red puede estar bloqueando los feeds externos.",
     sampleBtn:"Practicar con un texto de muestra",
+    source:"Fuente", openOrf:"Abrir en orf.at",
+    note:"Lernblatt usa solo APIs abiertas y sin clave: titulares del ORF (rss.orf.at), traducción de Google Translate, género de Wiktionary y detección de caso por reglas en tu navegador. Puede contener errores; usalo como apoyo. El audio usa la voz de tu navegador.",
+    noVoice:"Tu navegador no tiene una voz en alemán, así que el audio puede sonar con otra. En el sistema podés agregar una voz «Deutsch (de-DE)».",
+    score:"aciertos",
     samples:[
-      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Política"},
-      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economía"},
-      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Ciencia"}
+      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Política",
+       body:"Der Nationalrat hat am Donnerstag ein neues Klimaschutzgesetz beschlossen. Die Abgeordneten stimmten nach einer langen Debatte über die strengeren Regeln ab. Die Regierung will damit den Ausstoß von Treibhausgasen deutlich senken. Mit dem Gesetz sollen Unternehmen in den nächsten Jahren mehr in saubere Energie investieren. Die Opposition kritisierte den Plan als zu wenig ehrgeizig. Umweltgruppen begrüßten hingegen den Schritt der Regierung."},
+      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economía",
+       body:"Die Wiener Linien erhöhen ab Jänner die Preise für die Jahreskarte. Das Ticket kostet dann mehr als bisher. Das Unternehmen begründet die Erhöhung mit den gestiegenen Kosten für Energie und Personal. Viele Fahrgäste zeigten sich in einer Umfrage enttäuscht über die Entscheidung. Die Stadt Wien betonte, dass die Öffis trotzdem günstig blieben. Für Studierende und Senioren soll es weiterhin ermäßigte Tarife geben."},
+      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Ciencia",
+       body:"Forscher der Universität Wien haben am Montag eine neue Studie vorgestellt. Das Team arbeitete mehrere Jahre an dem Projekt. Die Wissenschaftler untersuchten, wie sich das Klima auf die Wälder in Österreich auswirkt. Die Ergebnisse zeigen einen klaren Zusammenhang zwischen Trockenheit und dem Zustand der Bäume. Die Studie wurde in einer internationalen Fachzeitschrift veröffentlicht. Weitere Untersuchungen sind bereits geplant."}
     ]
   },
   en:{
     tagline:"ORF news to read and learn German",
-    ui:"Interface", trans:"Translate to", level:"Level",
-    levelOrig:"Original", levelSimple:"Easy (B1)",
-    refresh:"Refresh", feed:"Today's headlines",
-    loadingHeads:"Fetching ORF headlines…",
+    ui:"Interface", trans:"Translate to", refresh:"Refresh", feed:"Today's headlines",
+    loadingHeads:"Loading ORF headlines…",
     emptyH:"Pick a headline to begin",
-    emptyP:"Each story appears in German with a side-by-side translation, audio, a grammar breakdown, and exercises generated from the text.",
+    emptyP:"Each story appears in German with a side-by-side translation, audio, a gender and case breakdown, and exercises generated from the text.",
     masc:"der · masculine", fem:"die · feminine", neut:"das · neuter",
-    colDe:"German", colTr:"Translation",
-    listen:"Listen", pause:"Pause", resume:"Resume", playSentence:"Read this sentence",
-    speed:"Speed",
+    colDe:"German", colTr:"Translation", translating:"translating…",
+    listen:"Listen", pause:"Pause", resume:"Resume", playSentence:"Read this sentence", speed:"Speed",
     tabGram:"Grammar", tabEx:"Exercises",
-    gNouns:"Nouns & gender", gCases:"Case: accusative / dative", gAdj:"Adjective endings",
-    exTrans:"Translate into German", exGender:"Identify the gender",
-    exCases:"Accusative or dative", exDecl:"Adjective declension",
+    gNouns:"Nouns & gender", gCases:"Case: accusative / dative", gAdj:"Adjective declension",
+    adjFound:"Adjectives found in the text", adjTable:"Endings reference (after a definite article)",
+    autoNote:"Auto-detected with rules; may not be perfect.",
+    genNote:"Gender from Wiktionary; words not found are left uncoloured.",
+    exGender:"Identify the gender", exCases:"Accusative or dative", exTrans:"Translate into German",
     promptTrans:"Translate into German:", yourAnswer:"Type your translation…",
-    reveal:"Show solution", model:"Model answer",
-    whichGender:"Which article does it take?", correct:"Correct!", wrong:"Not quite.",
-    loadingArt:"Loading the article and translating it…",
-    loadingAnalysis:"Analysing the grammar…",
-    loadingEx:"Building exercises from the text…",
+    reveal:"Show solution", model:"Original sentence",
+    whichGender:"Which article does it take?", whichCase:"Which case does it govern?",
+    correct:"Correct!", wrong:"Not quite.",
+    loadingArt:"Loading the article…",
     err:"Something went wrong while loading.", retry:"Try again",
+    errFeed:"Couldn't load the ORF headlines. Your network may be blocking external feeds.",
+    sampleBtn:"Practise with a sample text",
     source:"Source", openOrf:"Open on orf.at",
-    note:"Lernblatt uses real ORF news. Translations and exercises are generated automatically and may contain mistakes — treat them as study support, not gospel. Audio uses your browser's built-in voice.",
+    note:"Lernblatt uses only open, key-free APIs: ORF headlines (rss.orf.at), Google Translate, Wiktionary for gender, and rule-based case detection in your browser. It may contain mistakes; treat it as study support. Audio uses your browser's built-in voice.",
     noVoice:"Your browser has no German voice installed, so audio may use another. You can add a “Deutsch (de-DE)” voice in your system settings.",
     score:"correct",
-    errFeed:"Couldn't load the ORF headlines. Your environment or network may be blocking external news feeds.",
-    sampleBtn:"Practise with a sample text",
     samples:[
-      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Politics"},
-      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economy"},
-      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Science"}
+      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Politics",
+       body:"Der Nationalrat hat am Donnerstag ein neues Klimaschutzgesetz beschlossen. Die Abgeordneten stimmten nach einer langen Debatte über die strengeren Regeln ab. Die Regierung will damit den Ausstoß von Treibhausgasen deutlich senken. Mit dem Gesetz sollen Unternehmen in den nächsten Jahren mehr in saubere Energie investieren. Die Opposition kritisierte den Plan als zu wenig ehrgeizig. Umweltgruppen begrüßten hingegen den Schritt der Regierung."},
+      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economy",
+       body:"Die Wiener Linien erhöhen ab Jänner die Preise für die Jahreskarte. Das Ticket kostet dann mehr als bisher. Das Unternehmen begründet die Erhöhung mit den gestiegenen Kosten für Energie und Personal. Viele Fahrgäste zeigten sich in einer Umfrage enttäuscht über die Entscheidung. Die Stadt Wien betonte, dass die Öffis trotzdem günstig blieben. Für Studierende und Senioren soll es weiterhin ermäßigte Tarife geben."},
+      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Science",
+       body:"Forscher der Universität Wien haben am Montag eine neue Studie vorgestellt. Das Team arbeitete mehrere Jahre an dem Projekt. Die Wissenschaftler untersuchten, wie sich das Klima auf die Wälder in Österreich auswirkt. Die Ergebnisse zeigen einen klaren Zusammenhang zwischen Trockenheit und dem Zustand der Bäume. Die Studie wurde in einer internationalen Fachzeitschrift veröffentlicht. Weitere Untersuchungen sind bereits geplant."}
     ]
   }
 };
 
-const TR_NAME = { es:"Spanish (español)", en:"English" };
-
-const state = {
-  uiLang:"es", transLang:"es", level:"original",
-  headlines:null, activeId:null, tab:"gram",
-  rate:0.95, cache:{}
-};
+const state = { uiLang:"es", transLang:"es", headlines:null, activeId:null, tab:"gram", rate:0.95, cache:{} };
 const $ = (s,r=document)=>r.querySelector(s);
 const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
 const T = ()=>I18N[state.uiLang];
-
-/* ---------------- Claude API helpers ---------------- */
-async function callClaude(prompt){
-  const body = {
-    model:"claude-sonnet-4-6",
-    max_tokens:1000,
-    messages:[{role:"user", content:prompt}]
-  };
-  const res = await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)
-  });
-  if(!res.ok) throw new Error("API "+res.status);
-  const data = await res.json();
-  return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
-}
-function extractJSON(text){
-  if(!text) throw new Error("empty response");
-  let t = text.trim().replace(/^```(?:json)?/i,"").replace(/```\s*$/,"").trim();
-  try{ return JSON.parse(t); }catch(e){}
-  const oi=t.indexOf("{"), ai=t.indexOf("[");
-  let start=-1, close;
-  if(ai!==-1 && (oi===-1||ai<oi)){ start=ai; close="]"; }
-  else if(oi!==-1){ start=oi; close="}"; }
-  if(start===-1) throw new Error("no JSON found");
-  const end=t.lastIndexOf(close);
-  return JSON.parse(t.slice(start,end+1));
-}
-
-/* ---------------- Prompts ---------------- */
-const todayISO = new Date().toISOString().slice(0,10);
+const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const todayHuman = new Date().toLocaleDateString("de-AT",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 
-/* ---- Live ORF news via RSS (through CORS-friendly proxies) ---- */
-const ORF_FEED = "https://rss.orf.at/news.xml";
+/* ---------------- networking helpers ---------------- */
+function timeoutFetch(url, opts, ms){
+  const c=new AbortController(); const id=setTimeout(()=>c.abort(), ms||15000);
+  return fetch(url, Object.assign({}, opts, {signal:c.signal})).finally(()=>clearTimeout(id));
+}
+async function fetchJSON(url, ms){ const r=await timeoutFetch(url,{},ms); if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }
+async function fetchTextP(url, ms){ const r=await timeoutFetch(url,{},ms); if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); }
+
 const PROXIES = [
-  u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}`, // clean JSON
-  u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,           // {contents:"<xml>"}
-  u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`      // raw passthrough
+  u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}`,
+  u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+  u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
 ];
+const RAW_PROXIES = [
+  u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
+];
+
+/* ---------------- ORF headlines (RSS) ---------------- */
+const ORF_FEED = "https://rss.orf.at/news.xml";
 function stripTags(s){ const d=document.createElement("div"); d.innerHTML=s||""; return (d.textContent||"").replace(/\s+/g," ").trim(); }
 function tidyCat(c){ return (c||"").replace(/^.*[\/:]/,"").trim() || "ORF"; }
 function normItem(title,link,cat,desc,idx){
-  return { id:idx+1, headline_de:stripTags(title).trim(), teaser_de:stripTags(desc).trim(),
-           category_de:tidyCat(cat), url:(link||"").trim() };
+  return { id:idx+1, headline_de:stripTags(title).trim(), teaser_de:stripTags(desc).trim(), category_de:tidyCat(cat), url:(link||"").trim() };
 }
 function parseFeedXML(xml){
   const doc=new DOMParser().parseFromString(xml,"text/xml");
   const items=[...doc.querySelectorAll("item")];
-  if(!items.length) throw new Error("feed had no items");
+  if(!items.length) throw new Error("no items");
   const tx=(n,s)=>{ const e=n.querySelector(s); return e?e.textContent:""; };
   return items.map((it,i)=>normItem(tx(it,"title"),tx(it,"link"),tx(it,"category")||tx(it,"subject"),tx(it,"description"),i));
 }
 async function fetchHeadlines(){
-  let lastErr;
+  let last;
   for(let i=0;i<PROXIES.length;i++){
     try{
-      const res=await fetch(PROXIES[i](ORF_FEED));
+      const res=await timeoutFetch(PROXIES[i](ORF_FEED),{},15000);
       if(!res.ok) throw new Error("HTTP "+res.status);
-      if(i===0){
-        const j=await res.json();
-        if(j.status!=="ok"||!Array.isArray(j.items)||!j.items.length) throw new Error("rss2json empty");
-        return j.items.map((it,idx)=>normItem(it.title,it.link,(it.categories||[])[0],it.description,idx));
-      }else if(i===1){
-        const j=await res.json(); return parseFeedXML(j.contents||"");
-      }else{
-        return parseFeedXML(await res.text());
-      }
-    }catch(e){ lastErr=e; }
+      if(i===0){ const j=await res.json(); if(j.status!=="ok"||!j.items||!j.items.length) throw new Error("empty"); return j.items.map((it,idx)=>normItem(it.title,it.link,(it.categories||[])[0],it.description,idx)); }
+      if(i===1){ const j=await res.json(); return parseFeedXML(j.contents||""); }
+      return parseFeedXML(await res.text());
+    }catch(e){ last=e; }
   }
-  throw lastErr||new Error("all news proxies failed");
+  throw last||new Error("all proxies failed");
 }
-// Best-effort: pull the real article body so the study text is grounded, not invented.
 async function fetchArticleText(url){
   if(!url) return "";
-  for(const mk of [PROXIES[1],PROXIES[2]]){
+  for(let i=0;i<PROXIES.length;i++){
     try{
-      const res=await fetch(mk(url));
-      if(!res.ok) continue;
+      const res=await timeoutFetch(PROXIES[i](url),{},15000); if(!res.ok) continue;
       let html;
-      if(mk===PROXIES[1]){ const j=await res.json(); html=j.contents; } else { html=await res.text(); }
+      if(i===0){ continue; }
+      else if(i===1){ const j=await res.json(); html=j.contents; }
+      else { html=await res.text(); }
       const doc=new DOMParser().parseFromString(html||"","text/html");
-      const ps=[...doc.querySelectorAll("p")].map(p=>p.textContent.trim()).filter(t=>t.length>50);
+      const ps=[...doc.querySelectorAll("p")].map(p=>p.textContent.trim()).filter(t=>t.length>45 && !/^\s*(Cookie|Datenschutz)/i.test(t));
       const joined=ps.join(" ").replace(/\s+/g," ").trim();
-      if(joined.length>140) return joined.slice(0,1800);
+      if(joined.length>140) return joined.slice(0,2000);
     }catch(e){}
   }
   return "";
 }
 
-function articlePrompt(h, sourceText){
-  const L=TR_NAME[state.transLang];
-  const lvl = state.level==="simple"
-    ? "Write in clear, natural B1-level German (simpler words and shorter sentences, still real news style)."
-    : "Write in authentic German news style.";
-  const basis = sourceText
-    ? `Source article text (German):\n"""${sourceText}"""`
-    : `Only the ORF headline is available (the feed provides titles only).`;
-  return `A learner reads this current ORF news headline: "${h.headline_de}" (category: ${h.category_de}).
-${basis}
-${lvl} Produce a coherent news item of exactly 8 short German sentences, based strictly on the information above. Do NOT invent specific names, numbers or quotes that are not supported by the source; if details are missing, keep the sentences accurate but general. Translate EACH sentence into ${L} faithfully.
-Respond with ONLY this JSON (no markdown):
-{"title_de":"<German title>","sentences":[{"de":"<German sentence>","tr":"<translation>"}],"note":"<if you had only the headline, one short caveat line in ${L} that this is a reconstruction; otherwise empty string>"}`;
-}
-function analysisPrompt(text){
-  const L=TR_NAME[state.transLang];
-  return `Analyse this German news text for a Spanish-speaking learner at A2–B1. Only use words that actually appear in the text.
-TEXT: """${text}"""
-Respond with ONLY this JSON (no markdown):
-{"nouns":[{"word":"<noun, capitalised>","article":"der|die|das","gender":"m|f|n","plural":"<plural form>","meaning":"<meaning in ${L}>"} up to 8 important nouns],
-"cases":[{"phrase":"<short phrase from the text>","case":"Akkusativ|Dativ|Nominativ|Genitiv","explanation":"<why, in ${L}>"} up to 5 examples, prioritising Akkusativ and Dativ],
-"adjectives":[{"phrase":"<phrase with an attributive adjective>","adjective":"<the adjective as it appears>","ending":"<the ending, e.g. -e, -en, -es>","explanation":"<why this ending, in ${L}>"} up to 5 examples]}`;
-}
-function exercisesPrompt(text){
-  const L=TR_NAME[state.transLang];
-  return `Create German exercises for an A2–B1 Spanish-speaking learner, based ONLY on this text (reuse its vocabulary and sentences).
-TEXT: """${text}"""
-Respond with ONLY this JSON (no markdown):
-{"translation":[{"prompt":"<a sentence in ${L} to translate INTO German>","answer":"<correct German>"} 3 items],
-"gender":[{"noun":"<German noun WITHOUT article>","answer":"der|die|das","meaning":"<meaning in ${L}>"} 4 items],
-"cases":[{"sentence":"<a German sentence; wrap the target phrase in **double asterisks**>","question":"<in ${L}: which case is the marked phrase?>","options":["Akkusativ","Dativ"],"answer":"Akkusativ|Dativ","explanation":"<in ${L}>"} 3 items],
-"declension":[{"sentence":"<German sentence with a ___ gap for the adjective>","base":"<adjective base form>","options":["<4 candidate forms>"],"answer":"<correct form>","explanation":"<in ${L}>"} 3 items]}`;
+/* ---------------- translation (Google Translate, open) ---------------- */
+function gURL(text,tl){ return `https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`; }
+function parseGoogle(j){ if(Array.isArray(j)&&Array.isArray(j[0])) return j[0].map(s=>s[0]).join(""); return ""; }
+async function translate(text, tl){
+  const g=gURL(text,tl);
+  try{ const j=await fetchJSON(g,12000); const t=parseGoogle(j); if(t) return t; }catch(e){}
+  for(const mk of RAW_PROXIES){ try{ const j=await fetchJSON(mk(g),14000); const t=parseGoogle(j); if(t) return t; }catch(e){} }
+  try{ const m=await fetchJSON(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=de|${tl}`,12000); if(m&&m.responseData&&m.responseData.translatedText) return m.responseData.translatedText; }catch(e){}
+  return "";
 }
 
-/* ---------------- Gender colouring ---------------- */
-let GENDER_MAP = {}; // lowercased noun -> der/die/das
-function buildGenderMap(nouns){
-  GENDER_MAP = {};
-  (nouns||[]).forEach(n=>{
-    if(n.word) GENDER_MAP[n.word.toLowerCase().replace(/[^a-zäöüß]/g,"")]=n.article;
-  });
+/* ---------------- German rules: sentences, cases, adjectives ---------------- */
+function splitSentences(text){
+  text=(text||"").replace(/\s+/g," ").trim();
+  const parts = text.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || (text?[text]:[]);
+  return parts.map(s=>s.trim()).filter(s=>s.length>1).slice(0,9);
 }
+const CASE_OF = (()=>{
+  const m={};
+  const put=(arr,c)=>arr.forEach(w=>m[w]=c);
+  put(["durch","für","gegen","ohne","um","bis","entlang","wider"],"Akkusativ");
+  put(["aus","außer","bei","gegenüber","mit","nach","seit","von","zu","ab","laut","binnen"],"Dativ");
+  put(["an","auf","hinter","in","neben","über","unter","vor","zwischen"],"Wechsel");
+  put(["während","wegen","trotz","statt","anstatt","innerhalb","außerhalb","aufgrund","oberhalb","unterhalb"],"Genitiv");
+  put(["ins","ans","aufs","durchs","fürs","ums"],"Akkusativ");
+  put(["im","am","beim","vom","zum","zur","z35"],"Dativ");
+  return m;
+})();
+function detectCases(sentences){
+  const out=[]; const seenTrig={};
+  sentences.forEach(s=>{
+    const tokens=s.split(/(\s+)/);
+    for(let i=0;i<tokens.length;i++){
+      const raw=tokens[i]; const w=raw.toLowerCase().replace(/[^a-zäöüß]/g,"");
+      if(CASE_OF[w]){
+        const after=[]; for(let j=i+1;j<tokens.length && after.length<4;j++){ const t=tokens[j].trim(); if(!t) continue; if(/[.,;:!?]$/.test(t)){ after.push(t.replace(/[.,;:!?]+$/,"")); break;} after.push(t); }
+        const phrase = raw.replace(/[^A-Za-zäöüÄÖÜß]/g,"") + " " + after.join(" ");
+        out.push({trigger:w, display:raw.replace(/[^A-Za-zäöüÄÖÜß]/g,""), phrase:phrase.trim(), case:CASE_OF[w]});
+        if(!seenTrig[w]) seenTrig[w]=CASE_OF[w];
+      }
+    }
+  });
+  return { list: out.slice(0,8), triggers: seenTrig };
+}
+const ADJ_STOP = new Set(["aber","oder","sondern","denn","wenn","dann","auch","schon","noch","sehr","mehr","immer","wieder","hier","oben","unten","gegen","neben","über","unter","während","wegen","ohne","gegenüber","gestern","heute","morgen","wie","wo","wer","der","die","das","den","dem","des","eine","einen","einem","einer","eines"]);
+function detectAdjectives(sentences){
+  const out=[]; const re=/\b(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|seine[rmn]?|ihre[rmn]?|keine[rmn]?|diese[rmns]?)?\s*([a-zäöüß]{3,}(e|en|er|es|em))\s+([A-ZÄÖÜ][a-zäöüß]+)/g;
+  sentences.forEach(s=>{ let m; re.lastIndex=0; while((m=re.exec(s))){ const adj=m[1], ending=m[2], noun=m[3]; if(ADJ_STOP.has(adj)) continue; out.push({adj, ending:"-"+ending, noun}); } });
+  const seen=new Set(); return out.filter(a=>{ const k=a.adj+a.noun; if(seen.has(k))return false; seen.add(k); return true; }).slice(0,6);
+}
+
+/* ---------------- gender via Wiktionary (open) ---------------- */
+const GENDER_CACHE={};
+async function lookupGender(noun){
+  const key=noun.toLowerCase();
+  if(key in GENDER_CACHE) return GENDER_CACHE[key];
+  try{
+    const url=`https://de.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(noun)}&prop=wikitext&format=json&origin=*`;
+    const j=await fetchJSON(url,9000);
+    const wt=j&&j.parse&&j.parse.wikitext&&j.parse.wikitext["*"];
+    let g=null;
+    if(wt && /\{\{Wortart\|Substantiv\|Deutsch\}\}/.test(wt)){
+      const mm=wt.match(/Genus[^=]*=\s*([mfn])/);
+      if(mm) g = mm[1]==="m"?"der":mm[1]==="f"?"die":"das";
+    }
+    GENDER_CACHE[key]=g; return g;
+  }catch(e){ GENDER_CACHE[key]=null; return null; }
+}
+async function buildGenders(sentences){
+  const caps=new Set();
+  sentences.forEach(s=>{ (s.match(/[A-ZÄÖÜ][a-zäöüß]{2,}/g)||[]).forEach(w=>caps.add(w)); });
+  const words=[...caps].slice(0,18);
+  const results=await Promise.all(words.map(async w=>[w, await lookupGender(w)]));
+  const map={}, nouns=[];
+  results.forEach(([w,g])=>{ if(g){ map[w.toLowerCase()]=g; nouns.push({word:w, article:g}); } });
+  return {map, nouns};
+}
+
+/* ---------------- gender colouring ---------------- */
+let GENDER_MAP={};
 function colourNouns(sentence){
-  // wrap any capitalised word that we know the gender of
   return sentence.replace(/([A-ZÄÖÜ][a-zäöüßA-ZÄÖÜ\-]+)/g,(m)=>{
-    const key=m.toLowerCase().replace(/[^a-zäöüß]/g,"");
-    const art=GENDER_MAP[key];
-    if(art) return `<span class="n ${art}">${m}</span>`;
-    return m;
+    const art=GENDER_MAP[m.toLowerCase().replace(/[^a-zäöüß]/g,"")];
+    return art ? `<span class="n ${art}">${m}</span>` : m;
   });
 }
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
-/* ---------------- Speech ---------------- */
-const synth = window.speechSynthesis;
+/* ---------------- speech ---------------- */
+const synth=window.speechSynthesis;
 let deVoice=null, voiceMissing=false, queue=[], qIndex=0, playing=false;
-function pickVoice(){
-  const vs = synth.getVoices();
-  deVoice = vs.find(v=>v.lang==="de-DE") || vs.find(v=>v.lang && v.lang.startsWith("de")) || null;
-  voiceMissing = !deVoice;
-}
-if(synth){ pickVoice(); synth.onvoiceschanged = pickVoice; }
-
-function stopSpeech(){ if(synth){ synth.cancel(); } playing=false; queue=[]; qIndex=0; clearSpeakHighlight(); updatePlayBtn(); }
+function pickVoice(){ const vs=synth.getVoices(); deVoice=vs.find(v=>v.lang==="de-DE")||vs.find(v=>v.lang&&v.lang.startsWith("de"))||null; voiceMissing=!deVoice; }
+if(synth){ pickVoice(); synth.onvoiceschanged=pickVoice; }
+function stopSpeech(){ if(synth)synth.cancel(); playing=false; queue=[]; qIndex=0; clearSpeakHighlight(); updatePlayBtn(); }
 function clearSpeakHighlight(){ document.querySelectorAll(".srow.speaking").forEach(r=>r.classList.remove("speaking")); }
-function speakOne(text){
-  if(!synth) return;
-  synth.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice;
-  synth.speak(u);
-}
+function speakOne(text){ if(!synth)return; synth.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice; synth.speak(u); }
 function playArticle(sentences){
-  if(!synth) return;
-  if(playing){ // toggle pause/resume
-    if(synth.paused){ synth.resume(); } else { synth.pause(); }
-    updatePlayBtn(); return;
-  }
-  synth.cancel(); queue=sentences.map(s=>s.de); qIndex=0; playing=true; updatePlayBtn();
-  speakNext();
+  if(!synth)return;
+  if(playing){ if(synth.paused)synth.resume(); else synth.pause(); updatePlayBtn(); return; }
+  synth.cancel(); queue=sentences.slice(); qIndex=0; playing=true; updatePlayBtn(); speakNext();
 }
 function speakNext(){
   if(qIndex>=queue.length){ stopSpeech(); return; }
   clearSpeakHighlight();
   const row=document.querySelector(`.srow[data-i="${qIndex}"]`);
   if(row){ row.classList.add("speaking"); row.scrollIntoView({block:"nearest",behavior:"smooth"}); }
-  const u=new SpeechSynthesisUtterance(queue[qIndex]);
-  u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice;
-  u.onend=()=>{ qIndex++; if(playing) speakNext(); };
-  synth.speak(u);
+  const u=new SpeechSynthesisUtterance(queue[qIndex]); u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice;
+  u.onend=()=>{ qIndex++; if(playing) speakNext(); }; synth.speak(u);
 }
 function updatePlayBtn(){
-  const b=$("#playBtn"); if(!b) return;
-  const paused = synth && synth.paused;
-  const label = !playing ? T().listen : (paused? T().resume : T().pause);
-  $("#playLabel").textContent = label;
-  b.querySelector(".ic").innerHTML = (playing && !paused)
+  const b=$("#playBtn"); if(!b)return;
+  const paused=synth&&synth.paused;
+  $("#playLabel").textContent = !playing ? T().listen : (paused?T().resume:T().pause);
+  b.querySelector(".ic").innerHTML = (playing&&!paused)
     ? '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'
     : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
 }
 
-/* ---------------- Rendering: headlines ---------------- */
+/* ---------------- headlines UI ---------------- */
 function renderHeadlinesLoading(){
   const list=$("#hlist"); list.innerHTML="";
-  for(let i=0;i<6;i++){
-    const c=el("div","hcard");
-    c.innerHTML=`<div class="skel" style="height:10px;width:40%;margin-bottom:8px"></div>
-      <div class="skel" style="height:16px;width:90%;margin-bottom:6px"></div>
-      <div class="skel" style="height:16px;width:70%"></div>`;
-    list.appendChild(c);
-  }
+  for(let i=0;i<6;i++){ const c=el("div","hcard"); c.innerHTML=`<div class="skel" style="height:10px;width:40%;margin-bottom:8px"></div><div class="skel" style="height:16px;width:90%;margin-bottom:6px"></div><div class="skel" style="height:16px;width:70%"></div>`; list.appendChild(c); }
 }
 async function loadHeadlines(){
   renderHeadlinesLoading();
-  $("#read").innerHTML = `<div class="panel"><div class="spinwrap"><span class="spin"></span>${T().loadingHeads}</div></div>`;
+  $("#read").innerHTML=`<div class="panel"><div class="spinwrap"><span class="spin"></span>${T().loadingHeads}</div></div>`;
   try{
-    const items = await fetchHeadlines();
-    state.headlines = items.filter(h=>h.headline_de).slice(0,10);
-    if(!state.headlines.length) throw new Error("no usable items");
-    renderHeadlines();
-    renderEmpty();
+    const items=await fetchHeadlines();
+    state.headlines=items.filter(h=>h.headline_de).slice(0,10);
+    if(!state.headlines.length) throw new Error("empty");
+    renderHeadlines(); renderEmpty();
   }catch(e){
-    console.error(e);
-    $("#hlist").innerHTML="";
-    $("#read").innerHTML = errorBox(()=>loadHeadlines(), T().errFeed, {label:T().sampleBtn, fn:loadSampleHeadlines});
+    console.error(e); $("#hlist").innerHTML="";
+    $("#read").innerHTML=errorBox(()=>loadHeadlines(), T().errFeed, {label:T().sampleBtn, fn:loadSampleHeadlines});
   }
 }
 function loadSampleHeadlines(){
-  state.headlines = T().samples.map((s,i)=>({id:i+1, headline_de:s.h, teaser_de:s.t, category_de:s.c, url:""}));
-  state.activeId=null;
-  renderHeadlines();
-  renderEmpty();
+  state.headlines=T().samples.map((s,i)=>({id:i+1, headline_de:s.h, teaser_de:s.t, category_de:s.c, url:"", body:s.body}));
+  state.activeId=null; renderHeadlines(); renderEmpty();
 }
 function renderHeadlines(){
   const list=$("#hlist"); list.innerHTML="";
   (state.headlines||[]).forEach(h=>{
     const c=el("button","hcard"+(h.id===state.activeId?" active":""));
-    c.dataset.id=h.id;
-    c.innerHTML=`<div class="hcat">${esc(h.category_de||"")}</div>
-      <div class="htitle">${esc(h.headline_de||"")}</div>
-      <div class="hteaser">${esc(h.teaser_de||"")}</div>`;
-    c.onclick=()=>openArticle(h);
-    list.appendChild(c);
+    c.innerHTML=`<div class="hcat">${esc(h.category_de||"")}</div><div class="htitle">${esc(h.headline_de||"")}</div>${h.teaser_de?`<div class="hteaser">${esc(h.teaser_de)}</div>`:""}`;
+    c.onclick=()=>openArticle(h); list.appendChild(c);
   });
 }
 
-/* ---------------- Rendering: reading area ---------------- */
+/* ---------------- reading area ---------------- */
 function renderEmpty(){
   const t=T();
-  $("#read").innerHTML = `<div class="empty">
-    <h3 class="serif">${t.emptyH}</h3>
-    <p style="max-width:440px;margin:0 auto">${t.emptyP}</p>
-    <div class="legend">
-      <span><i class="swatch" style="background:var(--der)"></i>${t.masc}</span>
-      <span><i class="swatch" style="background:var(--die)"></i>${t.fem}</span>
-      <span><i class="swatch" style="background:var(--das)"></i>${t.neut}</span>
-    </div>
-  </div>`;
+  $("#read").innerHTML=`<div class="empty"><h3 class="serif">${t.emptyH}</h3><p style="max-width:440px;margin:0 auto">${t.emptyP}</p>
+    <div class="legend"><span><i class="swatch" style="background:var(--der)"></i>${t.masc}</span><span><i class="swatch" style="background:var(--die)"></i>${t.fem}</span><span><i class="swatch" style="background:var(--das)"></i>${t.neut}</span></div></div>`;
 }
-function errorBox(retryFn, msg, extra){
-  const id="err"+Math.random().toString(36).slice(2);
-  const id2="err"+Math.random().toString(36).slice(2);
-  setTimeout(()=>{
-    const b=document.getElementById(id); if(b)b.onclick=retryFn;
-    if(extra){ const b2=document.getElementById(id2); if(b2)b2.onclick=extra.fn; }
-  },0);
-  return `<div class="errbox">${esc(msg||T().err)}<br>
-    <button class="ghost" id="${id}">${T().retry}</button>
-    ${extra?`<button class="ghost" id="${id2}" style="margin-left:8px">${esc(extra.label)}</button>`:""}
-  </div>`;
+function errorBox(retryFn,msg,extra){
+  const id="e"+Math.random().toString(36).slice(2), id2="e"+Math.random().toString(36).slice(2);
+  setTimeout(()=>{ const b=document.getElementById(id); if(b)b.onclick=retryFn; if(extra){ const b2=document.getElementById(id2); if(b2)b2.onclick=extra.fn; } },0);
+  return `<div class="errbox">${esc(msg||T().err)}<br><button class="ghost" id="${id}">${T().retry}</button>${extra?`<button class="ghost" id="${id2}" style="margin-left:8px">${esc(extra.label)}</button>`:""}</div>`;
 }
-
-function cacheKey(h){ return `${h.id}|${state.level}|${state.transLang}`; }
+function cacheKey(h){ return `${h.id}|${state.transLang}`; }
 
 async function openArticle(h){
-  state.activeId=h.id; renderHeadlines();
-  stopSpeech();
+  state.activeId=h.id; renderHeadlines(); stopSpeech();
   const key=cacheKey(h);
-  if(state.cache[key]){ paintArticle(h, state.cache[key]); return; }
+  if(state.cache[key]){ GENDER_MAP=state.cache[key].genderMap||{}; paintArticle(h,state.cache[key]); return; }
 
-  // shell with article loading
-  $("#read").innerHTML = `<div class="panel">
-    <div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div>
-      <h1 class="art-title serif">${esc(h.headline_de||"")}</h1></div>
-    <div class="spinwrap"><span class="spin"></span>${T().loadingArt}</div>
-  </div>`;
-
+  $("#read").innerHTML=`<div class="panel"><div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div><h1 class="art-title serif">${esc(h.headline_de||"")}</h1></div><div class="spinwrap"><span class="spin"></span>${T().loadingArt}</div></div>`;
   try{
-    const src = await fetchArticleText(h.url);
-    const artTxt = await callClaude(articlePrompt(h, src));
-    const article = extractJSON(artTxt);
-    const bundle = {article, analysis:null, exercises:null};
-    state.cache[key]=bundle;
+    let src = h.body || await fetchArticleText(h.url);
+    if(!src || src.length<80) src = (h.headline_de||"") + ". " + (h.teaser_de||"");
+    const sentences = splitSentences(src);
+    const cases = detectCases(sentences);
+    const adjs = detectAdjectives(sentences);
+    const bundle = { title_de:h.headline_de, sentences:sentences.map(s=>({de:s, tr:null})), cases, adjs, nouns:[], genderMap:{} };
+    GENDER_MAP={}; state.cache[key]=bundle;
     paintArticle(h, bundle);
 
-    // analysis + exercises in parallel
-    const joined = (article.sentences||[]).map(s=>s.de).join(" ");
-    Promise.allSettled([
-      callClaude(analysisPrompt(joined)).then(t=>extractJSON(t)),
-      callClaude(exercisesPrompt(joined)).then(t=>extractJSON(t))
-    ]).then(([a,e])=>{
-      bundle.analysis = a.status==="fulfilled"? a.value : {error:true};
-      bundle.exercises = e.status==="fulfilled"? e.value : {error:true};
-      if(bundle.analysis && !bundle.analysis.error) buildGenderMap(bundle.analysis.nouns);
-      if(state.activeId===h.id) paintArticle(h, bundle); // repaint with grammar colours + panels
+    // translations (fill progressively)
+    sentences.forEach((s,i)=>{ translate(s, state.transLang).then(tr=>{ bundle.sentences[i].tr = tr || "—"; const cell=document.querySelector(`.s-tr[data-i="${i}"]`); if(cell && state.activeId===h.id){ cell.textContent=bundle.sentences[i].tr; cell.classList.remove("pending"); } }); });
+
+    // gender (Wiktionary) then recolour + grammar/exercises
+    buildGenders(sentences).then(({map,nouns})=>{
+      bundle.genderMap=map; bundle.nouns=nouns; GENDER_MAP=map;
+      if(state.activeId===h.id) paintArticle(h, bundle);
     });
   }catch(e){
     console.error(e);
-    $("#read").innerHTML = errorBox(()=>openArticle(h), T().err);
+    $("#read").innerHTML=errorBox(()=>openArticle(h), T().err);
   }
 }
 
 function paintArticle(h, bundle){
-  const t=T(); const a=bundle.article;
-  if(bundle.analysis && !bundle.analysis.error) buildGenderMap(bundle.analysis.nouns);
-
-  const rows=(a.sentences||[]).map((s,i)=>`
+  const t=T();
+  GENDER_MAP = bundle.genderMap||{};
+  const rows=bundle.sentences.map((s,i)=>`
     <div class="srow" data-i="${i}">
       <div class="s-de serif">
-        <button class="playbtn small mini" title="${esc(t.playSentence)}" data-speak="${i}" aria-label="${esc(t.playSentence)}">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        <button class="playbtn small mini" title="${esc(t.playSentence)}" data-speak="${i}" aria-label="${esc(t.playSentence)}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
         ${colourNouns(esc(s.de))}
       </div>
-      <div class="s-tr">${esc(s.tr)}</div>
+      <div class="s-tr ${s.tr==null?'pending':''}" data-i="${i}">${s.tr==null?esc(t.translating):esc(s.tr)}</div>
     </div>`).join("");
-
   const srcLink = h.url ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${t.openOrf} ↗</a>` : "";
 
-  $("#read").innerHTML = `<div class="panel">
-    <div class="art-head">
-      <div class="art-cat">${esc(h.category_de||"")}</div>
-      <h1 class="art-title serif">${esc(a.title_de||h.headline_de||"")}</h1>
-      ${a.note? `<p class="art-note">${esc(a.note)}</p>`:""}
-      ${srcLink? `<p class="art-note" style="font-style:normal">${t.source}: ${srcLink}</p>`:""}
-    </div>
-    <div class="audiobar">
-      <button class="playbtn" id="playBtn" aria-label="${esc(t.listen)}"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-      <span class="audio-label" id="playLabel">${t.listen}</span>
-      <label class="rate">${t.speed}
-        <input type="range" min="0.6" max="1.2" step="0.05" value="${state.rate}" id="rate">
-      </label>
-    </div>
+  $("#read").innerHTML=`<div class="panel">
+    <div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div><h1 class="art-title serif">${esc(bundle.title_de||h.headline_de||"")}</h1>${srcLink?`<p class="art-note" style="font-style:normal">${t.source}: ${srcLink}</p>`:""}</div>
+    <div class="audiobar"><button class="playbtn" id="playBtn" aria-label="${esc(t.listen)}"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button><span class="audio-label" id="playLabel">${t.listen}</span><label class="rate">${t.speed}<input type="range" min="0.6" max="1.2" step="0.05" value="${state.rate}" id="rate"></label></div>
     <div class="col-tags"><div style="flex:1">${t.colDe}</div><div style="flex:1">${t.colTr}</div></div>
     <div class="sentences" id="sentences">${rows}</div>
-
-    <div class="tabs">
-      <button class="tab ${state.tab==='gram'?'on':''}" data-tab="gram">${t.tabGram}</button>
-      <button class="tab ${state.tab==='ex'?'on':''}" data-tab="ex">${t.tabEx}</button>
-    </div>
+    <div class="tabs"><button class="tab ${state.tab==='gram'?'on':''}" data-tab="gram">${t.tabGram}</button><button class="tab ${state.tab==='ex'?'on':''}" data-tab="ex">${t.tabEx}</button></div>
     <div class="tabbody" id="tabbody"></div>
   </div>`;
 
-  // wire audio
-  $("#playBtn").onclick=()=>playArticle(a.sentences||[]);
+  $("#playBtn").onclick=()=>playArticle(bundle.sentences.map(s=>s.de));
   $("#rate").oninput=(e)=>{ state.rate=parseFloat(e.target.value); };
-  $("#sentences").querySelectorAll("[data-speak]").forEach(b=>{
-    b.onclick=()=>{ stopSpeech(); speakOne((a.sentences||[])[+b.dataset.speak].de); };
-  });
-  // wire tabs
-  $("#tabbody").parentElement.querySelectorAll(".tab").forEach(tb=>{
-    tb.onclick=()=>{ state.tab=tb.dataset.tab; paintArticle(h,bundle); };
-  });
+  $("#sentences").querySelectorAll("[data-speak]").forEach(b=>{ b.onclick=()=>{ stopSpeech(); speakOne(bundle.sentences[+b.dataset.speak].de); }; });
+  $("#tabbody").parentElement.querySelectorAll(".tab").forEach(tb=>{ tb.onclick=()=>{ state.tab=tb.dataset.tab; paintArticle(h,bundle); }; });
   updatePlayBtn();
-  renderTab(bundle);
+  if(state.tab==="gram") renderGrammar($("#tabbody"), bundle); else renderExercises($("#tabbody"), bundle);
 }
 
-function renderTab(bundle){
-  const body=$("#tabbody"); const t=T();
-  if(state.tab==="gram") renderGrammar(body, bundle.analysis);
-  else renderExercises(body, bundle.exercises);
+/* ---------- grammar ---------- */
+function caseClassOf(c){ return {Akkusativ:"akk",Dativ:"dat",Wechsel:"wex",Genitiv:"gen"}[c]||"akk"; }
+function caseExplain(w,c){
+  const es={Akkusativ:`«${w}» siempre rige acusativo.`,Dativ:`«${w}» siempre rige dativo.`,Wechsel:`«${w}»: acusativo con movimiento (¿adónde?), dativo con ubicación (¿dónde?).`,Genitiv:`«${w}» rige genitivo.`};
+  const en={Akkusativ:`“${w}” always takes the accusative.`,Dativ:`“${w}” always takes the dative.`,Wechsel:`“${w}”: accusative for movement, dative for location.`,Genitiv:`“${w}” takes the genitive.`};
+  return (state.uiLang==="es"?es:en)[c];
 }
-
-/* ---------- Grammar panel ---------- */
-function renderGrammar(body, analysis){
+function renderGrammar(body, bundle){
   const t=T();
-  if(!analysis){ body.innerHTML=`<div class="spinwrap"><span class="spin"></span>${t.loadingAnalysis}</div>`; return; }
-  if(analysis.error){ body.innerHTML=`<div class="errbox">${t.err}</div>`; return; }
-
-  const caseClass={Akkusativ:"akk",Dativ:"dat",Nominativ:"nom",Genitiv:"gen"};
-  const nouns=(analysis.nouns||[]).map(n=>`
-    <div class="ncard ${n.article}">
-      <span class="art">${esc(n.article)}</span> <span class="word">${esc(n.word)}</span>
-      <div class="meta">${n.plural?("Pl. "+esc(n.plural)+" · "):""}${esc(n.meaning||"")}</div>
-    </div>`).join("");
-  const cases=(analysis.cases||[]).map(c=>`
-    <div class="gline">
-      <span class="gphrase">${esc(c.phrase)}</span>
-      <span class="pill ${caseClass[c.case]||'nom'}">${esc(c.case)}</span>
-      <div class="gexp">${esc(c.explanation||"")}</div>
-    </div>`).join("");
-  const adj=(analysis.adjectives||[]).map(d=>`
-    <div class="gline">
-      <span class="gphrase">${esc(d.phrase)}</span>
-      <span class="gend">${esc(d.adjective)} → ${esc(d.ending)}</span>
-      <div class="gexp">${esc(d.explanation||"")}</div>
-    </div>`).join("");
-
-  body.innerHTML = `
-    <div class="sec-label">${t.gNouns}</div><div class="ngrid">${nouns||"—"}</div>
+  const nouns=(bundle.nouns||[]).map(n=>`<div class="ncard ${n.article}"><span class="art">${n.article}</span> <span class="word">${esc(n.word)}</span></div>`).join("");
+  const cases=(bundle.cases.list||[]).map(c=>`<div class="gline"><span class="gphrase"><b>${esc(c.display)}</b> ${esc(c.phrase.replace(c.display,"").trim())}</span><span class="pill ${caseClassOf(c.case)}">${c.case}</span><div class="gexp">${esc(caseExplain(c.display,c.case))}</div></div>`).join("");
+  const adjs=(bundle.adjs||[]).map(a=>`<div class="gline"><span class="gphrase">${esc(a.adj)} ${esc(a.noun)}</span><span class="gend">${esc(a.adj)} → ${esc(a.ending)}</span></div>`).join("");
+  const declTable=`<table class="decl"><tr><th></th><th>der (m)</th><th>die (f)</th><th>das (n)</th><th>Plural</th></tr>
+    <tr><th>Nom.</th><td>der gut<b>e</b></td><td>die gut<b>e</b></td><td>das gut<b>e</b></td><td>die gut<b>en</b></td></tr>
+    <tr><th>Akk.</th><td>den gut<b>en</b></td><td>die gut<b>e</b></td><td>das gut<b>e</b></td><td>die gut<b>en</b></td></tr>
+    <tr><th>Dat.</th><td>dem gut<b>en</b></td><td>der gut<b>en</b></td><td>dem gut<b>en</b></td><td>den gut<b>en</b></td></tr>
+    <tr><th>Gen.</th><td>des gut<b>en</b></td><td>der gut<b>en</b></td><td>des gut<b>en</b></td><td>der gut<b>en</b></td></tr></table>`;
+  body.innerHTML=`
+    <div class="sec-label">${t.gNouns}</div><div class="hint">${esc(t.genNote)}</div><div class="ngrid">${nouns||"—"}</div>
     <div class="sec-label">${t.gCases}</div>${cases||"—"}
-    <div class="sec-label">${t.gAdj}</div>${adj||"—"}`;
+    <div class="sec-label">${t.gAdj}</div>
+    ${adjs?`<div class="hint">${esc(t.adjFound)} · ${esc(t.autoNote)}</div>${adjs}`:""}
+    <div class="hint" style="margin-top:14px">${esc(t.adjTable)}</div>${declTable}`;
 }
 
-/* ---------- Exercises panel ---------- */
+/* ---------- exercises ---------- */
 let exScore={correct:0,total:0};
-function renderExercises(body, ex){
-  const t=T();
-  if(!ex){ body.innerHTML=`<div class="spinwrap"><span class="spin"></span>${t.loadingEx}</div>`; return; }
-  if(ex.error){ body.innerHTML=`<div class="errbox">${t.err}</div>`; return; }
-  exScore={correct:0,total:0};
-  body.innerHTML="";
-
-  // 1. Gender ID
-  body.appendChild(secLabel(t.exGender));
-  (ex.gender||[]).forEach((q,i)=>{
-    const card=el("div","ex");
-    card.innerHTML=`<p class="ex-q"><strong>${esc(q.noun)}</strong> <span style="color:var(--muted)">— ${esc(q.meaning||"")}</span><br><span style="font-size:13px;color:var(--muted)">${t.whichGender}</span></p>`;
-    const opts=el("div","opts");
-    ["der","die","das"].forEach(o=>{
-      const b=el("button","opt "+o,o);
-      b.onclick=()=>mcAnswer(b,opts,o===q.answer,o,q.answer,null,card);
-      opts.appendChild(b);
-    });
-    card.appendChild(opts);
-    card.appendChild(feedbackEl());
-    body.appendChild(card);
-  });
-
-  // 2. Case ID
-  body.appendChild(secLabel(t.exCases));
-  (ex.cases||[]).forEach(q=>{
-    const card=el("div","ex");
-    const sent=esc(q.sentence||"").replace(/\*\*(.+?)\*\*/g,'<u style="text-decoration-color:var(--at-red);text-underline-offset:3px">$1</u>');
-    card.innerHTML=`<p class="ex-q"><span class="de">${sent}</span><br><span style="font-size:13px;color:var(--muted)">${esc(q.question||"")}</span></p>`;
-    const opts=el("div","opts");
-    (q.options||["Akkusativ","Dativ"]).forEach(o=>{
-      const b=el("button","opt",o);
-      b.onclick=()=>mcAnswer(b,opts,o===q.answer,o,q.answer,q.explanation,card);
-      opts.appendChild(b);
-    });
-    card.appendChild(opts); card.appendChild(feedbackEl());
-    body.appendChild(card);
-  });
-
-  // 3. Adjective declension
-  body.appendChild(secLabel(t.exDecl));
-  (ex.declension||[]).forEach(q=>{
-    const card=el("div","ex");
-    const sent=esc(q.sentence||"").replace(/_+/g,'<span class="gap">?</span>');
-    card.innerHTML=`<p class="ex-q"><span class="de">${sent}</span>${q.base?` <span style="color:var(--muted);font-size:13px">(${esc(q.base)})</span>`:""}</p>`;
-    const opts=el("div","opts");
-    (q.options||[]).forEach(o=>{
-      const b=el("button","opt",o);
-      b.onclick=()=>mcAnswer(b,opts,o===q.answer,o,q.answer,q.explanation,card);
-      opts.appendChild(b);
-    });
-    card.appendChild(opts); card.appendChild(feedbackEl());
-    body.appendChild(card);
-  });
-
-  // 4. Translation
-  body.appendChild(secLabel(t.exTrans));
-  (ex.translation||[]).forEach(q=>{
-    const card=el("div","ex");
-    card.innerHTML=`<p class="ex-q">${t.promptTrans} <em>${esc(q.prompt)}</em></p>`;
-    const ta=el("textarea","trans"); ta.placeholder=t.yourAnswer;
-    const btn=el("button","ghost reveal",t.reveal);
-    const ans=el("div","model-answer",`<span class="lab">${t.model}</span>${esc(q.answer)}`);
-    btn.onclick=()=>{ ans.classList.add("show"); };
-    card.appendChild(ta); card.appendChild(btn); card.appendChild(ans);
-    body.appendChild(card);
-  });
-
-  updateScoreChips();
-}
-function secLabel(txt){
-  const d=el("div","sec-label",txt+` <span class="scorechip" data-score></span>`);
-  return d;
-}
+function secLabel(txt){ return el("div","sec-label",txt+` <span class="scorechip" data-score></span>`); }
 function feedbackEl(){ return el("div","feedback"); }
-function mcAnswer(btn,opts,isCorrect,chosen,answer,explanation,card){
-  opts.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; });
+function updateScoreChips(){ document.querySelectorAll("[data-score]").forEach(s=>{ s.textContent = exScore.total?`${exScore.correct}/${exScore.total} ${T().score}`:""; }); }
+function mcAnswer(btn,opts,isCorrect,answer,explanation,card){
+  opts.querySelectorAll(".opt").forEach(b=>b.disabled=true);
   btn.classList.add(isCorrect?"correct":"wrong");
-  if(!isCorrect){
-    opts.querySelectorAll(".opt").forEach(b=>{ if(b.textContent===answer) b.classList.add("correct"); });
+  if(!isCorrect) opts.querySelectorAll(".opt").forEach(b=>{ if(b.dataset.val===answer) b.classList.add("correct"); });
+  const fb=card.querySelector(".feedback"); fb.className="feedback show "+(isCorrect?"good":"warn");
+  fb.textContent=(isCorrect?T().correct:T().wrong)+(explanation?(" "+explanation):(isCorrect?"":(" "+answer)));
+  exScore.total++; if(isCorrect)exScore.correct++; updateScoreChips();
+}
+function renderExercises(body, bundle){
+  const t=T(); exScore={correct:0,total:0}; body.innerHTML="";
+
+  // gender quiz
+  const gNouns=(bundle.nouns||[]).slice(0,5);
+  if(gNouns.length){
+    body.appendChild(secLabel(t.exGender));
+    gNouns.forEach(q=>{
+      const card=el("div","ex");
+      card.innerHTML=`<p class="ex-q"><strong>${esc(q.word)}</strong> &nbsp;<span style="font-size:13px;color:var(--muted)">${t.whichGender}</span></p>`;
+      const opts=el("div","opts");
+      ["der","die","das"].forEach(o=>{ const b=el("button","opt",o); b.dataset.val=o; b.onclick=()=>mcAnswer(b,opts,o===q.article,q.article,null,card); opts.appendChild(b); });
+      card.appendChild(opts); card.appendChild(feedbackEl()); body.appendChild(card);
+    });
   }
-  const fb=card.querySelector(".feedback");
-  fb.className="feedback show "+(isCorrect?"good":"warn");
-  fb.textContent=(isCorrect?T().correct:T().wrong)+(explanation?(" "+explanation):(" "+(isCorrect?"":answer)));
-  exScore.total++; if(isCorrect)exScore.correct++;
+
+  // case quiz (Akk/Dativ triggers only)
+  const trig=Object.entries(bundle.cases.triggers||{}).filter(([w,c])=>c==="Akkusativ"||c==="Dativ").slice(0,4);
+  if(trig.length){
+    body.appendChild(secLabel(t.exCases));
+    trig.forEach(([w,c])=>{
+      const card=el("div","ex");
+      card.innerHTML=`<p class="ex-q"><span class="de">«${esc(w)}»</span> &nbsp;<span style="font-size:13px;color:var(--muted)">${t.whichCase}</span></p>`;
+      const opts=el("div","opts");
+      ["Akkusativ","Dativ"].forEach(o=>{ const b=el("button","opt",o); b.dataset.val=o; b.onclick=()=>mcAnswer(b,opts,o===c,c,caseExplain(w,c),card); opts.appendChild(b); });
+      card.appendChild(opts); card.appendChild(feedbackEl()); body.appendChild(card);
+    });
+  }
+
+  // reverse translation
+  const transItems=bundle.sentences.filter(s=>s.tr && s.tr!=="—" && s.tr!=null).slice(0,3);
+  if(transItems.length){
+    body.appendChild(secLabel(t.exTrans));
+    transItems.forEach(s=>{
+      const card=el("div","ex");
+      card.innerHTML=`<p class="ex-q">${t.promptTrans} <em>${esc(s.tr)}</em></p>`;
+      const ta=el("textarea","trans"); ta.placeholder=t.yourAnswer;
+      const btn=el("button","ghost reveal",t.reveal);
+      const ans=el("div","model-answer",`<span class="lab">${t.model}</span>${esc(s.de)}`);
+      btn.onclick=()=>ans.classList.add("show");
+      card.appendChild(ta); card.appendChild(btn); card.appendChild(ans); body.appendChild(card);
+    });
+  }
+  if(!body.children.length) body.innerHTML=`<div class="hint">—</div>`;
   updateScoreChips();
 }
-function updateScoreChips(){
-  document.querySelectorAll("[data-score]").forEach(s=>{
-    s.textContent = exScore.total? `${exScore.correct}/${exScore.total} ${T().score}` : "";
-  });
-}
 
-/* ---------------- Controls ---------------- */
+/* ---------------- controls ---------------- */
 function applyI18N(){
   const t=T();
   document.documentElement.lang=state.uiLang;
   $("#tagline").textContent=t.tagline;
-  $("#lblUi").textContent=t.ui; $("#lblTrans").textContent=t.trans; $("#lblLevel").textContent=t.level;
-  $("#lvOrig").textContent=t.levelOrig; $("#lvSimple").textContent=t.levelSimple;
-  $("#refreshLbl").textContent=t.refresh;
+  $("#lblUi").textContent=t.ui; $("#lblTrans").textContent=t.trans; $("#refreshLbl").textContent=t.refresh;
   $("#feedTitle").textContent=t.feed; $("#feedDate").textContent=todayHuman;
-  $("#footer").innerHTML = t.note + (voiceMissing? ("<br>"+t.noVoice):"");
+  $("#footer").innerHTML=t.note + (voiceMissing?("<br>"+t.noVoice):"");
 }
-function bindSeg(id, key, after){
-  $(id).querySelectorAll("button").forEach(b=>{
-    b.onclick=()=>{
-      $(id).querySelectorAll("button").forEach(x=>x.classList.remove("on"));
-      b.classList.add("on");
-      state[key]=b.dataset.ui||b.dataset.tr||b.dataset.lv;
-      after && after();
-    };
-  });
+function bindSeg(id,key,after){ $(id).querySelectorAll("button").forEach(b=>{ b.onclick=()=>{ $(id).querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); state[key]=b.dataset.ui||b.dataset.tr; after&&after(); }; }); }
+function rerenderCurrent(){
+  applyI18N(); if(state.headlines) renderHeadlines();
+  if(state.activeId==null){ renderEmpty(); return; }
+  const h=(state.headlines||[]).find(x=>x.id===state.activeId); const b=h&&state.cache[cacheKey(h)];
+  if(h&&b){ GENDER_MAP=b.genderMap||{}; paintArticle(h,b);} else renderEmpty();
 }
-
+function reloadCurrentArticle(){ if(state.activeId==null)return; const h=(state.headlines||[]).find(x=>x.id===state.activeId); if(h) openArticle(h); }
 function init(){
   applyI18N();
   bindSeg("#uiSeg","uiLang",()=>{ applyI18N(); rerenderCurrent(); });
   bindSeg("#transSeg","transLang",()=>{ reloadCurrentArticle(); });
-  bindSeg("#levelSeg","level",()=>{ reloadCurrentArticle(); });
   $("#refreshBtn").onclick=()=>{ state.cache={}; state.activeId=null; loadHeadlines(); };
   loadHeadlines();
 }
-function rerenderCurrent(){
-  applyI18N();
-  if(state.headlines) renderHeadlines();
-  if(state.activeId==null){ renderEmpty(); return; }
-  const h=(state.headlines||[]).find(x=>x.id===state.activeId);
-  const b=h && state.cache[cacheKey(h)];
-  if(h && b) paintArticle(h,b); else renderEmpty();
-}
-function reloadCurrentArticle(){
-  if(state.activeId==null) return;
-  const h=(state.headlines||[]).find(x=>x.id===state.activeId);
-  if(h) openArticle(h); // cache key includes level+transLang, so this refetches if needed
-}
-
 window.addEventListener("beforeunload", stopSpeech);
 init();
 </script>
