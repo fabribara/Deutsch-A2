@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernblatt — ORF-Nachrichten lesen & Deutsch lernen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF7; --paper-2:#F3F1EA; --ink:#1A1A18; --muted:#6B6B62;
+    --line:#E3E0D6; --line-strong:#CFCBBE;
+    --at-red:#C8102E;            /* Austria accent, used sparingly */
+    --der:#2563EB; --der-bg:#E8EFFD;
+    --die:#D6206E; --die-bg:#FCE7F0;
+    --das:#15803D; --das-bg:#E4F4E9;
+    --ok:#15803D; --ok-bg:#E4F4E9; --bad:#C8102E; --bad-bg:#FBE7EA;
+    --shadow:0 1px 2px rgba(26,26,24,.04), 0 8px 24px rgba(26,26,24,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:"Newsreader",Georgia,"Times New Roman",serif}
+  button{font-family:inherit; cursor:pointer}
+  ::selection{background:#FBE7EA}
+
+  /* ---------- Top bar ---------- */
+  header.topbar{
+    position:sticky; top:0; z-index:20;
+    background:rgba(251,250,247,.88); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topwrap{max-width:1240px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+  .brand{display:flex; align-items:baseline; gap:10px; margin-right:auto}
+  .mark{
+    font-family:"Newsreader",serif; font-weight:600; font-size:30px; letter-spacing:-.01em;
+    line-height:1;
+  }
+  .mark .dot{color:var(--at-red)}
+  .tagline{font-size:12.5px; color:var(--muted); letter-spacing:.02em}
+  .controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .seg{display:inline-flex; background:var(--paper-2); border:1px solid var(--line); border-radius:999px; padding:3px}
+  .seg button{
+    border:0; background:transparent; color:var(--muted); font-size:13px; font-weight:600;
+    padding:6px 12px; border-radius:999px; letter-spacing:.01em;
+  }
+  .seg button.on{background:#fff; color:var(--ink); box-shadow:var(--shadow)}
+  .ctl-label{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); margin-right:2px}
+  .ghost{
+    border:1px solid var(--line-strong); background:#fff; color:var(--ink);
+    border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600;
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .ghost:hover{border-color:var(--ink)}
+  .ghost svg{width:15px;height:15px}
+
+  /* ---------- Layout ---------- */
+  .shell{max-width:1240px; margin:0 auto; padding:22px; display:grid; grid-template-columns:320px 1fr; gap:24px; align-items:start}
+  @media(max-width:920px){ .shell{grid-template-columns:1fr; padding:16px} }
+
+  /* ---------- Headlines column ---------- */
+  aside.feed{position:sticky; top:84px}
+  @media(max-width:920px){ aside.feed{position:static} }
+  .feed-head{display:flex; align-items:baseline; justify-content:space-between; margin:2px 4px 12px}
+  .feed-head h2{font-family:"Newsreader",serif; font-weight:600; font-size:20px; margin:0}
+  .feed-date{font-size:12px; color:var(--muted)}
+  .hlist{display:flex; flex-direction:column; gap:8px; max-height:calc(100vh - 150px); overflow:auto; padding-right:4px}
+  @media(max-width:920px){ .hlist{max-height:none} }
+  .hcard{
+    text-align:left; width:100%; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:13px 14px; transition:border-color .15s, transform .15s;
+  }
+  .hcard:hover{border-color:var(--line-strong); transform:translateY(-1px)}
+  .hcard.active{border-color:var(--at-red); box-shadow:0 0 0 1px var(--at-red) inset}
+  .hcat{font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--at-red); font-weight:700}
+  .htitle{font-family:"Newsreader",serif; font-size:17px; line-height:1.25; margin:4px 0 4px; font-weight:500}
+  .hteaser{font-size:12.5px; color:var(--muted); line-height:1.4}
+
+  /* ---------- Reading area ---------- */
+  main.read{min-height:60vh}
+  .empty{
+    background:#fff; border:1px dashed var(--line-strong); border-radius:var(--radius);
+    padding:48px 36px; text-align:center; color:var(--muted);
+  }
+  .empty h3{font-family:"Newsreader",serif; color:var(--ink); font-size:24px; margin:0 0 8px; font-weight:500}
+  .legend{display:inline-flex; gap:16px; margin-top:22px; flex-wrap:wrap; justify-content:center}
+  .legend span{display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--ink)}
+  .swatch{width:13px; height:13px; border-radius:4px; display:inline-block}
+
+  .panel{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+  .art-head{padding:24px 28px 18px; border-bottom:1px solid var(--line)}
+  .art-cat{font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--at-red); font-weight:700}
+  .art-title{font-family:"Newsreader",serif; font-weight:600; font-size:30px; line-height:1.15; letter-spacing:-.01em; margin:8px 0 0}
+  @media(max-width:560px){ .art-title{font-size:24px} }
+  .art-note{margin:12px 0 0; font-size:12.5px; color:var(--muted); font-style:italic}
+
+  /* audio bar */
+  .audiobar{display:flex; align-items:center; gap:12px; padding:14px 28px; background:var(--paper-2); border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .playbtn{
+    border:0; background:var(--at-red); color:#fff; border-radius:999px;
+    width:42px; height:42px; display:grid; place-items:center; flex:0 0 auto;
+  }
+  .playbtn svg{width:18px;height:18px;fill:#fff}
+  .playbtn.small{width:28px;height:28px;background:transparent;color:var(--muted)}
+  .playbtn.small svg{width:15px;height:15px;fill:var(--muted)}
+  .playbtn.small:hover svg{fill:var(--at-red)}
+  .audio-label{font-size:13px; font-weight:600}
+  .rate{display:flex; align-items:center; gap:8px; margin-left:auto; font-size:12px; color:var(--muted)}
+  .rate input{accent-color:var(--at-red)}
+
+  /* sentences */
+  .sentences{padding:6px 0}
+  .srow{
+    display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:14px 28px;
+    border-bottom:1px solid var(--line); align-items:start;
+  }
+  @media(max-width:680px){ .srow{grid-template-columns:1fr; gap:6px} }
+  .srow:last-child{border-bottom:0}
+  .srow.speaking{background:#FFFCF4}
+  .s-de{font-family:"Newsreader",serif; font-size:19px; line-height:1.5; position:relative; cursor:default}
+  .s-de .mini{position:absolute; left:-26px; top:3px}
+  @media(max-width:680px){ .s-de .mini{position:static; margin-right:6px; display:inline-flex; vertical-align:middle} }
+  .s-tr{font-size:15px; color:#4A4A42; line-height:1.55; padding-top:2px}
+  .col-tags{display:flex; gap:18px; padding:10px 28px 2px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  @media(max-width:680px){ .col-tags{display:none} }
+
+  /* gender-colored nouns */
+  .n{font-weight:500; border-radius:4px; padding:0 2px}
+  .n.der{color:var(--der); background:var(--der-bg)}
+  .n.die{color:var(--die); background:var(--die-bg)}
+  .n.das{color:var(--das); background:var(--das-bg)}
+
+  /* tabs */
+  .tabs{display:flex; gap:4px; padding:16px 28px 0; border-top:1px solid var(--line); background:#fff}
+  .tab{border:0; background:transparent; padding:10px 4px; margin-right:20px; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent}
+  .tab.on{color:var(--ink); border-bottom-color:var(--at-red)}
+  .tabbody{padding:20px 28px 30px}
+  @media(max-width:560px){ .art-head,.audiobar,.srow,.col-tags,.tabs,.tabbody{padding-left:18px;padding-right:18px} }
+
+  .sec-label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:700; margin:22px 0 10px}
+  .sec-label:first-child{margin-top:0}
+
+  /* grammar: nouns */
+  .ngrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px}
+  .ncard{border:1px solid var(--line); border-radius:11px; padding:11px 13px}
+  .ncard .art{font-weight:700; font-size:13px}
+  .ncard .word{font-family:"Newsreader",serif; font-size:19px; font-weight:500}
+  .ncard .meta{font-size:12px; color:var(--muted); margin-top:3px}
+  .ncard.der{border-color:#BFD3FB} .ncard.der .art{color:var(--der)}
+  .ncard.die{border-color:#F6C3DA} .ncard.die .art{color:var(--die)}
+  .ncard.das{border-color:#BFE5C9} .ncard.das .art{color:var(--das)}
+
+  .gline{padding:11px 0; border-bottom:1px solid var(--line)}
+  .gline:last-child{border-bottom:0}
+  .gphrase{font-family:"Newsreader",serif; font-size:18px}
+  .pill{display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; letter-spacing:.04em; vertical-align:middle; margin-left:8px}
+  .pill.akk{background:#FFF1E6; color:#B45309}
+  .pill.dat{background:#EEF2FF; color:#4338CA}
+  .pill.nom{background:#ECFDF5; color:#047857}
+  .pill.gen{background:#FDF2F8; color:#9D174D}
+  .gexp{font-size:13px; color:var(--muted); margin-top:4px}
+  .gend{display:inline-block; background:var(--paper-2); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-weight:600; font-size:13px; color:var(--at-red)}
+
+  /* exercises */
+  .ex{border:1px solid var(--line); border-radius:12px; padding:15px 16px; margin-bottom:12px}
+  .ex-q{font-size:15px; margin:0 0 11px}
+  .ex-q .de{font-family:"Newsreader",serif; font-size:18px}
+  .ex-q .gap{border-bottom:2px solid var(--at-red); padding:0 16px; margin:0 2px}
+  .opts{display:flex; gap:8px; flex-wrap:wrap}
+  .opt{
+    border:1px solid var(--line-strong); background:#fff; border-radius:9px; padding:8px 14px;
+    font-size:14px; font-weight:600; transition:.12s;
+  }
+  .opt:hover:not(:disabled){border-color:var(--ink)}
+  .opt:disabled{cursor:default; opacity:1}
+  .opt.correct{background:var(--ok-bg); border-color:var(--ok); color:var(--ok)}
+  .opt.wrong{background:var(--bad-bg); border-color:var(--bad); color:var(--bad)}
+  .opt.der{} .opt.die{} .opt.das{}
+  .feedback{font-size:13px; margin-top:10px; padding:9px 12px; border-radius:8px; display:none}
+  .feedback.show{display:block}
+  .feedback.good{background:var(--ok-bg); color:#0f5a2c}
+  .feedback.warn{background:var(--bad-bg); color:#8c0c20}
+  textarea.trans{width:100%; border:1px solid var(--line-strong); border-radius:9px; padding:10px 12px; font-family:inherit; font-size:15px; resize:vertical; min-height:54px}
+  textarea.trans:focus{outline:2px solid var(--at-red); outline-offset:1px; border-color:var(--at-red)}
+  .reveal{margin-top:9px}
+  .model-answer{display:none; margin-top:9px; padding:10px 12px; background:var(--das-bg); border-radius:8px; font-size:15px}
+  .model-answer.show{display:block}
+  .model-answer .lab{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--das); font-weight:700; display:block; margin-bottom:3px}
+  .scorechip{font-size:12px; font-weight:700; color:var(--muted); float:right}
+
+  /* loading */
+  .skel{background:linear-gradient(90deg,#efece4 25%,#f6f4ee 50%,#efece4 75%); background-size:200% 100%; animation:sh 1.3s infinite; border-radius:6px}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  @media (prefers-reduced-motion: reduce){ .skel{animation:none} *{transition:none!important} }
+  .loadrow{padding:16px 28px; border-bottom:1px solid var(--line)}
+  .spinwrap{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; padding:18px 28px}
+  .spin{width:16px;height:16px;border:2px solid var(--line-strong);border-top-color:var(--at-red);border-radius:50%;animation:rot .8s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+
+  .errbox{background:var(--bad-bg); border:1px solid #F0C5CC; color:#8c0c20; border-radius:10px; padding:14px 16px; margin:16px 28px; font-size:14px}
+  .errbox button{margin-top:8px}
+  .footer{max-width:1240px;margin:0 auto;padding:8px 22px 40px;color:var(--muted);font-size:11.5px}
+  .footer a{color:var(--muted)}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topwrap">
+    <div class="brand">
+      <span class="mark serif">Lernblatt<span class="dot">.</span></span>
+      <span class="tagline" id="tagline"></span>
+    </div>
+    <div class="controls">
+      <span class="ctl-label" id="lblUi"></span>
+      <div class="seg" id="uiSeg">
+        <button data-ui="es" class="on">ES</button>
+        <button data-ui="en">EN</button>
+      </div>
+      <span class="ctl-label" id="lblTrans"></span>
+      <div class="seg" id="transSeg">
+        <button data-tr="es" class="on">Español</button>
+        <button data-tr="en">English</button>
+      </div>
+      <span class="ctl-label" id="lblLevel"></span>
+      <div class="seg" id="levelSeg">
+        <button data-lv="original" class="on" id="lvOrig"></button>
+        <button data-lv="simple" id="lvSimple"></button>
+      </div>
+      <button class="ghost" id="refreshBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>
+        <span id="refreshLbl"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="feed">
+    <div class="feed-head">
+      <h2 id="feedTitle"></h2>
+      <span class="feed-date" id="feedDate"></span>
+    </div>
+    <div class="hlist" id="hlist"></div>
+  </aside>
+
+  <main class="read" id="read"></main>
+</div>
+
+<div class="footer" id="footer"></div>
+
+<script>
+/* ========================================================================
+   Lernblatt — daily ORF news as a German study session
+   Uses the in-app Claude API (web search) for live headlines, translation,
+   grammar analysis and auto-generated exercises. Audio uses the browser's
+   built-in speech engine (no external API).
+   ===================================================================== */
+
+const I18N = {
+  es:{
+    tagline:"Noticias del ORF para leer y aprender alemán",
+    ui:"Interfaz", trans:"Traducir a", level:"Nivel",
+    levelOrig:"Original", levelSimple:"Fácil (B1)",
+    refresh:"Actualizar", feed:"Titulares de hoy",
+    loadingHeads:"Buscando los titulares del ORF…",
+    emptyH:"Elegí un titular para empezar",
+    emptyP:"Cada artículo se muestra en alemán con traducción al lado, audio, análisis gramatical y ejercicios creados a partir del texto.",
+    masc:"der · masculino", fem:"die · femenino", neut:"das · neutro",
+    colDe:"Alemán", colTr:"Traducción",
+    listen:"Escuchar", pause:"Pausar", resume:"Seguir", playSentence:"Leer esta frase",
+    speed:"Velocidad",
+    tabGram:"Gramática", tabEx:"Ejercicios",
+    gNouns:"Sustantivos y género", gCases:"Caso: Akkusativ / Dativ", gAdj:"Declinación de adjetivos",
+    exTrans:"Traducción al alemán", exGender:"Identificar el género",
+    exCases:"Akkusativ o Dativ", exDecl:"Declinación del adjetivo",
+    promptTrans:"Traducí al alemán:", yourAnswer:"Escribí tu traducción…",
+    reveal:"Ver solución", model:"Respuesta modelo",
+    whichGender:"¿Qué artículo lleva?", correct:"¡Correcto!", wrong:"No es correcto.",
+    loadingArt:"Cargando el artículo y traduciéndolo…",
+    loadingAnalysis:"Analizando la gramática…",
+    loadingEx:"Creando ejercicios a partir del texto…",
+    err:"Algo salió mal al cargar.", retry:"Reintentar",
+    source:"Fuente", openOrf:"Abrir en orf.at",
+    note:"Lernblatt usa noticias reales del ORF. La traducción y los ejercicios se generan automáticamente y pueden contener errores — usalos como apoyo, no como verdad absoluta. El audio usa la voz de tu navegador.",
+    noVoice:"Tu navegador no tiene una voz en alemán instalada, así que el audio puede sonar con otra. En el sistema podés agregar una voz «Deutsch (de-DE)».",
+    score:"aciertos"
+  },
+  en:{
+    tagline:"ORF news to read and learn German",
+    ui:"Interface", trans:"Translate to", level:"Level",
+    levelOrig:"Original", levelSimple:"Easy (B1)",
+    refresh:"Refresh", feed:"Today's headlines",
+    loadingHeads:"Fetching ORF headlines…",
+    emptyH:"Pick a headline to begin",
+    emptyP:"Each story appears in German with a side-by-side translation, audio, a grammar breakdown, and exercises generated from the text.",
+    masc:"der · masculine", fem:"die · feminine", neut:"das · neuter",
+    colDe:"German", colTr:"Translation",
+    listen:"Listen", pause:"Pause", resume:"Resume", playSentence:"Read this sentence",
+    speed:"Speed",
+    tabGram:"Grammar", tabEx:"Exercises",
+    gNouns:"Nouns & gender", gCases:"Case: accusative / dative", gAdj:"Adjective endings",
+    exTrans:"Translate into German", exGender:"Identify the gender",
+    exCases:"Accusative or dative", exDecl:"Adjective declension",
+    promptTrans:"Translate into German:", yourAnswer:"Type your translation…",
+    reveal:"Show solution", model:"Model answer",
+    whichGender:"Which article does it take?", correct:"Correct!", wrong:"Not quite.",
+    loadingArt:"Loading the article and translating it…",
+    loadingAnalysis:"Analysing the grammar…",
+    loadingEx:"Building exercises from the text…",
+    err:"Something went wrong while loading.", retry:"Try again",
+    source:"Source", openOrf:"Open on orf.at",
+    note:"Lernblatt uses real ORF news. Translations and exercises are generated automatically and may contain mistakes — treat them as study support, not gospel. Audio uses your browser's built-in voice.",
+    noVoice:"Your browser has no German voice installed, so audio may use another. You can add a “Deutsch (de-DE)” voice in your system settings.",
+    score:"correct"
+  }
+};
+
+const TR_NAME = { es:"Spanish (español)", en:"English" };
+
+const state = {
+  uiLang:"es", transLang:"es", level:"original",
+  headlines:null, activeId:null, tab:"gram",
+  rate:0.95, cache:{}
+};
+const $ = (s,r=document)=>r.querySelector(s);
+const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const T = ()=>I18N[state.uiLang];
+
+/* ---------------- Claude API helpers ---------------- */
+async function callClaude(prompt, useSearch){
+  const body = {
+    model:"claude-sonnet-4-6",
+    max_tokens:1000,
+    messages:[{role:"user", content:prompt}]
+  };
+  if(useSearch) body.tools=[{type:"web_search_20250305", name:"web_search"}];
+  const res = await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)
+  });
+  if(!res.ok) throw new Error("API "+res.status);
+  const data = await res.json();
+  return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+}
+function extractJSON(text){
+  if(!text) throw new Error("empty response");
+  let t = text.trim().replace(/^```(?:json)?/i,"").replace(/```\s*$/,"").trim();
+  try{ return JSON.parse(t); }catch(e){}
+  const oi=t.indexOf("{"), ai=t.indexOf("[");
+  let start=-1, close;
+  if(ai!==-1 && (oi===-1||ai<oi)){ start=ai; close="]"; }
+  else if(oi!==-1){ start=oi; close="}"; }
+  if(start===-1) throw new Error("no JSON found");
+  const end=t.lastIndexOf(close);
+  return JSON.parse(t.slice(start,end+1));
+}
+
+/* ---------------- Prompts ---------------- */
+const todayISO = new Date().toISOString().slice(0,10);
+const todayHuman = new Date().toLocaleDateString("de-AT",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+
+function headlinesPrompt(){
+  return `Today is ${todayISO}. Use web search to find the CURRENT top news headlines from ORF (Österreichischer Rundfunk, orf.at), Austria's public broadcaster. Pick 8 diverse, recent headlines across categories such as Inland (Austria), Ausland (world), Wirtschaft, Wissenschaft, Kultur and Sport.
+Respond with ONLY a JSON array (no markdown, no commentary). Each element:
+{"id": <number 1-8>, "headline_de": "<the headline in German>", "teaser_de": "<one short German sentence>", "category_de": "<short German category label>", "url": "<source URL on orf.at if known, else \\"\\">"}`;
+}
+function articlePrompt(h){
+  const lvl = state.level==="simple"
+    ? "Rewrite the story in clear, natural B1-level German (simpler vocabulary and sentence structure, but still authentic news style)."
+    : "Use authentic German news language, close to how it was published.";
+  return `Today is ${todayISO}. A learner is reading this ORF headline: "${h.headline_de}". ${h.url?("Likely source: "+h.url+"."):""}
+Use web search to find the actual ORF article content. ${lvl}
+Segment the story into 8 short German sentences. Translate EACH sentence into ${TR_NAME[state.transLang]} faithfully and naturally.
+Respond with ONLY this JSON (no markdown):
+{"title_de":"<German title>","sentences":[{"de":"<German sentence>","tr":"<translation>"}],"note":"<if you could not retrieve the exact article and summarised instead, a one-line caveat in ${TR_NAME[state.transLang]}; otherwise empty string>"}`;
+}
+function analysisPrompt(text){
+  const L=TR_NAME[state.transLang];
+  return `Analyse this German news text for a Spanish-speaking learner at A2–B1. Only use words that actually appear in the text.
+TEXT: """${text}"""
+Respond with ONLY this JSON (no markdown):
+{"nouns":[{"word":"<noun, capitalised>","article":"der|die|das","gender":"m|f|n","plural":"<plural form>","meaning":"<meaning in ${L}>"} up to 8 important nouns],
+"cases":[{"phrase":"<short phrase from the text>","case":"Akkusativ|Dativ|Nominativ|Genitiv","explanation":"<why, in ${L}>"} up to 5 examples, prioritising Akkusativ and Dativ],
+"adjectives":[{"phrase":"<phrase with an attributive adjective>","adjective":"<the adjective as it appears>","ending":"<the ending, e.g. -e, -en, -es>","explanation":"<why this ending, in ${L}>"} up to 5 examples]}`;
+}
+function exercisesPrompt(text){
+  const L=TR_NAME[state.transLang];
+  return `Create German exercises for an A2–B1 Spanish-speaking learner, based ONLY on this text (reuse its vocabulary and sentences).
+TEXT: """${text}"""
+Respond with ONLY this JSON (no markdown):
+{"translation":[{"prompt":"<a sentence in ${L} to translate INTO German>","answer":"<correct German>"} 3 items],
+"gender":[{"noun":"<German noun WITHOUT article>","answer":"der|die|das","meaning":"<meaning in ${L}>"} 4 items],
+"cases":[{"sentence":"<a German sentence; wrap the target phrase in **double asterisks**>","question":"<in ${L}: which case is the marked phrase?>","options":["Akkusativ","Dativ"],"answer":"Akkusativ|Dativ","explanation":"<in ${L}>"} 3 items],
+"declension":[{"sentence":"<German sentence with a ___ gap for the adjective>","base":"<adjective base form>","options":["<4 candidate forms>"],"answer":"<correct form>","explanation":"<in ${L}>"} 3 items]}`;
+}
+
+/* ---------------- Gender colouring ---------------- */
+let GENDER_MAP = {}; // lowercased noun -> der/die/das
+function buildGenderMap(nouns){
+  GENDER_MAP = {};
+  (nouns||[]).forEach(n=>{
+    if(n.word) GENDER_MAP[n.word.toLowerCase().replace(/[^a-zäöüß]/g,"")]=n.article;
+  });
+}
+function colourNouns(sentence){
+  // wrap any capitalised word that we know the gender of
+  return sentence.replace(/([A-ZÄÖÜ][a-zäöüßA-ZÄÖÜ\-]+)/g,(m)=>{
+    const key=m.toLowerCase().replace(/[^a-zäöüß]/g,"");
+    const art=GENDER_MAP[key];
+    if(art) return `<span class="n ${art}">${m}</span>`;
+    return m;
+  });
+}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+/* ---------------- Speech ---------------- */
+const synth = window.speechSynthesis;
+let deVoice=null, voiceMissing=false, queue=[], qIndex=0, playing=false;
+function pickVoice(){
+  const vs = synth.getVoices();
+  deVoice = vs.find(v=>v.lang==="de-DE") || vs.find(v=>v.lang && v.lang.startsWith("de")) || null;
+  voiceMissing = !deVoice;
+}
+if(synth){ pickVoice(); synth.onvoiceschanged = pickVoice; }
+
+function stopSpeech(){ if(synth){ synth.cancel(); } playing=false; queue=[]; qIndex=0; clearSpeakHighlight(); updatePlayBtn(); }
+function clearSpeakHighlight(){ document.querySelectorAll(".srow.speaking").forEach(r=>r.classList.remove("speaking")); }
+function speakOne(text){
+  if(!synth) return;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice;
+  synth.speak(u);
+}
+function playArticle(sentences){
+  if(!synth) return;
+  if(playing){ // toggle pause/resume
+    if(synth.paused){ synth.resume(); } else { synth.pause(); }
+    updatePlayBtn(); return;
+  }
+  synth.cancel(); queue=sentences.map(s=>s.de); qIndex=0; playing=true; updatePlayBtn();
+  speakNext();
+}
+function speakNext(){
+  if(qIndex>=queue.length){ stopSpeech(); return; }
+  clearSpeakHighlight();
+  const row=document.querySelector(`.srow[data-i="${qIndex}"]`);
+  if(row){ row.classList.add("speaking"); row.scrollIntoView({block:"nearest",behavior:"smooth"}); }
+  const u=new SpeechSynthesisUtterance(queue[qIndex]);
+  u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice;
+  u.onend=()=>{ qIndex++; if(playing) speakNext(); };
+  synth.speak(u);
+}
+function updatePlayBtn(){
+  const b=$("#playBtn"); if(!b) return;
+  const paused = synth && synth.paused;
+  const label = !playing ? T().listen : (paused? T().resume : T().pause);
+  $("#playLabel").textContent = label;
+  b.querySelector(".ic").innerHTML = (playing && !paused)
+    ? '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+}
+
+/* ---------------- Rendering: headlines ---------------- */
+function renderHeadlinesLoading(){
+  const list=$("#hlist"); list.innerHTML="";
+  for(let i=0;i<6;i++){
+    const c=el("div","hcard");
+    c.innerHTML=`<div class="skel" style="height:10px;width:40%;margin-bottom:8px"></div>
+      <div class="skel" style="height:16px;width:90%;margin-bottom:6px"></div>
+      <div class="skel" style="height:16px;width:70%"></div>`;
+    list.appendChild(c);
+  }
+}
+async function loadHeadlines(){
+  renderHeadlinesLoading();
+  $("#read").innerHTML = `<div class="panel"><div class="spinwrap"><span class="spin"></span>${T().loadingHeads}</div></div>`;
+  try{
+    const txt = await callClaude(headlinesPrompt(), true);
+    const arr = extractJSON(txt);
+    state.headlines = Array.isArray(arr)?arr:(arr.headlines||[]);
+    renderHeadlines();
+    renderEmpty();
+  }catch(e){
+    $("#hlist").innerHTML="";
+    $("#read").innerHTML = errorBox(()=>loadHeadlines());
+    console.error(e);
+  }
+}
+function renderHeadlines(){
+  const list=$("#hlist"); list.innerHTML="";
+  (state.headlines||[]).forEach(h=>{
+    const c=el("button","hcard"+(h.id===state.activeId?" active":""));
+    c.dataset.id=h.id;
+    c.innerHTML=`<div class="hcat">${esc(h.category_de||"")}</div>
+      <div class="htitle">${esc(h.headline_de||"")}</div>
+      <div class="hteaser">${esc(h.teaser_de||"")}</div>`;
+    c.onclick=()=>openArticle(h);
+    list.appendChild(c);
+  });
+}
+
+/* ---------------- Rendering: reading area ---------------- */
+function renderEmpty(){
+  const t=T();
+  $("#read").innerHTML = `<div class="empty">
+    <h3 class="serif">${t.emptyH}</h3>
+    <p style="max-width:440px;margin:0 auto">${t.emptyP}</p>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--der)"></i>${t.masc}</span>
+      <span><i class="swatch" style="background:var(--die)"></i>${t.fem}</span>
+      <span><i class="swatch" style="background:var(--das)"></i>${t.neut}</span>
+    </div>
+  </div>`;
+}
+function errorBox(retryFn){
+  const id="err"+Math.random().toString(36).slice(2);
+  setTimeout(()=>{ const b=document.getElementById(id); if(b)b.onclick=retryFn; },0);
+  return `<div class="errbox">${T().err}<br><button class="ghost" id="${id}">${T().retry}</button></div>`;
+}
+
+function cacheKey(h){ return `${h.id}|${state.level}|${state.transLang}`; }
+
+async function openArticle(h){
+  state.activeId=h.id; renderHeadlines();
+  stopSpeech();
+  const key=cacheKey(h);
+  if(state.cache[key]){ paintArticle(h, state.cache[key]); return; }
+
+  // shell with article loading
+  $("#read").innerHTML = `<div class="panel">
+    <div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div>
+      <h1 class="art-title serif">${esc(h.headline_de||"")}</h1></div>
+    <div class="spinwrap"><span class="spin"></span>${T().loadingArt}</div>
+  </div>`;
+
+  try{
+    const artTxt = await callClaude(articlePrompt(h), true);
+    const article = extractJSON(artTxt);
+    const bundle = {article, analysis:null, exercises:null};
+    state.cache[key]=bundle;
+    paintArticle(h, bundle);
+
+    // analysis + exercises in parallel
+    const joined = (article.sentences||[]).map(s=>s.de).join(" ");
+    Promise.allSettled([
+      callClaude(analysisPrompt(joined),false).then(t=>extractJSON(t)),
+      callClaude(exercisesPrompt(joined),false).then(t=>extractJSON(t))
+    ]).then(([a,e])=>{
+      bundle.analysis = a.status==="fulfilled"? a.value : {error:true};
+      bundle.exercises = e.status==="fulfilled"? e.value : {error:true};
+      if(bundle.analysis && !bundle.analysis.error) buildGenderMap(bundle.analysis.nouns);
+      if(state.activeId===h.id) paintArticle(h, bundle); // repaint with grammar colours + panels
+    });
+  }catch(e){
+    console.error(e);
+    $("#read").innerHTML = errorBox(()=>openArticle(h));
+  }
+}
+
+function paintArticle(h, bundle){
+  const t=T(); const a=bundle.article;
+  if(bundle.analysis && !bundle.analysis.error) buildGenderMap(bundle.analysis.nouns);
+
+  const rows=(a.sentences||[]).map((s,i)=>`
+    <div class="srow" data-i="${i}">
+      <div class="s-de serif">
+        <button class="playbtn small mini" title="${esc(t.playSentence)}" data-speak="${i}" aria-label="${esc(t.playSentence)}">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+        ${colourNouns(esc(s.de))}
+      </div>
+      <div class="s-tr">${esc(s.tr)}</div>
+    </div>`).join("");
+
+  const srcLink = h.url ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${t.openOrf} ↗</a>` : "";
+
+  $("#read").innerHTML = `<div class="panel">
+    <div class="art-head">
+      <div class="art-cat">${esc(h.category_de||"")}</div>
+      <h1 class="art-title serif">${esc(a.title_de||h.headline_de||"")}</h1>
+      ${a.note? `<p class="art-note">${esc(a.note)}</p>`:""}
+      ${srcLink? `<p class="art-note" style="font-style:normal">${t.source}: ${srcLink}</p>`:""}
+    </div>
+    <div class="audiobar">
+      <button class="playbtn" id="playBtn" aria-label="${esc(t.listen)}"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+      <span class="audio-label" id="playLabel">${t.listen}</span>
+      <label class="rate">${t.speed}
+        <input type="range" min="0.6" max="1.2" step="0.05" value="${state.rate}" id="rate">
+      </label>
+    </div>
+    <div class="col-tags"><div style="flex:1">${t.colDe}</div><div style="flex:1">${t.colTr}</div></div>
+    <div class="sentences" id="sentences">${rows}</div>
+
+    <div class="tabs">
+      <button class="tab ${state.tab==='gram'?'on':''}" data-tab="gram">${t.tabGram}</button>
+      <button class="tab ${state.tab==='ex'?'on':''}" data-tab="ex">${t.tabEx}</button>
+    </div>
+    <div class="tabbody" id="tabbody"></div>
+  </div>`;
+
+  // wire audio
+  $("#playBtn").onclick=()=>playArticle(a.sentences||[]);
+  $("#rate").oninput=(e)=>{ state.rate=parseFloat(e.target.value); };
+  $("#sentences").querySelectorAll("[data-speak]").forEach(b=>{
+    b.onclick=()=>{ stopSpeech(); speakOne((a.sentences||[])[+b.dataset.speak].de); };
+  });
+  // wire tabs
+  $("#tabbody").parentElement.querySelectorAll(".tab").forEach(tb=>{
+    tb.onclick=()=>{ state.tab=tb.dataset.tab; paintArticle(h,bundle); };
+  });
+  updatePlayBtn();
+  renderTab(bundle);
+}
+
+function renderTab(bundle){
+  const body=$("#tabbody"); const t=T();
+  if(state.tab==="gram") renderGrammar(body, bundle.analysis);
+  else renderExercises(body, bundle.exercises);
+}
+
+/* ---------- Grammar panel ---------- */
+function renderGrammar(body, analysis){
+  const t=T();
+  if(!analysis){ body.innerHTML=`<div class="spinwrap"><span class="spin"></span>${t.loadingAnalysis}</div>`; return; }
+  if(analysis.error){ body.innerHTML=`<div class="errbox">${t.err}</div>`; return; }
+
+  const caseClass={Akkusativ:"akk",Dativ:"dat",Nominativ:"nom",Genitiv:"gen"};
+  const nouns=(analysis.nouns||[]).map(n=>`
+    <div class="ncard ${n.article}">
+      <span class="art">${esc(n.article)}</span> <span class="word">${esc(n.word)}</span>
+      <div class="meta">${n.plural?("Pl. "+esc(n.plural)+" · "):""}${esc(n.meaning||"")}</div>
+    </div>`).join("");
+  const cases=(analysis.cases||[]).map(c=>`
+    <div class="gline">
+      <span class="gphrase">${esc(c.phrase)}</span>
+      <span class="pill ${caseClass[c.case]||'nom'}">${esc(c.case)}</span>
+      <div class="gexp">${esc(c.explanation||"")}</div>
+    </div>`).join("");
+  const adj=(analysis.adjectives||[]).map(d=>`
+    <div class="gline">
+      <span class="gphrase">${esc(d.phrase)}</span>
+      <span class="gend">${esc(d.adjective)} → ${esc(d.ending)}</span>
+      <div class="gexp">${esc(d.explanation||"")}</div>
+    </div>`).join("");
+
+  body.innerHTML = `
+    <div class="sec-label">${t.gNouns}</div><div class="ngrid">${nouns||"—"}</div>
+    <div class="sec-label">${t.gCases}</div>${cases||"—"}
+    <div class="sec-label">${t.gAdj}</div>${adj||"—"}`;
+}
+
+/* ---------- Exercises panel ---------- */
+let exScore={correct:0,total:0};
+function renderExercises(body, ex){
+  const t=T();
+  if(!ex){ body.innerHTML=`<div class="spinwrap"><span class="spin"></span>${t.loadingEx}</div>`; return; }
+  if(ex.error){ body.innerHTML=`<div class="errbox">${t.err}</div>`; return; }
+  exScore={correct:0,total:0};
+  body.innerHTML="";
+
+  // 1. Gender ID
+  body.appendChild(secLabel(t.exGender));
+  (ex.gender||[]).forEach((q,i)=>{
+    const card=el("div","ex");
+    card.innerHTML=`<p class="ex-q"><strong>${esc(q.noun)}</strong> <span style="color:var(--muted)">— ${esc(q.meaning||"")}</span><br><span style="font-size:13px;color:var(--muted)">${t.whichGender}</span></p>`;
+    const opts=el("div","opts");
+    ["der","die","das"].forEach(o=>{
+      const b=el("button","opt "+o,o);
+      b.onclick=()=>mcAnswer(b,opts,o===q.answer,o,q.answer,null,card);
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    card.appendChild(feedbackEl());
+    body.appendChild(card);
+  });
+
+  // 2. Case ID
+  body.appendChild(secLabel(t.exCases));
+  (ex.cases||[]).forEach(q=>{
+    const card=el("div","ex");
+    const sent=esc(q.sentence||"").replace(/\*\*(.+?)\*\*/g,'<u style="text-decoration-color:var(--at-red);text-underline-offset:3px">$1</u>');
+    card.innerHTML=`<p class="ex-q"><span class="de">${sent}</span><br><span style="font-size:13px;color:var(--muted)">${esc(q.question||"")}</span></p>`;
+    const opts=el("div","opts");
+    (q.options||["Akkusativ","Dativ"]).forEach(o=>{
+      const b=el("button","opt",o);
+      b.onclick=()=>mcAnswer(b,opts,o===q.answer,o,q.answer,q.explanation,card);
+      opts.appendChild(b);
+    });
+    card.appendChild(opts); card.appendChild(feedbackEl());
+    body.appendChild(card);
+  });
+
+  // 3. Adjective declension
+  body.appendChild(secLabel(t.exDecl));
+  (ex.declension||[]).forEach(q=>{
+    const card=el("div","ex");
+    const sent=esc(q.sentence||"").replace(/_+/g,'<span class="gap">?</span>');
+    card.innerHTML=`<p class="ex-q"><span class="de">${sent}</span>${q.base?` <span style="color:var(--muted);font-size:13px">(${esc(q.base)})</span>`:""}</p>`;
+    const opts=el("div","opts");
+    (q.options||[]).forEach(o=>{
+      const b=el("button","opt",o);
+      b.onclick=()=>mcAnswer(b,opts,o===q.answer,o,q.answer,q.explanation,card);
+      opts.appendChild(b);
+    });
+    card.appendChild(opts); card.appendChild(feedbackEl());
+    body.appendChild(card);
+  });
+
+  // 4. Translation
+  body.appendChild(secLabel(t.exTrans));
+  (ex.translation||[]).forEach(q=>{
+    const card=el("div","ex");
+    card.innerHTML=`<p class="ex-q">${t.promptTrans} <em>${esc(q.prompt)}</em></p>`;
+    const ta=el("textarea","trans"); ta.placeholder=t.yourAnswer;
+    const btn=el("button","ghost reveal",t.reveal);
+    const ans=el("div","model-answer",`<span class="lab">${t.model}</span>${esc(q.answer)}`);
+    btn.onclick=()=>{ ans.classList.add("show"); };
+    card.appendChild(ta); card.appendChild(btn); card.appendChild(ans);
+    body.appendChild(card);
+  });
+
+  updateScoreChips();
+}
+function secLabel(txt){
+  const d=el("div","sec-label",txt+` <span class="scorechip" data-score></span>`);
+  return d;
+}
+function feedbackEl(){ return el("div","feedback"); }
+function mcAnswer(btn,opts,isCorrect,chosen,answer,explanation,card){
+  opts.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; });
+  btn.classList.add(isCorrect?"correct":"wrong");
+  if(!isCorrect){
+    opts.querySelectorAll(".opt").forEach(b=>{ if(b.textContent===answer) b.classList.add("correct"); });
+  }
+  const fb=card.querySelector(".feedback");
+  fb.className="feedback show "+(isCorrect?"good":"warn");
+  fb.textContent=(isCorrect?T().correct:T().wrong)+(explanation?(" "+explanation):(" "+(isCorrect?"":answer)));
+  exScore.total++; if(isCorrect)exScore.correct++;
+  updateScoreChips();
+}
+function updateScoreChips(){
+  document.querySelectorAll("[data-score]").forEach(s=>{
+    s.textContent = exScore.total? `${exScore.correct}/${exScore.total} ${T().score}` : "";
+  });
+}
+
+/* ---------------- Controls ---------------- */
+function applyI18N(){
+  const t=T();
+  document.documentElement.lang=state.uiLang;
+  $("#tagline").textContent=t.tagline;
+  $("#lblUi").textContent=t.ui; $("#lblTrans").textContent=t.trans; $("#lblLevel").textContent=t.level;
+  $("#lvOrig").textContent=t.levelOrig; $("#lvSimple").textContent=t.levelSimple;
+  $("#refreshLbl").textContent=t.refresh;
+  $("#feedTitle").textContent=t.feed; $("#feedDate").textContent=todayHuman;
+  $("#footer").innerHTML = t.note + (voiceMissing? ("<br>"+t.noVoice):"");
+}
+function bindSeg(id, key, after){
+  $(id).querySelectorAll("button").forEach(b=>{
+    b.onclick=()=>{
+      $(id).querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+      state[key]=b.dataset.ui||b.dataset.tr||b.dataset.lv;
+      after && after();
+    };
+  });
+}
+
+function init(){
+  applyI18N();
+  bindSeg("#uiSeg","uiLang",()=>{ applyI18N(); rerenderCurrent(); });
+  bindSeg("#transSeg","transLang",()=>{ reloadCurrentArticle(); });
+  bindSeg("#levelSeg","level",()=>{ reloadCurrentArticle(); });
+  $("#refreshBtn").onclick=()=>{ state.cache={}; state.activeId=null; loadHeadlines(); };
+  loadHeadlines();
+}
+function rerenderCurrent(){
+  applyI18N();
+  if(state.headlines) renderHeadlines();
+  if(state.activeId==null){ renderEmpty(); return; }
+  const h=(state.headlines||[]).find(x=>x.id===state.activeId);
+  const b=h && state.cache[cacheKey(h)];
+  if(h && b) paintArticle(h,b); else renderEmpty();
+}
+function reloadCurrentArticle(){
+  if(state.activeId==null) return;
+  const h=(state.headlines||[]).find(x=>x.id===state.activeId);
+  if(h) openArticle(h); // cache key includes level+transLang, so this refetches if needed
+}
+
+window.addEventListener("beforeunload", stopSpeech);
+init();
+</script>
+</body>
+</html>
