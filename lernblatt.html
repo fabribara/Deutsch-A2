@@ -291,7 +291,14 @@ const I18N = {
     source:"Fuente", openOrf:"Abrir en orf.at",
     note:"Lernblatt usa noticias reales del ORF. La traducción y los ejercicios se generan automáticamente y pueden contener errores — usalos como apoyo, no como verdad absoluta. El audio usa la voz de tu navegador.",
     noVoice:"Tu navegador no tiene una voz en alemán instalada, así que el audio puede sonar con otra. En el sistema podés agregar una voz «Deutsch (de-DE)».",
-    score:"aciertos"
+    score:"aciertos",
+    errFeed:"No se pudieron cargar los titulares del ORF. Tu entorno o tu red pueden estar bloqueando los feeds externos.",
+    sampleBtn:"Practicar con un texto de muestra",
+    samples:[
+      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Política"},
+      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economía"},
+      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Ciencia"}
+    ]
   },
   en:{
     tagline:"ORF news to read and learn German",
@@ -319,7 +326,14 @@ const I18N = {
     source:"Source", openOrf:"Open on orf.at",
     note:"Lernblatt uses real ORF news. Translations and exercises are generated automatically and may contain mistakes — treat them as study support, not gospel. Audio uses your browser's built-in voice.",
     noVoice:"Your browser has no German voice installed, so audio may use another. You can add a “Deutsch (de-DE)” voice in your system settings.",
-    score:"correct"
+    score:"correct",
+    errFeed:"Couldn't load the ORF headlines. Your environment or network may be blocking external news feeds.",
+    sampleBtn:"Practise with a sample text",
+    samples:[
+      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Politics"},
+      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economy"},
+      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Science"}
+    ]
   }
 };
 
@@ -335,13 +349,12 @@ const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h
 const T = ()=>I18N[state.uiLang];
 
 /* ---------------- Claude API helpers ---------------- */
-async function callClaude(prompt, useSearch){
+async function callClaude(prompt){
   const body = {
     model:"claude-sonnet-4-6",
     max_tokens:1000,
     messages:[{role:"user", content:prompt}]
   };
-  if(useSearch) body.tools=[{type:"web_search_20250305", name:"web_search"}];
   const res = await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)
   });
@@ -366,20 +379,76 @@ function extractJSON(text){
 const todayISO = new Date().toISOString().slice(0,10);
 const todayHuman = new Date().toLocaleDateString("de-AT",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 
-function headlinesPrompt(){
-  return `Today is ${todayISO}. Use web search to find the CURRENT top news headlines from ORF (Österreichischer Rundfunk, orf.at), Austria's public broadcaster. Pick 8 diverse, recent headlines across categories such as Inland (Austria), Ausland (world), Wirtschaft, Wissenschaft, Kultur and Sport.
-Respond with ONLY a JSON array (no markdown, no commentary). Each element:
-{"id": <number 1-8>, "headline_de": "<the headline in German>", "teaser_de": "<one short German sentence>", "category_de": "<short German category label>", "url": "<source URL on orf.at if known, else \\"\\">"}`;
+/* ---- Live ORF news via RSS (through CORS-friendly proxies) ---- */
+const ORF_FEED = "https://rss.orf.at/news.xml";
+const PROXIES = [
+  u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}`, // clean JSON
+  u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,           // {contents:"<xml>"}
+  u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`      // raw passthrough
+];
+function stripTags(s){ const d=document.createElement("div"); d.innerHTML=s||""; return (d.textContent||"").replace(/\s+/g," ").trim(); }
+function tidyCat(c){ return (c||"").replace(/^.*[\/:]/,"").trim() || "ORF"; }
+function normItem(title,link,cat,desc,idx){
+  return { id:idx+1, headline_de:stripTags(title).trim(), teaser_de:stripTags(desc).trim(),
+           category_de:tidyCat(cat), url:(link||"").trim() };
 }
-function articlePrompt(h){
+function parseFeedXML(xml){
+  const doc=new DOMParser().parseFromString(xml,"text/xml");
+  const items=[...doc.querySelectorAll("item")];
+  if(!items.length) throw new Error("feed had no items");
+  const tx=(n,s)=>{ const e=n.querySelector(s); return e?e.textContent:""; };
+  return items.map((it,i)=>normItem(tx(it,"title"),tx(it,"link"),tx(it,"category")||tx(it,"subject"),tx(it,"description"),i));
+}
+async function fetchHeadlines(){
+  let lastErr;
+  for(let i=0;i<PROXIES.length;i++){
+    try{
+      const res=await fetch(PROXIES[i](ORF_FEED));
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      if(i===0){
+        const j=await res.json();
+        if(j.status!=="ok"||!Array.isArray(j.items)||!j.items.length) throw new Error("rss2json empty");
+        return j.items.map((it,idx)=>normItem(it.title,it.link,(it.categories||[])[0],it.description,idx));
+      }else if(i===1){
+        const j=await res.json(); return parseFeedXML(j.contents||"");
+      }else{
+        return parseFeedXML(await res.text());
+      }
+    }catch(e){ lastErr=e; }
+  }
+  throw lastErr||new Error("all news proxies failed");
+}
+// Best-effort: pull the real article body so the study text is grounded, not invented.
+async function fetchArticleText(url){
+  if(!url) return "";
+  for(const mk of [PROXIES[1],PROXIES[2]]){
+    try{
+      const res=await fetch(mk(url));
+      if(!res.ok) continue;
+      let html;
+      if(mk===PROXIES[1]){ const j=await res.json(); html=j.contents; } else { html=await res.text(); }
+      const doc=new DOMParser().parseFromString(html||"","text/html");
+      const ps=[...doc.querySelectorAll("p")].map(p=>p.textContent.trim()).filter(t=>t.length>50);
+      const joined=ps.join(" ").replace(/\s+/g," ").trim();
+      if(joined.length>140) return joined.slice(0,1800);
+    }catch(e){}
+  }
+  return "";
+}
+
+function articlePrompt(h, sourceText){
+  const L=TR_NAME[state.transLang];
   const lvl = state.level==="simple"
-    ? "Rewrite the story in clear, natural B1-level German (simpler vocabulary and sentence structure, but still authentic news style)."
-    : "Use authentic German news language, close to how it was published.";
-  return `Today is ${todayISO}. A learner is reading this ORF headline: "${h.headline_de}". ${h.url?("Likely source: "+h.url+"."):""}
-Use web search to find the actual ORF article content. ${lvl}
-Segment the story into 8 short German sentences. Translate EACH sentence into ${TR_NAME[state.transLang]} faithfully and naturally.
+    ? "Write in clear, natural B1-level German (simpler words and shorter sentences, still real news style)."
+    : "Write in authentic German news style.";
+  const basis = sourceText
+    ? `Source article text (German):\n"""${sourceText}"""`
+    : `Only the ORF headline is available (the feed provides titles only).`;
+  return `A learner reads this current ORF news headline: "${h.headline_de}" (category: ${h.category_de}).
+${basis}
+${lvl} Produce a coherent news item of exactly 8 short German sentences, based strictly on the information above. Do NOT invent specific names, numbers or quotes that are not supported by the source; if details are missing, keep the sentences accurate but general. Translate EACH sentence into ${L} faithfully.
 Respond with ONLY this JSON (no markdown):
-{"title_de":"<German title>","sentences":[{"de":"<German sentence>","tr":"<translation>"}],"note":"<if you could not retrieve the exact article and summarised instead, a one-line caveat in ${TR_NAME[state.transLang]}; otherwise empty string>"}`;
+{"title_de":"<German title>","sentences":[{"de":"<German sentence>","tr":"<translation>"}],"note":"<if you had only the headline, one short caveat line in ${L} that this is a reconstruction; otherwise empty string>"}`;
 }
 function analysisPrompt(text){
   const L=TR_NAME[state.transLang];
@@ -483,16 +552,22 @@ async function loadHeadlines(){
   renderHeadlinesLoading();
   $("#read").innerHTML = `<div class="panel"><div class="spinwrap"><span class="spin"></span>${T().loadingHeads}</div></div>`;
   try{
-    const txt = await callClaude(headlinesPrompt(), true);
-    const arr = extractJSON(txt);
-    state.headlines = Array.isArray(arr)?arr:(arr.headlines||[]);
+    const items = await fetchHeadlines();
+    state.headlines = items.filter(h=>h.headline_de).slice(0,10);
+    if(!state.headlines.length) throw new Error("no usable items");
     renderHeadlines();
     renderEmpty();
   }catch(e){
-    $("#hlist").innerHTML="";
-    $("#read").innerHTML = errorBox(()=>loadHeadlines());
     console.error(e);
+    $("#hlist").innerHTML="";
+    $("#read").innerHTML = errorBox(()=>loadHeadlines(), T().errFeed, {label:T().sampleBtn, fn:loadSampleHeadlines});
   }
+}
+function loadSampleHeadlines(){
+  state.headlines = T().samples.map((s,i)=>({id:i+1, headline_de:s.h, teaser_de:s.t, category_de:s.c, url:""}));
+  state.activeId=null;
+  renderHeadlines();
+  renderEmpty();
 }
 function renderHeadlines(){
   const list=$("#hlist"); list.innerHTML="";
@@ -520,10 +595,17 @@ function renderEmpty(){
     </div>
   </div>`;
 }
-function errorBox(retryFn){
+function errorBox(retryFn, msg, extra){
   const id="err"+Math.random().toString(36).slice(2);
-  setTimeout(()=>{ const b=document.getElementById(id); if(b)b.onclick=retryFn; },0);
-  return `<div class="errbox">${T().err}<br><button class="ghost" id="${id}">${T().retry}</button></div>`;
+  const id2="err"+Math.random().toString(36).slice(2);
+  setTimeout(()=>{
+    const b=document.getElementById(id); if(b)b.onclick=retryFn;
+    if(extra){ const b2=document.getElementById(id2); if(b2)b2.onclick=extra.fn; }
+  },0);
+  return `<div class="errbox">${esc(msg||T().err)}<br>
+    <button class="ghost" id="${id}">${T().retry}</button>
+    ${extra?`<button class="ghost" id="${id2}" style="margin-left:8px">${esc(extra.label)}</button>`:""}
+  </div>`;
 }
 
 function cacheKey(h){ return `${h.id}|${state.level}|${state.transLang}`; }
@@ -542,7 +624,8 @@ async function openArticle(h){
   </div>`;
 
   try{
-    const artTxt = await callClaude(articlePrompt(h), true);
+    const src = await fetchArticleText(h.url);
+    const artTxt = await callClaude(articlePrompt(h, src));
     const article = extractJSON(artTxt);
     const bundle = {article, analysis:null, exercises:null};
     state.cache[key]=bundle;
@@ -551,8 +634,8 @@ async function openArticle(h){
     // analysis + exercises in parallel
     const joined = (article.sentences||[]).map(s=>s.de).join(" ");
     Promise.allSettled([
-      callClaude(analysisPrompt(joined),false).then(t=>extractJSON(t)),
-      callClaude(exercisesPrompt(joined),false).then(t=>extractJSON(t))
+      callClaude(analysisPrompt(joined)).then(t=>extractJSON(t)),
+      callClaude(exercisesPrompt(joined)).then(t=>extractJSON(t))
     ]).then(([a,e])=>{
       bundle.analysis = a.status==="fulfilled"? a.value : {error:true};
       bundle.exercises = e.status==="fulfilled"? e.value : {error:true};
@@ -561,7 +644,7 @@ async function openArticle(h){
     });
   }catch(e){
     console.error(e);
-    $("#read").innerHTML = errorBox(()=>openArticle(h));
+    $("#read").innerHTML = errorBox(()=>openArticle(h), T().err);
   }
 }
 
