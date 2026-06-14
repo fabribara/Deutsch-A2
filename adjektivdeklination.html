@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="de-AT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Adjektivdeklination · Österreichisch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0E6;
+    --paper-2:#EBE5D6;
+    --card:#FBF8F0;
+    --ink:#211B16;
+    --ink-soft:#5C5247;
+    --line:#D8CFBC;
+    /* gender colours — the memory system */
+    --masc:#2D5BA8;   /* blue   */
+    --fem:#C0392B;    /* red    */
+    --neut:#2E7D5B;   /* green  */
+    --pl:#7B4FA0;     /* purple */
+    --at-red:#C8102E;
+    --good:#2E7D5B;
+    --bad:#C0392B;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.55;font-size:17px;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px 64px}
+
+  header{padding:30px 0 16px;text-align:center}
+  .at-stripe{height:5px;width:74px;margin:0 auto 18px;border-radius:3px;
+    background:linear-gradient(to bottom,var(--at-red) 0 33%,#fff 33% 66%,var(--at-red) 66% 100%);box-shadow:0 0 0 1px var(--line)}
+  h1{font-family:"Playfair Display",serif;font-weight:900;font-size:36px;line-height:1.03;margin:0 0 6px;letter-spacing:-.6px}
+  .sub{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+  .legend{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin:18px 0 4px;font-size:13px;font-family:"IBM Plex Mono",monospace}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+  nav{position:sticky;top:0;z-index:20;background:var(--paper);padding:10px 0 8px;display:flex;gap:7px;overflow-x:auto;
+    scrollbar-width:none;margin:8px -16px 0;padding-left:16px;padding-right:16px}
+  nav::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);color:var(--ink-soft);
+    padding:9px 15px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.18s}
+  .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  section{display:none;animation:fade .3s ease}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2{font-family:"Playfair Display",serif;font-weight:700;font-size:25px;margin:24px 0 4px;letter-spacing:-.3px}
+  .lead{color:var(--ink-soft);margin:0 0 16px;font-size:15.5px}
+  .card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:18px;margin:0 0 16px}
+  .card h3{margin:0 0 6px;font-size:18px;font-family:"Playfair Display",serif;font-weight:700}
+  .trigger{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-soft);margin:0 0 12px}
+  .trigger code{background:var(--paper-2);padding:1px 6px;border-radius:5px;font-weight:600}
+
+  /* declension matrix — stacked cards per gender for mobile */
+  .gender-block{margin-top:10px;border-radius:12px;overflow:hidden;border:1.5px solid var(--line)}
+  .ghead{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:#fff;padding:7px 13px}
+  .ghead.masc{background:var(--masc)} .ghead.fem{background:var(--fem)} .ghead.neut{background:var(--neut)} .ghead.pl{background:var(--pl)}
+  .grow{display:grid;grid-template-columns:64px 1fr;border-top:1px solid var(--line);background:var(--card)}
+  .grow:first-of-type{border-top:none}
+  .gcase{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink-soft);padding:10px 8px;background:var(--paper-2);display:flex;align-items:center}
+  .gform{padding:9px 12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .end{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px}
+  .gex{font-size:14px;color:var(--ink-soft);font-style:italic}
+  .gex u{text-decoration-color:currentColor}
+
+  ul.tips{margin:8px 0 0;padding-left:20px}
+  ul.tips li{margin:7px 0}
+  .ex{font-style:italic}
+  .big-rule{font-family:"Playfair Display",serif;font-size:21px;line-height:1.35;margin:0 0 8px}
+  code{font-family:"IBM Plex Mono",monospace;background:var(--paper-2);padding:1px 6px;border-radius:5px;font-weight:600}
+
+  .at-note{border:1.5px dashed var(--at-red);background:rgba(200,16,46,.05);border-radius:12px;padding:13px 15px;margin:14px 0}
+  .at-note .flag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--at-red);display:block;margin-bottom:5px}
+
+  /* quiz */
+  .quizbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .progress{flex:1;height:8px;background:var(--paper-2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .progress i{display:block;height:100%;width:0;background:var(--ink);transition:width .4s}
+  .scorebox{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600}
+  .qprompt{font-size:14px;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;letter-spacing:.04em;margin-bottom:4px}
+  .qtype{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    padding:3px 9px;border-radius:6px;color:#fff;display:inline-block;margin-bottom:8px}
+  .t-stark{background:var(--ink)} .t-schwach{background:var(--neut)} .t-gemischt{background:var(--pl)}
+  .qsentence{font-size:22px;font-family:"Playfair Display",serif;line-height:1.35;margin:2px 0 4px}
+  .stem{font-weight:700}
+  .blank{display:inline-block;min-width:30px;border-bottom:3px solid var(--ink);text-align:center;font-weight:700}
+  .qtrans{color:var(--ink-soft);font-size:14.5px;font-style:italic;margin-bottom:16px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;padding:15px 10px;border-radius:13px;
+    border:2px solid var(--line);background:var(--card);cursor:pointer;transition:.15s;text-align:center}
+  .opt:active{transform:scale(.97)}
+  .opt.correct{border-color:var(--good);background:rgba(46,125,91,.13);color:var(--good)}
+  .opt.wrong{border-color:var(--bad);background:rgba(192,57,43,.12);color:var(--bad)}
+  .opt:disabled{cursor:default}
+  .feedback{margin-top:15px;border-radius:13px;padding:14px 15px;font-size:15px;display:none}
+  .feedback.show{display:block;animation:fade .25s}
+  .feedback.ok{background:rgba(46,125,91,.1);border:1.5px solid var(--good)}
+  .feedback.no{background:rgba(192,57,43,.08);border:1.5px solid var(--bad)}
+  .feedback .verdict{font-weight:700;font-family:"Playfair Display",serif;font-size:17px;margin-bottom:4px}
+  .feedback .verdict.ok{color:var(--good)} .feedback .verdict.no{color:var(--bad)}
+  .next{margin-top:14px;width:100%;padding:15px;border:none;border-radius:13px;background:var(--ink);color:var(--paper);
+    font-family:inherit;font-weight:600;font-size:16px;cursor:pointer}
+  .done{text-align:center;padding:24px 10px}
+  .done .big{font-family:"Playfair Display",serif;font-size:46px;font-weight:900;margin:6px 0}
+  .restart{margin-top:8px;padding:13px 26px;border:2px solid var(--ink);background:transparent;border-radius:12px;font-family:inherit;font-weight:600;font-size:15px;cursor:pointer}
+
+  footer{text-align:center;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;margin-top:36px;padding-top:18px;border-top:1px solid var(--line)}
+
+  @media(max-width:430px){
+    h1{font-size:30px} body{font-size:16px}
+    .qsentence{font-size:19px}
+    .grow{grid-template-columns:56px 1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="at-stripe"></div>
+    <h1>Adjektiv&shy;deklination</h1>
+    <div class="sub">Drei Typen · vier Fälle · Österreichisch</div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--masc)"></i>mask.</span>
+      <span><i class="dot" style="background:var(--fem)"></i>fem.</span>
+      <span><i class="dot" style="background:var(--neut)"></i>neut.</span>
+      <span><i class="dot" style="background:var(--pl)"></i>Plural</span>
+    </div>
+  </header>
+
+  <nav id="nav">
+    <button class="tab active" data-s="logik">Die Logik</button>
+    <button class="tab" data-s="stark">Stark</button>
+    <button class="tab" data-s="schwach">Schwach</button>
+    <button class="tab" data-s="gemischt">Gemischt</button>
+    <button class="tab" data-s="quiz">Üben</button>
+  </nav>
+
+  <!-- ============ LOGIK ============ -->
+  <section id="logik" class="active">
+    <h2>Ein Prinzip erklärt fast alles</h2>
+    <div class="card">
+      <p class="big-rule">Geschlecht und Fall müssen <em>genau einmal</em> markiert werden — entweder im Artikel <em>oder</em> in der Adjektivendung.</p>
+      <p style="margin:0;color:var(--ink-soft)">Sagt der Artikel schon alles (<code>der</code>, <code>dem</code>…), wird das Adjektiv „faul“ und nimmt meist nur <code>-e</code> oder <code>-en</code>. Fehlt der Artikel, muss das Adjektiv die ganze Arbeit machen und übernimmt die Artikel-Endung.</p>
+    </div>
+
+    <div class="card">
+      <h3>Welcher der drei Typen?</h3>
+      <p class="trigger">Es kommt nur darauf an, <b>was vor dem Adjektiv steht.</b></p>
+      <ul class="tips">
+        <li><span class="qtype t-stark">Stark</span> &nbsp;<b>nichts</b> davor (kein Artikel). Das Adjektiv trägt das Signal allein.<br><span class="ex">guter Wein · kaltes Wasser · frische Marillen</span></li>
+        <li><span class="qtype t-schwach">Schwach</span> &nbsp;nach <code>der/die/das</code>, <code>dieser</code>, <code>jeder</code>, <code>welcher</code>, <code>alle</code>.<br><span class="ex">der gute Wein · das kalte Wasser</span></li>
+        <li><span class="qtype t-gemischt">Gemischt</span> &nbsp;nach <code>ein</code>, <code>kein</code>, <code>mein/dein/sein…</code><br><span class="ex">ein guter Wein · meine frischen Marillen</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Der „-en“-Sog</h3>
+      <p style="margin:0">Wenn du unsicher bist, ist <code>-en</code> die statistisch sicherste Wette:</p>
+      <ul class="tips">
+        <li><b>Dativ</b> ist fast überall <code>-en</code>.</li>
+        <li><b>Dativ Plural</b> und <b>Genitiv mask./neut.</b> sind <em>immer</em> <code>-en</code> — in allen drei Typen.</li>
+        <li>Maskulin <b>Akkusativ</b> ist <em>immer</em> <code>-en</code> (dein klassischer Stolperstein!).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Prädikativ = keine Endung</h3>
+      <p style="margin:0">Nach <em>sein, werden, bleiben</em> steht das Adjektiv „nackt“ — ohne jede Endung:</p>
+      <p class="ex" style="margin:8px 0 0">Der Wein ist <b>gut</b>. · Die Luft wird <b>frisch</b>. · Es bleibt <b>kalt</b>.</p>
+    </div>
+
+    <div class="at-note">
+      <span class="flag">🇦🇹 Österreichisch</span>
+      Die Endungen sind in ganz D-A-CH gleich — aber die Wörter, an denen du übst, sind hier anders: <b>der Paradeiser</b> (Tomate), <b>die Marille</b> (Aprikose), <b>der Erdapfel</b> (Kartoffel), <b>der Topfen</b> (Quark), <b>das Beisl</b> (Wirtshaus), <b>der Sessel</b> (Stuhl). Im <b>Jänner</b> (Januar) ist es <em>heuer</em> (dieses Jahr) besonders kalt.
+    </div>
+  </section>
+
+  <!-- ============ STARK ============ -->
+  <section id="stark">
+    <h2>Stark <span style="font-size:15px;color:var(--ink-soft)">· ohne Artikel</span></h2>
+    <p class="trigger">Auslöser: <b>nichts</b> davor. Das Adjektiv übernimmt die volle Artikelendung.<br>(<code>-er -e -es -e</code> / <code>-en -e -es -e</code> / <code>-em -er -em -en</code>)</p>
+
+    <div class="gender-block">
+      <div class="ghead masc">Maskulin — guter Wein</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--masc)">-er</span><span class="gex">gut<u>er</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">gut<u>en</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--masc)">-em</span><span class="gex">gut<u>em</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">gut<u>en</u> Wein(e)s</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead fem">Feminin — kalte Milch</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--fem)">-e</span><span class="gex">kalt<u>e</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--fem)">-e</span><span class="gex">kalt<u>e</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--fem)">-er</span><span class="gex">kalt<u>er</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--fem)">-er</span><span class="gex">kalt<u>er</u> Milch</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead neut">Neutrum — kaltes Wasser</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--neut)">-es</span><span class="gex">kalt<u>es</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--neut)">-es</span><span class="gex">kalt<u>es</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--neut)">-em</span><span class="gex">kalt<u>em</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--neut)">-en</span><span class="gex">kalt<u>en</u> Wassers</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead pl">Plural — frische Marillen</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--pl)">-e</span><span class="gex">frisch<u>e</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--pl)">-e</span><span class="gex">frisch<u>e</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--pl)">-er</span><span class="gex">frisch<u>er</u> Marillen</span></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><p style="margin:0">Merke: die starken Endungen sind fast identisch mit <code>der/die/das</code> — nur Genitiv mask./neut. weicht ab (<code>-en</code> statt <em>-es</em>).</p></div>
+  </section>
+
+  <!-- ============ SCHWACH ============ -->
+  <section id="schwach">
+    <h2>Schwach <span style="font-size:15px;color:var(--ink-soft)">· nach der/die/das</span></h2>
+    <p class="trigger">Auslöser: <code>der · die · das · dieser · jeder · welcher · alle</code>. Der Artikel sagt schon alles → das Adjektiv ist „faul“: nur <code>-e</code> oder <code>-en</code>.</p>
+
+    <div class="gender-block">
+      <div class="ghead masc">Maskulin — der gute Wein</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--masc)">-e</span><span class="gex">der gut<u>e</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">den gut<u>en</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">dem gut<u>en</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">des gut<u>en</u> Weins</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead fem">Feminin — die kalte Milch</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--fem)">-e</span><span class="gex">die kalt<u>e</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--fem)">-e</span><span class="gex">die kalt<u>e</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--fem)">-en</span><span class="gex">der kalt<u>en</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--fem)">-en</span><span class="gex">der kalt<u>en</u> Milch</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead neut">Neutrum — das kalte Wasser</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--neut)">-e</span><span class="gex">das kalt<u>e</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--neut)">-e</span><span class="gex">das kalt<u>e</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--neut)">-en</span><span class="gex">dem kalt<u>en</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--neut)">-en</span><span class="gex">des kalt<u>en</u> Wassers</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead pl">Plural — die frischen Marillen</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">die frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">die frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">den frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">der frisch<u>en</u> Marillen</span></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><p style="margin:0"><b>Die ganze Tabelle ist <code>-en</code></b> — bis auf eine kleine Ecke oben links: Nominativ (alle Genera) und Akkusativ fem./neut. nehmen <code>-e</code>. Sonst nie etwas anderes.</p></div>
+  </section>
+
+  <!-- ============ GEMISCHT ============ -->
+  <section id="gemischt">
+    <h2>Gemischt <span style="font-size:15px;color:var(--ink-soft)">· nach ein/kein/mein</span></h2>
+    <p class="trigger">Auslöser: <code>ein · kein · mein · dein · sein · ihr · unser · euer · Ihr</code>. Ein Hybrid: dort, wo <code>ein</code> keine Endung zeigt (mask. Nom, neut. Nom/Akk), springt das Adjektiv ein und wird <em>stark</em>. Sonst ist es <em>schwach</em> (<code>-en</code>).</p>
+
+    <div class="gender-block">
+      <div class="ghead masc">Maskulin — ein guter Wein</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--masc)">-er</span><span class="gex">ein gut<u>er</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">einen gut<u>en</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">einem gut<u>en</u> Wein</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--masc)">-en</span><span class="gex">eines gut<u>en</u> Weins</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead fem">Feminin — eine kalte Milch</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--fem)">-e</span><span class="gex">eine kalt<u>e</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--fem)">-e</span><span class="gex">eine kalt<u>e</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--fem)">-en</span><span class="gex">einer kalt<u>en</u> Milch</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--fem)">-en</span><span class="gex">einer kalt<u>en</u> Milch</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead neut">Neutrum — ein kaltes Wasser</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--neut)">-es</span><span class="gex">ein kalt<u>es</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--neut)">-es</span><span class="gex">ein kalt<u>es</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--neut)">-en</span><span class="gex">einem kalt<u>en</u> Wasser</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--neut)">-en</span><span class="gex">eines kalt<u>en</u> Wassers</span></div></div>
+    </div>
+    <div class="gender-block">
+      <div class="ghead pl">Plural — meine frischen Marillen</div>
+      <div class="grow"><div class="gcase">Nom</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">meine frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Akk</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">meine frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Dat</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">meinen frisch<u>en</u> Marillen</span></div></div>
+      <div class="grow"><div class="gcase">Gen</div><div class="gform"><span class="end" style="color:var(--pl)">-en</span><span class="gex">meiner frisch<u>en</u> Marillen</span></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><p style="margin:0">Drei Felder sind „stark“ (<code>-er</code>, <code>-es</code>, <code>-es</code>) — genau dort, wo <em>ein</em> selbst leer ist. Alles andere: <code>-en</code>. Im Plural verhält sich <em>kein-/mein-</em> komplett wie <b>schwach</b>.</p></div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz">
+    <h2>Üben</h2>
+    <p class="lead">15 Lücken über alle drei Typen — mit Fokus auf Maskulin-Akkusativ (<code>-en</code>) und schwache Endungen, deinen bekannten Fallen.</p>
+    <div class="quizbar">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="scorebox" id="score">0 / 0</div>
+    </div>
+    <div id="quizbody"></div>
+  </section>
+
+  <footer>Für Fabricio · Österreichisches Deutsch · Adjektivdeklination</footer>
+</div>
+
+<script>
+document.getElementById('nav').addEventListener('click',function(e){
+  var b=e.target.closest('.tab'); if(!b)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById(b.dataset.s).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* type meta */
+var TYPE={stark:{label:'Stark · ohne Artikel',cls:'t-stark'},schwach:{label:'Schwach · nach der/die/das',cls:'t-schwach'},gemischt:{label:'Gemischt · nach ein/mein',cls:'t-gemischt'}};
+
+/* quiz data: pre = words before blank, stem = adjective stem, post = rest */
+var Q=[
+  {type:"gemischt",pre:"Ich trinke einen ",stem:"gut",post:" Wein.",end:"en",opts:["er","en","es","e"],
+   trans:"Tomo un buen vino.",why:"<b>Maskulin Akkusativ</b> → immer <code>-en</code>. <code>einen gut<u>en</u> Wein</code>. Dein Klassiker!"},
+  {type:"schwach",pre:"Der ",stem:"frisch",post:" Paradeiser schmeckt gut.",end:"e",opts:["e","en","er","es"],
+   trans:"El tomate fresco sabe bien.",why:"Nach <code>der</code> (Nom. mask.) → schwach → <code>-e</code>. <code>der frisch<u>e</u> Paradeiser</code>."},
+  {type:"stark",pre:"",stem:"Kalt",post:" Milch trinke ich nicht gern.",end:"e",opts:["e","er","es","en"],
+   trans:"No me gusta tomar leche fría.",why:"Kein Artikel → stark. Feminin Nominativ → <code>-e</code>. <code>Kalt<u>e</u> Milch</code>."},
+  {type:"gemischt",pre:"Sie kauft frische Marillen mit ihrem ",stem:"klein",post:" Bub.",end:"en",opts:["en","em","er","e"],
+   trans:"Compra albaricoques con su pequeño hijo.",why:"<code>mit</code> → Dativ. Nach <code>ihrem</code> (Dat. mask.) → schwach → <code>-en</code>. <code>ihrem klein<u>en</u> Bub</code>."},
+  {type:"schwach",pre:"Gib mir bitte den ",stem:"groß",post:" Sessel.",end:"en",opts:["e","en","er","es"],
+   trans:"Pásame la silla grande, por favor.",why:"<code>den</code> = Akk. mask. → schwach → <code>-en</code>. <code>den groß<u>en</u> Sessel</code>."},
+  {type:"stark",pre:"In Wien gibt es ",stem:"gut",post:" Kaffee.",end:"en",opts:["er","en","es","e"],
+   trans:"En Viena hay buen café.",why:"Kein Artikel → stark. <em>der Kaffee</em>, hier Akk. mask. → <code>-en</code>. <code>gut<u>en</u> Kaffee</code>."},
+  {type:"schwach",pre:"Das ",stem:"kalt",post:" Wasser ist erfrischend.",end:"e",opts:["e","es","en","er"],
+   trans:"El agua fría es refrescante.",why:"Nach <code>das</code> (Nom. neut.) → schwach → <code>-e</code>. <code>das kalt<u>e</u> Wasser</code>."},
+  {type:"gemischt",pre:"Ein ",stem:"kalt",post:" Bier, bitte!",end:"es",opts:["e","es","en","er"],
+   trans:"¡Una cerveza fría, por favor!",why:"Nach <code>ein</code> (Nom./Akk. neut.) ist <em>ein</em> endungslos → das Adjektiv wird stark → <code>-es</code>. <code>ein kalt<u>es</u> Bier</code>."},
+  {type:"stark",pre:"Mit ",stem:"warm",post:" Wasser geht es besser.",end:"em",opts:["es","em","en","er"],
+   trans:"Con agua tibia va mejor.",why:"<code>mit</code> → Dativ, kein Artikel → stark. Dat. neut. → <code>-em</code>. <code>warm<u>em</u> Wasser</code>."},
+  {type:"schwach",pre:"Ich helfe der ",stem:"nett",post:" Verkäuferin.",end:"en",opts:["e","en","er","em"],
+   trans:"Ayudo a la amable vendedora.",why:"<code>helfen</code> → Dativ. Nach <code>der</code> (Dat. fem.) → schwach → <code>-en</code>. <code>der nett<u>en</u> Verkäuferin</code>."},
+  {type:"gemischt",pre:"Das ist mein ",stem:"neu",post:" Sessel.",end:"er",opts:["e","en","er","es"],
+   trans:"Esta es mi silla nueva.",why:"Nach <code>mein</code> (Nom. mask.) ist <em>mein</em> endungslos → Adjektiv stark → <code>-er</code>. <code>mein neu<u>er</u> Sessel</code>."},
+  {type:"stark",pre:"Sie verkauft ",stem:"frisch",post:" Erdäpfel.",end:"e",opts:["e","en","er","es"],
+   trans:"Vende papas frescas.",why:"Kein Artikel → stark. Plural Akkusativ → <code>-e</code>. <code>frisch<u>e</u> Erdäpfel</code>."},
+  {type:"schwach",pre:"Ich gehe mit den ",stem:"alt",post:" Freunden ins Beisl.",end:"en",opts:["e","en","er","em"],
+   trans:"Voy al bar con los viejos amigos.",why:"<code>mit</code> → Dat. Plural. Schwach (und Plural ist sowieso überall <code>-en</code>). <code>den alt<u>en</u> Freunden</code>."},
+  {type:"gemischt",pre:"Hast du einen ",stem:"schön",post:" Tag gehabt?",end:"en",opts:["er","en","es","e"],
+   trans:"¿Tuviste un lindo día?",why:"<b>Maskulin Akkusativ</b> nach <code>einen</code> → <code>-en</code>. <code>einen schön<u>en</u> Tag</code>."},
+  {type:"stark",pre:"Im Jänner trinkt man gern ",stem:"heiß",post:" Tee.",end:"en",opts:["er","en","es","e"],
+   trans:"En enero gusta tomar té caliente.",why:"Kein Artikel → stark. <em>der Tee</em>, Akk. mask. → <code>-en</code>. <code>heiß<u>en</u> Tee</code>."}
+];
+
+var i=0,score=0,answered=false;
+var body=document.getElementById('quizbody');
+function render(){
+  answered=false;
+  if(i>=Q.length){finish();return;}
+  var q=Q[i];
+  document.getElementById('bar').style.width=(i/Q.length*100)+'%';
+  document.getElementById('score').textContent=score+' / '+Q.length;
+  var t=TYPE[q.type];
+  body.innerHTML=
+    '<div class="qprompt">Frage '+(i+1)+' · welche Endung?</div>'+
+    '<div><span class="qtype '+t.cls+'">'+t.label+'</span></div>'+
+    '<div class="qsentence">'+q.pre+'<span class="stem">'+q.stem+'</span><span class="blank" id="blk">‑?</span>'+q.post+'</div>'+
+    '<div class="qtrans">'+q.trans+'</div>'+
+    '<div class="opts" id="opts"></div>'+
+    '<div class="feedback" id="fb"></div>';
+  var opts=document.getElementById('opts');
+  q.opts.forEach(function(o){
+    var b=document.createElement('button');
+    b.className='opt';b.textContent='-'+o;
+    b.onclick=function(){choose(o,b,q);};
+    opts.appendChild(b);
+  });
+}
+function choose(o,btn,q){
+  if(answered)return;answered=true;
+  var correct=(o===q.end);
+  document.querySelectorAll('.opt').forEach(function(b){
+    b.disabled=true;
+    if(b.textContent==='-'+q.end)b.classList.add('correct');
+    else if(b===btn)b.classList.add('wrong');
+  });
+  document.getElementById('blk').textContent=q.stem.slice(-0)+'‑'+q.end;
+  document.getElementById('blk').textContent='-'+q.end;
+  if(correct)score++;
+  var fb=document.getElementById('fb');
+  fb.className='feedback show '+(correct?'ok':'no');
+  fb.innerHTML='<div class="verdict '+(correct?'ok':'no')+'">'+(correct?'Richtig! ✓':'Nicht ganz')+'</div>'+
+    '<div style="margin-bottom:8px">'+q.stem+'<code>'+q.end+'</code></div>'+
+    '<div>'+q.why+'</div>'+
+    '<button class="next" id="nx">'+(i===Q.length-1?'Ergebnis ansehen':'Weiter →')+'</button>';
+  document.getElementById('score').textContent=score+' / '+Q.length;
+  document.getElementById('nx').onclick=function(){i++;render();window.scrollTo({top:0,behavior:'smooth'});};
+}
+function finish(){
+  document.getElementById('bar').style.width='100%';
+  var pct=Math.round(score/Q.length*100);
+  var note=pct>=90?'Ausgezeichnet! 🇦🇹':pct>=70?'Sehr solide.':pct>=50?'Ordentlich — schau dir „Die Logik“ nochmal an.':'Zurück zu den Tabellen — Schritt für Schritt.';
+  body.innerHTML='<div class="done"><div class="qprompt">Fertig</div>'+
+    '<div class="big">'+score+'/'+Q.length+'</div>'+
+    '<div style="font-size:18px;font-family:Playfair Display,serif">'+pct+'% · '+note+'</div>'+
+    '<button class="restart" id="rs">Nochmal üben</button></div>';
+  document.getElementById('rs').onclick=function(){i=0;score=0;render();};
+}
+render();
+</script>
+</body>
+</html>

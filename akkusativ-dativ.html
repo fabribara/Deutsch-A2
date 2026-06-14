@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="de-AT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Akkusativ & Dativ · Österreichisch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0E6;
+    --paper-2:#EBE5D6;
+    --card:#FBF8F0;
+    --ink:#211B16;
+    --ink-soft:#5C5247;
+    --line:#D8CFBC;
+    /* case colours — the memory system */
+    --nom:#2E7D5B;   /* Nominativ — green */
+    --akk:#2D5BA8;   /* Akkusativ — blue  */
+    --dat:#C0532B;   /* Dativ — rust      */
+    --gen:#7B4FA0;   /* Genitiv — purple  */
+    --at-red:#C8102E;
+    --good:#2E7D5B;
+    --bad:#C0392B;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;
+    line-height:1.55;font-size:17px;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 16px 64px}
+
+  /* ---------- header ---------- */
+  header{padding:30px 0 18px;text-align:center}
+  .at-stripe{height:5px;width:74px;margin:0 auto 18px;border-radius:3px;
+    background:linear-gradient(to bottom,var(--at-red) 0 33%,#fff 33% 66%,var(--at-red) 66% 100%);
+    box-shadow:0 0 0 1px var(--line)}
+  h1{font-family:"Playfair Display",serif;font-weight:900;font-size:38px;line-height:1.02;margin:0 0 6px;letter-spacing:-.5px}
+  h1 .akk{color:var(--akk)} h1 .dat{color:var(--dat)}
+  .sub{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---------- legend ---------- */
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px;font-size:13px;font-family:"IBM Plex Mono",monospace}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+  /* ---------- tabs ---------- */
+  nav{position:sticky;top:0;z-index:20;background:var(--paper);padding:10px 0 8px;
+    display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin:8px -16px 0;padding-left:16px;padding-right:16px}
+  nav::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);color:var(--ink-soft);
+    padding:9px 15px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:.18s}
+  .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  section{display:none;animation:fade .3s ease}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2{font-family:"Playfair Display",serif;font-weight:700;font-size:25px;margin:26px 0 4px;letter-spacing:-.3px}
+  .lead{color:var(--ink-soft);margin:0 0 16px;font-size:15.5px}
+
+  .card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:18px;margin:0 0 16px}
+  .card h3{margin:0 0 10px;font-size:17px;font-family:"Playfair Display",serif;font-weight:700}
+
+  /* case chip */
+  .chip{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px;color:#fff;vertical-align:middle}
+  .c-nom{background:var(--nom)} .c-akk{background:var(--akk)} .c-dat{background:var(--dat)} .c-gen{background:var(--gen)}
+
+  .question-test{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+  .qt{border-left:5px solid;padding:12px 14px;border-radius:10px;background:var(--paper-2)}
+  .qt.akk{border-color:var(--akk)} .qt.dat{border-color:var(--dat)} .qt.nom{border-color:var(--nom)}
+  .qt b{font-family:"IBM Plex Mono",monospace}
+  .qt .q{font-size:20px;font-family:"Playfair Display",serif;font-weight:700}
+
+  /* tables */
+  .tbl{width:100%;border-collapse:collapse;font-size:15px;margin-top:4px}
+  .tbl th,.tbl td{padding:9px 8px;text-align:center;border-bottom:1px solid var(--line)}
+  .tbl th{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  .tbl td:first-child,.tbl th:first-child{text-align:left}
+  .rowlab{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+  .rowlab.nom{color:var(--nom)} .rowlab.akk{color:var(--akk)} .rowlab.dat{color:var(--dat)}
+  .form{font-family:"IBM Plex Mono",monospace;font-weight:600}
+  .hl{background:rgba(192,83,43,.16);border-radius:5px;padding:1px 4px}
+
+  ul.tips{margin:8px 0 0;padding-left:20px}
+  ul.tips li{margin:6px 0}
+  .ex{font-style:italic}
+  .ex .akkw{color:var(--akk);font-weight:600;font-style:normal}
+  .ex .datw{color:var(--dat);font-weight:600;font-style:normal}
+  .es{color:var(--ink-soft);font-size:14px}
+
+  .at-note{border:1.5px dashed var(--at-red);background:rgba(200,16,46,.05);border-radius:12px;padding:13px 15px;margin:14px 0}
+  .at-note .flag{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--at-red);display:block;margin-bottom:5px}
+
+  .preps{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .prep{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;padding:6px 11px;border-radius:8px;border:1.5px solid}
+  .prep.akk{color:var(--akk);border-color:var(--akk);background:rgba(45,91,168,.06)}
+  .prep.dat{color:var(--dat);border-color:var(--dat);background:rgba(192,83,43,.06)}
+  .prep.two{color:var(--gen);border-color:var(--gen);background:rgba(123,79,160,.06)}
+
+  /* ---------- quiz ---------- */
+  .quizbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .progress{flex:1;height:8px;background:var(--paper-2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .progress i{display:block;height:100%;width:0;background:var(--ink);transition:width .4s}
+  .scorebox{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600}
+  .qprompt{font-size:14px;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;letter-spacing:.04em;margin-bottom:6px}
+  .qsentence{font-size:21px;font-family:"Playfair Display",serif;line-height:1.35;margin:4px 0 4px}
+  .blank{display:inline-block;min-width:54px;border-bottom:3px solid var(--ink);text-align:center;font-weight:700}
+  .qtrans{color:var(--ink-soft);font-size:14.5px;font-style:italic;margin-bottom:16px}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .opt{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:17px;padding:15px 10px;border-radius:13px;
+    border:2px solid var(--line);background:var(--card);cursor:pointer;transition:.15s;text-align:center}
+  .opt:active{transform:scale(.97)}
+  .opt.correct{border-color:var(--good);background:rgba(46,125,91,.13);color:var(--good)}
+  .opt.wrong{border-color:var(--bad);background:rgba(192,57,43,.12);color:var(--bad)}
+  .opt:disabled{cursor:default}
+  .feedback{margin-top:15px;border-radius:13px;padding:14px 15px;font-size:15px;display:none}
+  .feedback.show{display:block;animation:fade .25s}
+  .feedback.ok{background:rgba(46,125,91,.1);border:1.5px solid var(--good)}
+  .feedback.no{background:rgba(192,57,43,.08);border:1.5px solid var(--bad)}
+  .feedback .verdict{font-weight:700;font-family:"Playfair Display",serif;font-size:17px;margin-bottom:4px}
+  .feedback .verdict.ok{color:var(--good)} .feedback .verdict.no{color:var(--bad)}
+  .feedback code{font-family:"IBM Plex Mono",monospace;background:var(--paper-2);padding:1px 5px;border-radius:4px;font-weight:600}
+  .next{margin-top:14px;width:100%;padding:15px;border:none;border-radius:13px;background:var(--ink);color:var(--paper);
+    font-family:inherit;font-weight:600;font-size:16px;cursor:pointer}
+  .next:active{transform:scale(.99)}
+  .done{text-align:center;padding:24px 10px}
+  .done .big{font-family:"Playfair Display",serif;font-size:46px;font-weight:900;margin:6px 0}
+  .restart{margin-top:8px;padding:13px 26px;border:2px solid var(--ink);background:transparent;border-radius:12px;font-family:inherit;font-weight:600;font-size:15px;cursor:pointer}
+
+  footer{text-align:center;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;margin-top:36px;padding-top:18px;border-top:1px solid var(--line)}
+
+  @media(max-width:430px){
+    h1{font-size:32px}
+    body{font-size:16px}
+    .tbl{font-size:13.5px}
+    .tbl th,.tbl td{padding:8px 4px}
+    .qsentence{font-size:19px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="at-stripe"></div>
+    <h1>Der <span class="akk">Akkusativ</span><br>& der <span class="dat">Dativ</span></h1>
+    <div class="sub">Fälle meistern · Österreichisches Deutsch</div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--nom)"></i>Nominativ · wer?</span>
+      <span><i class="dot" style="background:var(--akk)"></i>Akkusativ · wen?</span>
+      <span><i class="dot" style="background:var(--dat)"></i>Dativ · wem?</span>
+    </div>
+  </header>
+
+  <nav id="nav">
+    <button class="tab active" data-s="ueber">Überblick</button>
+    <button class="tab" data-s="formen">Artikel & Pronomen</button>
+    <button class="tab" data-s="prep">Präpositionen</button>
+    <button class="tab" data-s="verben">Dativ-Verben</button>
+    <button class="tab" data-s="quiz">Üben</button>
+  </nav>
+
+  <!-- ============ ÜBERBLICK ============ -->
+  <section id="ueber" class="active">
+    <h2>Die eine Frage, die alles entscheidet</h2>
+    <p class="lead">Stell dem Verb eine Frage. Die Antwort verrät dir den Fall — jedes Mal.</p>
+    <div class="card">
+      <div class="question-test">
+        <div class="qt nom"><span class="chip c-nom">Nominativ</span> <span class="q">Wer / Was?</span><br>
+          <span class="es">Wer macht es? → das Subjekt.</span><br>
+          <span class="ex">Der Bub kauft ein Sackerl.</span></div>
+        <div class="qt akk"><span class="chip c-akk">Akkusativ</span> <span class="q">Wen / Was?</span><br>
+          <span class="es">Wen oder was trifft die Handlung direkt? → das direkte Objekt.</span><br>
+          <span class="ex">Der Bub kauft <span class="akkw">ein Sackerl</span>.</span></div>
+        <div class="qt dat"><span class="chip c-dat">Dativ</span> <span class="q">Wem?</span><br>
+          <span class="es">Wem gibst/zeigst/hilfst du? → der Empfänger, das indirekte Objekt.</span><br>
+          <span class="ex">Der Bub gibt <span class="datw">der Verkäuferin</span> das Sackerl.</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Beides in einem Satz</h3>
+      <p class="ex" style="font-size:19px;margin:0">Ich gebe <span class="datw">dem Kind</span> <span class="akkw">den Apfel</span>.</p>
+      <p class="es" style="margin:6px 0 0">Le doy la manzana al niño.</p>
+      <ul class="tips">
+        <li><span class="chip c-dat">Dativ</span> <b>dem Kind</b> = <em>wem</em> gebe ich? → der Empfänger.</li>
+        <li><span class="chip c-akk">Akkusativ</span> <b>den Apfel</b> = <em>was</em> gebe ich? → das Ding, das übergeben wird.</li>
+      </ul>
+      <p class="es" style="margin-top:10px">Faustregel beim Geben/Zeigen/Schicken: <b>die Person steht im Dativ, die Sache im Akkusativ.</b></p>
+    </div>
+
+    <div class="card">
+      <h3>Deine zwei Stolpersteine</h3>
+      <ul class="tips">
+        <li><b>Dativ Plural</b> → Artikel <code class="form">den</code> <em>und</em> das Nomen bekommt ein <span class="hl">-n</span>: <span class="ex">mit <span class="datw">den Kindern</span>, aus <span class="datw">den Häusern</span></span>. (Endet das Nomen schon auf -n oder -s, bleibt es: <em>den Eltern, den Autos</em>.)</li>
+        <li><b>Maskulin Akkusativ</b> → <code class="form">der → den</code>, <code class="form">ein → einen</code>, <code class="form">mein → meinen</code>: <span class="ex">Ich sehe <span class="akkw">den Sessel</span> / <span class="akkw">einen Paradeiser</span>.</span></li>
+      </ul>
+    </div>
+
+    <div class="at-note">
+      <span class="flag">🇦🇹 Österreichisch</span>
+      Achtung: Im Österreichischen sagt man <b>auf etwas/jemanden vergessen</b> (mit <span class="chip c-akk">Akk.</span>) statt nur „vergessen“:<br>
+      <span class="ex">„Ich hab <span class="akkw">auf den Termin</span> vergessen.“</span> <span class="es">(DE: „Ich habe den Termin vergessen.“)</span>
+    </div>
+  </section>
+
+  <!-- ============ FORMEN ============ -->
+  <section id="formen">
+    <h2>Artikel & Pronomen</h2>
+    <p class="lead">Die Tabellen, die du im Schlaf können solltest. Die Dativ-Zeile ist rostrot, der Akkusativ blau.</p>
+
+    <div class="card">
+      <h3>Bestimmter Artikel <span class="es">(der/die/das)</span></h3>
+      <table class="tbl">
+        <tr><th></th><th>mask.</th><th>fem.</th><th>neut.</th><th>Plural</th></tr>
+        <tr><td><span class="rowlab nom">Nom</span></td><td class="form">der</td><td class="form">die</td><td class="form">das</td><td class="form">die</td></tr>
+        <tr><td><span class="rowlab akk">Akk</span></td><td class="form" style="color:var(--akk)">den</td><td class="form">die</td><td class="form">das</td><td class="form">die</td></tr>
+        <tr><td><span class="rowlab dat">Dat</span></td><td class="form" style="color:var(--dat)">dem</td><td class="form" style="color:var(--dat)">der</td><td class="form" style="color:var(--dat)">dem</td><td class="form" style="color:var(--dat)">den&nbsp;+n</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Unbestimmt / kein / Possessiv <span class="es">(ein, kein, mein…)</span></h3>
+      <table class="tbl">
+        <tr><th></th><th>mask.</th><th>fem.</th><th>neut.</th><th>Plural*</th></tr>
+        <tr><td><span class="rowlab nom">Nom</span></td><td class="form">ein</td><td class="form">eine</td><td class="form">ein</td><td class="form">keine</td></tr>
+        <tr><td><span class="rowlab akk">Akk</span></td><td class="form" style="color:var(--akk)">einen</td><td class="form">eine</td><td class="form">ein</td><td class="form">keine</td></tr>
+        <tr><td><span class="rowlab dat">Dat</span></td><td class="form" style="color:var(--dat)">einem</td><td class="form" style="color:var(--dat)">einer</td><td class="form" style="color:var(--dat)">einem</td><td class="form" style="color:var(--dat)">keinen&nbsp;+n</td></tr>
+      </table>
+      <p class="es" style="margin:8px 0 0">*„ein“ hat keinen Plural — darum <em>kein-</em>/<em>mein-</em> als Muster.</p>
+    </div>
+
+    <div class="card">
+      <h3>Personalpronomen</h3>
+      <table class="tbl">
+        <tr><th><span class="rowlab nom">Nom</span></th><th><span class="rowlab akk">Akk</span></th><th><span class="rowlab dat">Dat</span></th></tr>
+        <tr><td class="form">ich</td><td class="form" style="color:var(--akk)">mich</td><td class="form" style="color:var(--dat)">mir</td></tr>
+        <tr><td class="form">du</td><td class="form" style="color:var(--akk)">dich</td><td class="form" style="color:var(--dat)">dir</td></tr>
+        <tr><td class="form">er</td><td class="form" style="color:var(--akk)">ihn</td><td class="form" style="color:var(--dat)">ihm</td></tr>
+        <tr><td class="form">sie</td><td class="form" style="color:var(--akk)">sie</td><td class="form" style="color:var(--dat)">ihr</td></tr>
+        <tr><td class="form">es</td><td class="form" style="color:var(--akk)">es</td><td class="form" style="color:var(--dat)">ihm</td></tr>
+        <tr><td class="form">wir</td><td class="form" style="color:var(--akk)">uns</td><td class="form" style="color:var(--dat)">uns</td></tr>
+        <tr><td class="form">ihr</td><td class="form" style="color:var(--akk)">euch</td><td class="form" style="color:var(--dat)">euch</td></tr>
+        <tr><td class="form">sie/Sie</td><td class="form" style="color:var(--akk)">sie/Sie</td><td class="form" style="color:var(--dat)">ihnen/Ihnen</td></tr>
+      </table>
+      <p class="es" style="margin:8px 0 0">Wortstellung: zwei Pronomen → <b>Akkusativ vor Dativ</b>. „Ich gebe <span style="color:var(--akk)">es</span> <span style="color:var(--dat)">dir</span>.“</p>
+    </div>
+  </section>
+
+  <!-- ============ PRÄPOSITIONEN ============ -->
+  <section id="prep">
+    <h2>Präpositionen</h2>
+    <p class="lead">Manche Präpositionen ziehen <em>immer</em> einen Fall nach sich. Die merkst du dir als Block.</p>
+
+    <div class="card">
+      <h3><span class="chip c-akk">Akkusativ</span> — immer</h3>
+      <div class="preps">
+        <span class="prep akk">durch</span><span class="prep akk">für</span><span class="prep akk">gegen</span>
+        <span class="prep akk">ohne</span><span class="prep akk">um</span><span class="prep akk">bis</span><span class="prep akk">entlang</span>
+      </div>
+      <p class="es" style="margin-top:10px">Merksatz: <b>„durch · für · gegen · ohne · um“</b>. <span class="ex">Ich gehe <span class="akkw">durch den Park</span>, <span class="akkw">ohne einen Schirm</span>.</span></p>
+    </div>
+
+    <div class="card">
+      <h3><span class="chip c-dat">Dativ</span> — immer</h3>
+      <div class="preps">
+        <span class="prep dat">aus</span><span class="prep dat">außer</span><span class="prep dat">bei</span><span class="prep dat">mit</span>
+        <span class="prep dat">nach</span><span class="prep dat">seit</span><span class="prep dat">von</span><span class="prep dat">zu</span><span class="prep dat">gegenüber</span><span class="prep dat">ab</span>
+      </div>
+      <p class="es" style="margin-top:10px">Merksatz: <b>„aus · bei · mit · nach · seit · von · zu“</b>. <span class="ex">Ich fahre <span class="datw">mit der Bim</span> <span class="datw">zur Trafik</span>.</span></p>
+      <p class="es" style="margin-top:6px">Verschmelzungen: <code class="form">zu+dem=zum</code>, <code class="form">zu+der=zur</code>, <code class="form">bei+dem=beim</code>, <code class="form">von+dem=vom</code>.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="chip c-gen">Wechselpräpositionen</span> — Akk. <em>oder</em> Dativ</h3>
+      <div class="preps">
+        <span class="prep two">an</span><span class="prep two">auf</span><span class="prep two">hinter</span><span class="prep two">in</span><span class="prep two">neben</span>
+        <span class="prep two">über</span><span class="prep two">unter</span><span class="prep two">vor</span><span class="prep two">zwischen</span>
+      </div>
+      <p style="margin:12px 0 0"><b style="color:var(--akk)">Wohin?</b> = Bewegung, Richtung → <span class="chip c-akk">Akkusativ</span><br>
+      <b style="color:var(--dat)">Wo?</b> = Ort, kein Ziel → <span class="chip c-dat">Dativ</span></p>
+      <ul class="tips">
+        <li><span class="ex">Ich stelle den Sessel <span class="akkw">in die Küche</span>.</span> <span class="es">(Wohin? → Akk.)</span></li>
+        <li><span class="ex">Der Sessel steht <span class="datw">in der Küche</span>.</span> <span class="es">(Wo? → Dat.)</span></li>
+      </ul>
+      <p class="es" style="margin-top:6px">Eselsbrücke: Bewegungsverben (stellen, legen, gehen, fahren) → Akk. · Ruheverben (stehen, liegen, sein, bleiben) → Dat.</p>
+    </div>
+
+    <div class="at-note">
+      <span class="flag">🇦🇹 Österreichisch</span>
+      <b>„auf“</b> hört man hier öfter als in Deutschland: <span class="ex">auf Urlaub fahren</span> (DE: in den Urlaub), <span class="ex">am Wochenende</span>, und das berühmte <b>„sich ausgehen“</b>: <span class="ex">„Das geht sich noch aus.“</span> <span class="es">(Da reicht die Zeit / der Platz noch.)</span>
+    </div>
+  </section>
+
+  <!-- ============ VERBEN ============ -->
+  <section id="verben">
+    <h2>Verben, die den Dativ verlangen</h2>
+    <p class="lead">Bei diesen Verben steht das Objekt im <span class="chip c-dat">Dativ</span> — auch wenn dein Gefühl „Akkusativ“ sagt. Auswendig lernen.</p>
+
+    <div class="card">
+      <table class="tbl" style="font-size:15px">
+        <tr><th style="text-align:left">Verb</th><th style="text-align:left">Beispiel</th></tr>
+        <tr><td class="form">helfen</td><td class="ex" style="text-align:left">Ich helfe <span class="datw">meiner Mutter</span>.</td></tr>
+        <tr><td class="form">danken</td><td class="ex" style="text-align:left">Ich danke <span class="datw">dem Kellner</span>.</td></tr>
+        <tr><td class="form">gefallen</td><td class="ex" style="text-align:left">Wien gefällt <span class="datw">mir</span>.</td></tr>
+        <tr><td class="form">gehören</td><td class="ex" style="text-align:left">Das Sackerl gehört <span class="datw">dem Buben</span>.</td></tr>
+        <tr><td class="form">antworten</td><td class="ex" style="text-align:left">Sie antwortet <span class="datw">dem Lehrer</span>.</td></tr>
+        <tr><td class="form">gratulieren</td><td class="ex" style="text-align:left">Wir gratulieren <span class="datw">dir</span>.</td></tr>
+        <tr><td class="form">schmecken</td><td class="ex" style="text-align:left">Der Topfen schmeckt <span class="datw">den Kindern</span>.</td></tr>
+        <tr><td class="form">passen</td><td class="ex" style="text-align:left">Der Termin passt <span class="datw">uns</span>.</td></tr>
+        <tr><td class="form">folgen</td><td class="ex" style="text-align:left">Der Hund folgt <span class="datw">seinem Herrl</span>.</td></tr>
+        <tr><td class="form">begegnen</td><td class="ex" style="text-align:left">Ich begegne <span class="datw">einem Freund</span>.</td></tr>
+      </table>
+    </div>
+    <div class="at-note">
+      <span class="flag">🇦🇹 Wienerisch</span>
+      <b>„Herrl“</b> und <b>„Frauerl“</b> = Herrchen/Frauchen (Hundebesitzer). Und ein Tipp: <em>„Das schmeckt mir“</em> hört man ständig — das Verb steht im Dativ, nicht „Ich schmecke das“.
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz">
+    <h2>Üben</h2>
+    <p class="lead">15 Sätze, zugeschnitten auf deine Stolpersteine: Dativ-Plural, Maskulin-Akkusativ, Wechselpräpositionen und Dativ-Verben.</p>
+    <div class="quizbar">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="scorebox" id="score">0 / 0</div>
+    </div>
+    <div id="quizbody"></div>
+  </section>
+
+  <footer>Für Fabricio · Österreichisches Deutsch · Akkusativ &amp; Dativ</footer>
+</div>
+
+<script>
+/* ---------- tab switching ---------- */
+document.getElementById('nav').addEventListener('click',function(e){
+  var b=e.target.closest('.tab'); if(!b)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById(b.dataset.s).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- quiz data ---------- */
+var Q=[
+  {s:["Ich gebe ","___"," Kindern den Ball."],blank:"den",opts:["die","den","dem","der"],case:"dat",
+   trans:"Les doy la pelota a los niños.",
+   why:"<b>Dativ Plural</b>: Artikel <code>den</code> und das Nomen bekommt -n → <code>den Kindern</code>. „Geben“ → die Person (Empfänger) steht im Dativ."},
+  {s:["Siehst du ","___"," Sessel dort?"],blank:"den",opts:["der","den","dem","das"],case:"akk",
+   trans:"¿Ves esa silla (el sillón) ahí?",
+   why:"<b>Maskulin Akkusativ</b>: <code>der Sessel → den Sessel</code>. „Sehen“ hat ein direktes Objekt → Akkusativ."},
+  {s:["Ich fahre mit ","___"," Bim in die Stadt."],blank:"der",opts:["die","den","dem","der"],case:"dat",
+   trans:"Voy en tranvía al centro.",
+   why:"<code>mit</code> verlangt immer Dativ. <em>die Bim</em> ist feminin → Dat. fem. = <code>der</code>."},
+  {s:["Stell den Karfiol bitte in ","___"," Kühlschrank."],blank:"den",opts:["dem","den","der","das"],case:"akk",
+   trans:"Pon la coliflor en la heladera, por favor.",
+   why:"Wechselpräposition <code>in</code> + Bewegung (<em>Wohin?</em> stellen) → <b>Akkusativ</b>. <em>der Kühlschrank</em> → <code>den</code>."},
+  {s:["Der Karfiol ist schon in ","___"," Kühlschrank."],blank:"dem",opts:["dem","den","der","das"],case:"dat",
+   trans:"La coliflor ya está en la heladera.",
+   why:"Gleiche Präposition, aber jetzt <em>Wo?</em> (ist = Ruhe) → <b>Dativ</b>. <code>in + dem = im</code>."},
+  {s:["Wien gefällt ","___"," sehr gut."],blank:"mir",opts:["mich","mir","ich","mein"],case:"dat",
+   trans:"Viena me gusta mucho.",
+   why:"<code>gefallen</code> ist ein Dativ-Verb. „Wem gefällt es?“ → <code>mir</code>."},
+  {s:["Kannst du ","___"," Mutter helfen?"],blank:"deiner",opts:["deine","deinen","deiner","deinem"],case:"dat",
+   trans:"¿Puedes ayudar a tu madre?",
+   why:"<code>helfen</code> + Dativ. <em>die Mutter</em> ist feminin → Possessiv Dat. fem. = <code>deiner</code> (Endung -er, wie <em>der</em>)."},
+  {s:["Ich habe ","___"," Sackerl für dich gekauft."],blank:"ein",opts:["ein","einen","einem","eine"],case:"akk",
+   trans:"Te compré una bolsita.",
+   why:"<em>das Sackerl</em> ist <b>neutrum</b> → Akkusativ neutrum = <code>ein</code> (unverändert). Lass dich von „für dich“ nicht ablenken."},
+  {s:["Wir gehen ohne ","___"," Schirm aus dem Haus."],blank:"einen",opts:["ein","einem","einen","eine"],case:"akk",
+   trans:"Salimos de casa sin paraguas.",
+   why:"<code>ohne</code> verlangt immer Akkusativ. <em>der Schirm</em> (mask.) → <code>einen</code>."},
+  {s:["Das Auto gehört ","___"," Nachbarn."],blank:"dem",opts:["der","den","dem","das"],case:"dat",
+   trans:"El auto le pertenece al vecino.",
+   why:"<code>gehören</code> + Dativ. <em>der Nachbar</em> (mask.) → <code>dem</code>. (<em>Nachbar</em> ist auch ein n-Nomen: dem Nachbarn.)"},
+  {s:["Ich lege das Handy auf ","___"," Tisch."],blank:"den",opts:["dem","den","der","das"],case:"akk",
+   trans:"Pongo el celular sobre la mesa.",
+   why:"<code>auf</code> + <em>legen</em> = Bewegung (<em>Wohin?</em>) → <b>Akkusativ</b>. <em>der Tisch</em> → <code>den</code>."},
+  {s:["Das Handy liegt auf ","___"," Tisch."],blank:"dem",opts:["dem","den","der","das"],case:"dat",
+   trans:"El celular está sobre la mesa.",
+   why:"<code>auf</code> + <em>liegen</em> = Ruhe (<em>Wo?</em>) → <b>Dativ</b>. <code>auf dem Tisch</code>."},
+  {s:["Seit ","___"," Jahr lerne ich Deutsch."],blank:"einem",opts:["ein","einen","einem","einer"],case:"dat",
+   trans:"Desde hace un año aprendo alemán.",
+   why:"<code>seit</code> verlangt immer Dativ. <em>das Jahr</em> (neutrum) → Dat. = <code>einem</code>."},
+  {s:["Schmecken ","___"," Marillen?"],blank:"dir",opts:["du","dich","dir","dein"],case:"dat",
+   trans:"¿Te gustan los albaricoques (damascos)?",
+   why:"<code>schmecken</code> ist ein Dativ-Verb. „Wem schmecken sie?“ → <code>dir</code>."},
+  {s:["Ich hab auf ","___"," Termin vergessen."],blank:"den",opts:["der","den","dem","das"],case:"akk",
+   trans:"Me olvidé de la cita. (uso austríaco)",
+   why:"🇦🇹 Österreichisch: <b>auf etwas vergessen</b>. <code>auf</code> ist hier eine Wechselpräposition mit Bewegungs-/Zielsinn → <b>Akkusativ</b>. <em>der Termin</em> → <code>den</code>."}
+];
+
+var i=0,score=0,answered=false;
+var body=document.getElementById('quizbody');
+function render(){
+  answered=false;
+  if(i>=Q.length){finish();return;}
+  var q=Q[i];
+  document.getElementById('bar').style.width=(i/Q.length*100)+'%';
+  document.getElementById('score').textContent=score+' / '+Q.length;
+  var sentence=q.s[0]+'<span class="blank">?</span>'+(q.s[2]||q.s[1].startsWith(' ')||q.s.length>2?q.s.slice(2).join(''):'');
+  // build sentence safely
+  var sent='';
+  for(var k=0;k<q.s.length;k++){
+    if(q.s[k]==="___") sent+='<span class="blank" id="blk">?</span>';
+    else sent+=q.s[k];
+  }
+  body.innerHTML=
+    '<div class="qprompt">Frage '+(i+1)+' · welcher Fall?</div>'+
+    '<div class="qsentence">'+sent+'</div>'+
+    '<div class="qtrans">'+q.trans+'</div>'+
+    '<div class="opts" id="opts"></div>'+
+    '<div class="feedback" id="fb"></div>';
+  var opts=document.getElementById('opts');
+  q.opts.forEach(function(o){
+    var b=document.createElement('button');
+    b.className='opt';b.textContent=o;
+    b.onclick=function(){choose(o,b,q);};
+    opts.appendChild(b);
+  });
+}
+function choose(o,btn,q){
+  if(answered)return;answered=true;
+  var correct=(o===q.blank);
+  document.querySelectorAll('.opt').forEach(function(b){
+    b.disabled=true;
+    if(b.textContent===q.blank)b.classList.add('correct');
+    else if(b===btn)b.classList.add('wrong');
+  });
+  document.getElementById('blk').textContent=q.blank;
+  document.getElementById('blk').style.color=(q.case==='akk'?'var(--akk)':q.case==='dat'?'var(--dat)':'var(--nom)');
+  if(correct)score++;
+  var caseLabel=q.case==='akk'?'<span class="chip c-akk">Akkusativ</span>':q.case==='dat'?'<span class="chip c-dat">Dativ</span>':'<span class="chip c-nom">Nominativ</span>';
+  var fb=document.getElementById('fb');
+  fb.className='feedback show '+(correct?'ok':'no');
+  fb.innerHTML='<div class="verdict '+(correct?'ok':'no')+'">'+(correct?'Richtig! ✓':'Nicht ganz')+'</div>'+
+    '<div style="margin-bottom:8px">'+caseLabel+' → <code>'+q.blank+'</code></div>'+
+    '<div>'+q.why+'</div>'+
+    '<button class="next" id="nx">'+(i===Q.length-1?'Ergebnis ansehen':'Weiter →')+'</button>';
+  document.getElementById('score').textContent=score+' / '+Q.length;
+  document.getElementById('nx').onclick=function(){i++;render();window.scrollTo({top:0,behavior:'smooth'});};
+}
+function finish(){
+  document.getElementById('bar').style.width='100%';
+  var pct=Math.round(score/Q.length*100);
+  var note=pct>=90?'Ausgezeichnet! 🇦🇹':pct>=70?'Sehr solide — fast geschafft.':pct>=50?'Ein guter Anfang. Schau dir die Tabellen nochmal an.':'Zurück zum Überblick — du schaffst das.';
+  body.innerHTML='<div class="done"><div class="qprompt">Fertig</div>'+
+    '<div class="big">'+score+'/'+Q.length+'</div>'+
+    '<div style="font-size:18px;font-family:Playfair Display,serif">'+pct+'% · '+note+'</div>'+
+    '<button class="restart" id="rs">Nochmal üben</button></div>';
+  document.getElementById('rs').onclick=function(){i=0;score=0;render();};
+}
+render();
+</script>
+</body>
+</html>
