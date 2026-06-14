@@ -10,673 +10,559 @@
 <style>
   :root{
     --paper:#FBFAF7; --paper-2:#F3F1EA; --ink:#1A1A18; --muted:#6B6B62;
-    --line:#E3E0D6; --line-strong:#CFCBBE;
-    --at-red:#C8102E;
-    --der:#2563EB; --der-bg:#E8EFFD;
-    --die:#D6206E; --die-bg:#FCE7F0;
-    --das:#15803D; --das-bg:#E4F4E9;
+    --line:#E3E0D6; --line-strong:#CFCBBE; --at-red:#C8102E;
+    --der:#2563EB; --der-bg:#E8EFFD; --die:#D6206E; --die-bg:#FCE7F0; --das:#15803D; --das-bg:#E4F4E9;
     --ok:#15803D; --ok-bg:#E4F4E9; --bad:#C8102E; --bad-bg:#FBE7EA;
-    --shadow:0 1px 2px rgba(26,26,24,.04), 0 8px 24px rgba(26,26,24,.06);
-    --radius:14px;
+    --shadow:0 1px 2px rgba(26,26,24,.04), 0 8px 24px rgba(26,26,24,.06); --radius:14px;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
   body{background:var(--paper); color:var(--ink); font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif; font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;}
-  .serif{font-family:"Newsreader",Georgia,"Times New Roman",serif}
-  button{font-family:inherit; cursor:pointer}
-  ::selection{background:#FBE7EA}
-
+  .serif{font-family:"Newsreader",Georgia,serif} button{font-family:inherit; cursor:pointer} ::selection{background:#FBE7EA}
   header.topbar{position:sticky; top:0; z-index:20; background:rgba(251,250,247,.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
   .topwrap{max-width:1240px; margin:0 auto; padding:14px 22px; display:flex; align-items:center; gap:18px; flex-wrap:wrap}
   .brand{display:flex; align-items:baseline; gap:10px; margin-right:auto}
-  .mark{font-family:"Newsreader",serif; font-weight:600; font-size:30px; letter-spacing:-.01em; line-height:1;}
-  .mark .dot{color:var(--at-red)}
+  .mark{font-family:"Newsreader",serif; font-weight:600; font-size:30px; letter-spacing:-.01em; line-height:1;} .mark .dot{color:var(--at-red)}
   .tagline{font-size:12.5px; color:var(--muted); letter-spacing:.02em}
   .controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
   .seg{display:inline-flex; background:var(--paper-2); border:1px solid var(--line); border-radius:999px; padding:3px}
-  .seg button{border:0; background:transparent; color:var(--muted); font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; letter-spacing:.01em;}
+  .seg button{border:0; background:transparent; color:var(--muted); font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px;}
   .seg button.on{background:#fff; color:var(--ink); box-shadow:var(--shadow)}
   .ctl-label{font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); margin-right:2px}
   .ghost{border:1px solid var(--line-strong); background:#fff; color:var(--ink); border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:7px;}
-  .ghost:hover{border-color:var(--ink)}
-  .ghost svg{width:15px;height:15px}
-
+  .ghost:hover{border-color:var(--ink)} .ghost svg{width:15px;height:15px}
   .shell{max-width:1240px; margin:0 auto; padding:22px; display:grid; grid-template-columns:320px 1fr; gap:24px; align-items:start}
   @media(max-width:920px){ .shell{grid-template-columns:1fr; padding:16px} }
-
-  aside.feed{position:sticky; top:84px}
-  @media(max-width:920px){ aside.feed{position:static} }
+  aside.feed{position:sticky; top:84px} @media(max-width:920px){ aside.feed{position:static} }
   .feed-head{display:flex; align-items:baseline; justify-content:space-between; margin:2px 4px 12px}
   .feed-head h2{font-family:"Newsreader",serif; font-weight:600; font-size:20px; margin:0}
   .feed-date{font-size:12px; color:var(--muted)}
   .hlist{display:flex; flex-direction:column; gap:8px; max-height:calc(100vh - 150px); overflow:auto; padding-right:4px}
   @media(max-width:920px){ .hlist{max-height:none} }
-  .hcard{text-align:left; width:100%; background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px; transition:border-color .15s, transform .15s;}
-  .hcard:hover{border-color:var(--line-strong); transform:translateY(-1px)}
-  .hcard.active{border-color:var(--at-red); box-shadow:0 0 0 1px var(--at-red) inset}
+  .hcard{text-align:left; width:100%; background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px; transition:.15s;}
+  .hcard:hover{border-color:var(--line-strong); transform:translateY(-1px)} .hcard.active{border-color:var(--at-red); box-shadow:0 0 0 1px var(--at-red) inset}
   .hcat{font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--at-red); font-weight:700}
   .htitle{font-family:"Newsreader",serif; font-size:17px; line-height:1.25; margin:4px 0 4px; font-weight:500}
   .hteaser{font-size:12.5px; color:var(--muted); line-height:1.4}
-
   main.read{min-height:60vh}
   .empty{background:#fff; border:1px dashed var(--line-strong); border-radius:var(--radius); padding:48px 36px; text-align:center; color:var(--muted);}
   .empty h3{font-family:"Newsreader",serif; color:var(--ink); font-size:24px; margin:0 0 8px; font-weight:500}
   .legend{display:inline-flex; gap:16px; margin-top:22px; flex-wrap:wrap; justify-content:center}
   .legend span{display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--ink)}
   .swatch{width:13px; height:13px; border-radius:4px; display:inline-block}
-
   .panel{background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
   .art-head{padding:24px 28px 18px; border-bottom:1px solid var(--line)}
   .art-cat{font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--at-red); font-weight:700}
-  .art-title{font-family:"Newsreader",serif; font-weight:600; font-size:30px; line-height:1.15; letter-spacing:-.01em; margin:8px 0 0}
+  .art-title{font-family:"Newsreader",serif; font-weight:600; font-size:30px; line-height:1.15; margin:8px 0 0}
   @media(max-width:560px){ .art-title{font-size:24px} }
-  .art-note{margin:12px 0 0; font-size:12.5px; color:var(--muted); font-style:italic}
-
+  .art-note{margin:12px 0 0; font-size:12.5px; color:var(--muted)}
   .audiobar{display:flex; align-items:center; gap:12px; padding:14px 28px; background:var(--paper-2); border-bottom:1px solid var(--line); flex-wrap:wrap}
   .playbtn{border:0; background:var(--at-red); color:#fff; border-radius:999px; width:42px; height:42px; display:grid; place-items:center; flex:0 0 auto;}
-  .playbtn svg{width:18px;height:18px;fill:#fff}
-  .playbtn.small{width:28px;height:28px;background:transparent;color:var(--muted)}
-  .playbtn.small svg{width:15px;height:15px;fill:var(--muted)}
-  .playbtn.small:hover svg{fill:var(--at-red)}
-  .audio-label{font-size:13px; font-weight:600}
-  .rate{display:flex; align-items:center; gap:8px; margin-left:auto; font-size:12px; color:var(--muted)}
-  .rate input{accent-color:var(--at-red)}
-
+  .playbtn svg{width:18px;height:18px;fill:#fff} .playbtn.small{width:28px;height:28px;background:transparent;color:var(--muted)}
+  .playbtn.small svg{width:15px;height:15px;fill:var(--muted)} .playbtn.small:hover svg{fill:var(--at-red)}
+  .audio-label{font-size:13px; font-weight:600} .rate{display:flex; align-items:center; gap:8px; margin-left:auto; font-size:12px; color:var(--muted)} .rate input{accent-color:var(--at-red)}
   .sentences{padding:6px 0}
   .srow{display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:14px 28px; border-bottom:1px solid var(--line); align-items:start;}
   @media(max-width:680px){ .srow{grid-template-columns:1fr; gap:6px} }
-  .srow:last-child{border-bottom:0}
-  .srow.speaking{background:#FFFCF4}
+  .srow:last-child{border-bottom:0} .srow.speaking{background:#FFFCF4}
   .s-de{font-family:"Newsreader",serif; font-size:19px; line-height:1.5; position:relative;}
   .s-de .mini{position:absolute; left:-26px; top:3px}
   @media(max-width:680px){ .s-de .mini{position:static; margin-right:6px; display:inline-flex; vertical-align:middle} }
-  .s-tr{font-size:15px; color:#4A4A42; line-height:1.55; padding-top:2px}
-  .s-tr.pending{color:var(--muted); font-style:italic}
+  .s-tr{font-size:15px; color:#4A4A42; line-height:1.55; padding-top:2px} .s-tr.pending{color:var(--muted); font-style:italic}
   .col-tags{display:flex; gap:18px; padding:10px 28px 2px; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
   @media(max-width:680px){ .col-tags{display:none} }
-
   .n{font-weight:500; border-radius:4px; padding:0 2px}
-  .n.der{color:var(--der); background:var(--der-bg)}
-  .n.die{color:var(--die); background:var(--die-bg)}
-  .n.das{color:var(--das); background:var(--das-bg)}
-
+  .n.der{color:var(--der); background:var(--der-bg)} .n.die{color:var(--die); background:var(--die-bg)} .n.das{color:var(--das); background:var(--das-bg)}
   .tabs{display:flex; gap:4px; padding:16px 28px 0; border-top:1px solid var(--line); background:#fff}
   .tab{border:0; background:transparent; padding:10px 4px; margin-right:20px; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent}
   .tab.on{color:var(--ink); border-bottom-color:var(--at-red)}
   .tabbody{padding:20px 28px 30px}
   @media(max-width:560px){ .art-head,.audiobar,.srow,.col-tags,.tabs,.tabbody{padding-left:18px;padding-right:18px} }
-
-  .sec-label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:700; margin:22px 0 10px}
-  .sec-label:first-child{margin-top:0}
+  .sec-label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:700; margin:22px 0 10px} .sec-label:first-child{margin-top:0}
   .hint{font-size:12px;color:var(--muted);margin:-4px 0 10px;font-style:italic}
-
-  .ngrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+  .ngrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px}
   .ncard{border:1px solid var(--line); border-radius:11px; padding:11px 13px}
-  .ncard .art{font-weight:700; font-size:13px}
-  .ncard .word{font-family:"Newsreader",serif; font-size:18px; font-weight:500}
-  .ncard.der{border-color:#BFD3FB} .ncard.der .art{color:var(--der)}
-  .ncard.die{border-color:#F6C3DA} .ncard.die .art{color:var(--die)}
-  .ncard.das{border-color:#BFE5C9} .ncard.das .art{color:var(--das)}
-
-  .gline{padding:11px 0; border-bottom:1px solid var(--line)}
-  .gline:last-child{border-bottom:0}
-  .gphrase{font-family:"Newsreader",serif; font-size:18px}
-  .gphrase b{color:var(--at-red); font-weight:600}
-  .pill{display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; letter-spacing:.04em; vertical-align:middle; margin-left:8px}
-  .pill.akk{background:#FFF1E6; color:#B45309}
-  .pill.dat{background:#EEF2FF; color:#4338CA}
-  .pill.wex{background:#F3EEFF; color:#6D28D9}
-  .pill.gen{background:#FDF2F8; color:#9D174D}
-  .gexp{font-size:13px; color:var(--muted); margin-top:4px}
-  .gend{display:inline-block; background:var(--paper-2); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-weight:600; font-size:13px; color:var(--at-red)}
-
+  .ncard .art{font-weight:700; font-size:13px} .ncard .word{font-family:"Newsreader",serif; font-size:18px; font-weight:500}
+  .ncard .meta{font-size:12px; color:var(--muted); margin-top:3px}
+  .ncard.der{border-color:#BFD3FB} .ncard.der .art{color:var(--der)} .ncard.die{border-color:#F6C3DA} .ncard.die .art{color:var(--die)} .ncard.das{border-color:#BFE5C9} .ncard.das .art{color:var(--das)}
+  .gline{padding:11px 0; border-bottom:1px solid var(--line)} .gline:last-child{border-bottom:0}
+  .gphrase{font-family:"Newsreader",serif; font-size:18px} .gphrase b{color:var(--at-red); font-weight:600}
+  .pill{display:inline-block; font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; margin-left:8px; vertical-align:middle}
+  .pill.akk{background:#FFF1E6; color:#B45309} .pill.dat{background:#EEF2FF; color:#4338CA} .pill.wex{background:#F3EEFF; color:#6D28D9} .pill.gen{background:#FDF2F8; color:#9D174D} .pill.nom{background:#ECFDF5; color:#047857}
+  .gexp{font-size:13px; color:var(--muted); margin-top:4px} .gend{display:inline-block; background:var(--paper-2); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-weight:600; font-size:13px; color:var(--at-red)}
   table.decl{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:6px}
-  table.decl th, table.decl td{border:1px solid var(--line); padding:6px 9px; text-align:left}
-  table.decl th{background:var(--paper-2); font-weight:600; font-size:12px}
-  table.decl td b{color:var(--at-red)}
-
+  table.decl th, table.decl td{border:1px solid var(--line); padding:6px 9px; text-align:left} table.decl th{background:var(--paper-2); font-weight:600; font-size:12px} table.decl td b{color:var(--at-red)}
   .ex{border:1px solid var(--line); border-radius:12px; padding:15px 16px; margin-bottom:12px}
-  .ex-q{font-size:15px; margin:0 0 11px}
-  .ex-q .de{font-family:"Newsreader",serif; font-size:18px}
+  .ex-q{font-size:15px; margin:0 0 11px} .ex-q .de{font-family:"Newsreader",serif; font-size:18px} .ex-q .gap{border-bottom:2px solid var(--at-red); padding:0 16px; margin:0 2px}
   .opts{display:flex; gap:8px; flex-wrap:wrap}
   .opt{border:1px solid var(--line-strong); background:#fff; border-radius:9px; padding:8px 14px; font-size:14px; font-weight:600; transition:.12s;}
-  .opt:hover:not(:disabled){border-color:var(--ink)}
-  .opt:disabled{cursor:default; opacity:1}
-  .opt.correct{background:var(--ok-bg); border-color:var(--ok); color:var(--ok)}
-  .opt.wrong{background:var(--bad-bg); border-color:var(--bad); color:var(--bad)}
+  .opt:hover:not(:disabled){border-color:var(--ink)} .opt:disabled{cursor:default}
+  .opt.correct{background:var(--ok-bg); border-color:var(--ok); color:var(--ok)} .opt.wrong{background:var(--bad-bg); border-color:var(--bad); color:var(--bad)}
   .feedback{font-size:13px; margin-top:10px; padding:9px 12px; border-radius:8px; display:none}
-  .feedback.show{display:block}
-  .feedback.good{background:var(--ok-bg); color:#0f5a2c}
-  .feedback.warn{background:var(--bad-bg); color:#8c0c20}
+  .feedback.show{display:block} .feedback.good{background:var(--ok-bg); color:#0f5a2c} .feedback.warn{background:var(--bad-bg); color:#8c0c20}
   textarea.trans{width:100%; border:1px solid var(--line-strong); border-radius:9px; padding:10px 12px; font-family:inherit; font-size:15px; resize:vertical; min-height:54px}
   textarea.trans:focus{outline:2px solid var(--at-red); outline-offset:1px; border-color:var(--at-red)}
-  .reveal{margin-top:9px}
-  .model-answer{display:none; margin-top:9px; padding:10px 12px; background:var(--das-bg); border-radius:8px; font-size:15px; font-family:"Newsreader",serif}
-  .model-answer.show{display:block}
-  .model-answer .lab{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--das); font-weight:700; display:block; margin-bottom:3px; font-family:"Inter",sans-serif}
+  .reveal{margin-top:9px} .model-answer{display:none; margin-top:9px; padding:10px 12px; background:var(--das-bg); border-radius:8px; font-size:15px; font-family:"Newsreader",serif}
+  .model-answer.show{display:block} .model-answer .lab{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--das); font-weight:700; display:block; margin-bottom:3px; font-family:"Inter",sans-serif}
   .scorechip{font-size:12px; font-weight:700; color:var(--muted); float:right}
-
   .skel{background:linear-gradient(90deg,#efece4 25%,#f6f4ee 50%,#efece4 75%); background-size:200% 100%; animation:sh 1.3s infinite; border-radius:6px}
   @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
   @media (prefers-reduced-motion: reduce){ .skel{animation:none} *{transition:none!important} }
   .spinwrap{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; padding:18px 28px}
-  .spin{width:16px;height:16px;border:2px solid var(--line-strong);border-top-color:var(--at-red);border-radius:50%;animation:rot .8s linear infinite}
-  @keyframes rot{to{transform:rotate(360deg)}}
+  .spin{width:16px;height:16px;border:2px solid var(--line-strong);border-top-color:var(--at-red);border-radius:50%;animation:rot .8s linear infinite} @keyframes rot{to{transform:rotate(360deg)}}
   .errbox{background:var(--bad-bg); border:1px solid #F0C5CC; color:#8c0c20; border-radius:10px; padding:14px 16px; margin:16px 28px; font-size:14px}
-  .errbox button{margin-top:8px}
-  .footer{max-width:1240px;margin:0 auto;padding:8px 22px 40px;color:var(--muted);font-size:11.5px;line-height:1.5}
+  .errbox code{background:#fff; padding:1px 5px; border-radius:4px; font-size:12.5px} .errbox button{margin-top:10px}
+  .footer{max-width:1240px;margin:0 auto;padding:8px 22px 60px;color:var(--muted);font-size:11.5px;line-height:1.5}
   .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  /* visible status bar */
+  .statusbar{font-size:12.5px; padding:10px 28px; border-bottom:1px solid var(--line); line-height:1.5}
+  .statusbar b{font-weight:700}
+  .statusbar.ok{background:var(--ok-bg); color:#0f5a2c}
+  .statusbar.warn{background:#FFF6E6; color:#8a5a00}
+  .statusbar.err{background:var(--bad-bg); color:#8c0c20}
+  @media(max-width:560px){ .statusbar{padding-left:18px;padding-right:18px} }
+  /* diagnostics log */
+  .logpanel{position:fixed; left:0; right:0; bottom:0; z-index:60; background:#1c1c1a; color:#e8e6df; border-top:2px solid var(--at-red); max-height:48vh; display:flex; flex-direction:column}
+  .logpanel[hidden]{display:none}
+  .loghead{display:flex; align-items:center; gap:10px; padding:9px 14px; border-bottom:1px solid #333; font-size:12px; flex-wrap:wrap}
+  .loghead .ttl{font-weight:700; margin-right:auto}
+  .loghead button{background:#2a2a27; color:#e8e6df; border:1px solid #444; border-radius:8px; padding:5px 11px; font-size:12px; font-weight:600}
+  .loghead label{display:flex;align-items:center;gap:6px}
+  #logBody{overflow:auto; padding:8px 14px; font-size:11.5px; line-height:1.55; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .logline{white-space:pre-wrap; word-break:break-word}
+  .logline.ok{color:#7ee29a} .logline.err{color:#ff9a9a} .logline.warn{color:#ffcf8f} .logline.info{color:#9fc7ff}
 </style>
 </head>
 <body>
 
 <header class="topbar">
   <div class="topwrap">
-    <div class="brand">
-      <span class="mark serif">Lernblatt<span class="dot">.</span></span>
-      <span class="tagline" id="tagline"></span>
-    </div>
+    <div class="brand"><span class="mark serif">Lernblatt<span class="dot">.</span></span><span class="tagline" id="tagline"></span></div>
     <div class="controls">
       <span class="ctl-label" id="lblUi"></span>
       <div class="seg" id="uiSeg"><button data-ui="es" class="on">ES</button><button data-ui="en">EN</button></div>
       <span class="ctl-label" id="lblTrans"></span>
       <div class="seg" id="transSeg"><button data-tr="es" class="on">Español</button><button data-tr="en">English</button></div>
-      <button class="ghost" id="refreshBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>
-        <span id="refreshLbl"></span>
-      </button>
+      <button class="ghost" id="logBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/><path d="M4 4h16v16H4z" opacity=".25"/></svg><span id="logLbl"></span></button>
+      <button class="ghost" id="refreshBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg><span id="refreshLbl"></span></button>
     </div>
   </div>
 </header>
 
 <div class="shell">
-  <aside class="feed">
-    <div class="feed-head"><h2 id="feedTitle"></h2><span class="feed-date" id="feedDate"></span></div>
-    <div class="hlist" id="hlist"></div>
-  </aside>
+  <aside class="feed"><div class="feed-head"><h2 id="feedTitle"></h2><span class="feed-date" id="feedDate"></span></div><div class="hlist" id="hlist"></div></aside>
   <main class="read" id="read"></main>
 </div>
 
 <div class="footer" id="footer"></div>
 
+<div class="logpanel" id="logPanel" hidden>
+  <div class="loghead">
+    <span class="ttl" id="logTitle"></span>
+    <label><input type="checkbox" id="llmToggle" checked> <span id="llmLbl"></span></label>
+    <button id="logCopy"></button>
+    <button id="logClose">✕</button>
+  </div>
+  <div id="logBody"></div>
+</div>
+
 <script>
 /* Lernblatt — daily ORF news as a German study session.
-   Open APIs only, no key: ORF RSS (news) · Google Translate (translation)
-   · Wiktionary (noun gender) · browser speech (audio) · client-side rules (cases). */
+   Open + key-free: ORF RSS (news) · Pollinations LLM (analysis, optional) ·
+   Google Translate / MyMemory (translation) · Wiktionary (gender) ·
+   browser speech (audio) · rule-based case detection. All steps logged. */
 
-const I18N = {
-  es:{
-    tagline:"Noticias del ORF para leer y aprender alemán",
-    ui:"Interfaz", trans:"Traducir a", refresh:"Actualizar", feed:"Titulares de hoy",
-    loadingHeads:"Cargando los titulares del ORF…",
-    emptyH:"Elegí un titular para empezar",
-    emptyP:"Cada artículo se muestra en alemán con traducción al lado, audio, análisis de género y caso, y ejercicios creados a partir del texto.",
-    masc:"der · masculino", fem:"die · femenino", neut:"das · neutro",
-    colDe:"Alemán", colTr:"Traducción", translating:"traduciendo…",
-    listen:"Escuchar", pause:"Pausar", resume:"Seguir", playSentence:"Leer esta frase", speed:"Velocidad",
-    tabGram:"Gramática", tabEx:"Ejercicios",
-    gNouns:"Sustantivos y género", gCases:"Caso: Akkusativ / Dativ", gAdj:"Declinación de adjetivos",
-    adjFound:"Adjetivos detectados en el texto", adjTable:"Tabla de terminaciones (tras artículo definido)",
-    autoNote:"Detección automática mediante reglas; puede no ser perfecta.",
-    genNote:"Género obtenido de Wiktionary; las palabras no encontradas no se colorean.",
-    exGender:"Identificar el género", exCases:"Akkusativ o Dativ", exTrans:"Traducción al alemán",
-    promptTrans:"Traducí al alemán:", yourAnswer:"Escribí tu traducción…",
-    reveal:"Ver solución", model:"Frase original",
-    whichGender:"¿Qué artículo lleva?", whichCase:"¿Qué caso rige?",
-    correct:"¡Correcto!", wrong:"No es correcto.",
-    loadingArt:"Cargando el artículo…",
-    err:"Algo salió mal al cargar.", retry:"Reintentar",
-    errFeed:"No se pudieron cargar los titulares del ORF. Tu red puede estar bloqueando los feeds externos.",
-    sampleBtn:"Practicar con un texto de muestra",
-    source:"Fuente", openOrf:"Abrir en orf.at",
-    note:"Lernblatt usa solo APIs abiertas y sin clave: titulares del ORF (rss.orf.at), traducción de Google Translate, género de Wiktionary y detección de caso por reglas en tu navegador. Puede contener errores; usalo como apoyo. El audio usa la voz de tu navegador.",
-    noVoice:"Tu navegador no tiene una voz en alemán, así que el audio puede sonar con otra. En el sistema podés agregar una voz «Deutsch (de-DE)».",
-    score:"aciertos",
-    samples:[
-      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Política",
-       body:"Der Nationalrat hat am Donnerstag ein neues Klimaschutzgesetz beschlossen. Die Abgeordneten stimmten nach einer langen Debatte über die strengeren Regeln ab. Die Regierung will damit den Ausstoß von Treibhausgasen deutlich senken. Mit dem Gesetz sollen Unternehmen in den nächsten Jahren mehr in saubere Energie investieren. Die Opposition kritisierte den Plan als zu wenig ehrgeizig. Umweltgruppen begrüßten hingegen den Schritt der Regierung."},
-      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economía",
-       body:"Die Wiener Linien erhöhen ab Jänner die Preise für die Jahreskarte. Das Ticket kostet dann mehr als bisher. Das Unternehmen begründet die Erhöhung mit den gestiegenen Kosten für Energie und Personal. Viele Fahrgäste zeigten sich in einer Umfrage enttäuscht über die Entscheidung. Die Stadt Wien betonte, dass die Öffis trotzdem günstig blieben. Für Studierende und Senioren soll es weiterhin ermäßigte Tarife geben."},
-      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Ciencia",
-       body:"Forscher der Universität Wien haben am Montag eine neue Studie vorgestellt. Das Team arbeitete mehrere Jahre an dem Projekt. Die Wissenschaftler untersuchten, wie sich das Klima auf die Wälder in Österreich auswirkt. Die Ergebnisse zeigen einen klaren Zusammenhang zwischen Trockenheit und dem Zustand der Bäume. Die Studie wurde in einer internationalen Fachzeitschrift veröffentlicht. Weitere Untersuchungen sind bereits geplant."}
-    ]
-  },
-  en:{
-    tagline:"ORF news to read and learn German",
-    ui:"Interface", trans:"Translate to", refresh:"Refresh", feed:"Today's headlines",
-    loadingHeads:"Loading ORF headlines…",
-    emptyH:"Pick a headline to begin",
-    emptyP:"Each story appears in German with a side-by-side translation, audio, a gender and case breakdown, and exercises generated from the text.",
-    masc:"der · masculine", fem:"die · feminine", neut:"das · neuter",
-    colDe:"German", colTr:"Translation", translating:"translating…",
-    listen:"Listen", pause:"Pause", resume:"Resume", playSentence:"Read this sentence", speed:"Speed",
-    tabGram:"Grammar", tabEx:"Exercises",
-    gNouns:"Nouns & gender", gCases:"Case: accusative / dative", gAdj:"Adjective declension",
-    adjFound:"Adjectives found in the text", adjTable:"Endings reference (after a definite article)",
-    autoNote:"Auto-detected with rules; may not be perfect.",
-    genNote:"Gender from Wiktionary; words not found are left uncoloured.",
-    exGender:"Identify the gender", exCases:"Accusative or dative", exTrans:"Translate into German",
-    promptTrans:"Translate into German:", yourAnswer:"Type your translation…",
-    reveal:"Show solution", model:"Original sentence",
-    whichGender:"Which article does it take?", whichCase:"Which case does it govern?",
-    correct:"Correct!", wrong:"Not quite.",
-    loadingArt:"Loading the article…",
-    err:"Something went wrong while loading.", retry:"Try again",
-    errFeed:"Couldn't load the ORF headlines. Your network may be blocking external feeds.",
-    sampleBtn:"Practise with a sample text",
-    source:"Source", openOrf:"Open on orf.at",
-    note:"Lernblatt uses only open, key-free APIs: ORF headlines (rss.orf.at), Google Translate, Wiktionary for gender, and rule-based case detection in your browser. It may contain mistakes; treat it as study support. Audio uses your browser's built-in voice.",
-    noVoice:"Your browser has no German voice installed, so audio may use another. You can add a “Deutsch (de-DE)” voice in your system settings.",
-    score:"correct",
-    samples:[
-      {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:"Politics",
-       body:"Der Nationalrat hat am Donnerstag ein neues Klimaschutzgesetz beschlossen. Die Abgeordneten stimmten nach einer langen Debatte über die strengeren Regeln ab. Die Regierung will damit den Ausstoß von Treibhausgasen deutlich senken. Mit dem Gesetz sollen Unternehmen in den nächsten Jahren mehr in saubere Energie investieren. Die Opposition kritisierte den Plan als zu wenig ehrgeizig. Umweltgruppen begrüßten hingegen den Schritt der Regierung."},
-      {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:"Economy",
-       body:"Die Wiener Linien erhöhen ab Jänner die Preise für die Jahreskarte. Das Ticket kostet dann mehr als bisher. Das Unternehmen begründet die Erhöhung mit den gestiegenen Kosten für Energie und Personal. Viele Fahrgäste zeigten sich in einer Umfrage enttäuscht über die Entscheidung. Die Stadt Wien betonte, dass die Öffis trotzdem günstig blieben. Für Studierende und Senioren soll es weiterhin ermäßigte Tarife geben."},
-      {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:"Science",
-       body:"Forscher der Universität Wien haben am Montag eine neue Studie vorgestellt. Das Team arbeitete mehrere Jahre an dem Projekt. Die Wissenschaftler untersuchten, wie sich das Klima auf die Wälder in Österreich auswirkt. Die Ergebnisse zeigen einen klaren Zusammenhang zwischen Trockenheit und dem Zustand der Bäume. Die Studie wurde in einer internationalen Fachzeitschrift veröffentlicht. Weitere Untersuchungen sind bereits geplant."}
-    ]
-  }
+/* ---------------- diagnostics log ---------------- */
+const LOG=[];
+function log(level,msg){ LOG.push({t:new Date().toLocaleTimeString(),level,msg:String(msg)}); if(LOG.length>300)LOG.shift(); renderLog(); }
+function renderLog(){ const b=document.getElementById("logBody"); if(!b||document.getElementById("logPanel").hidden)return; b.innerHTML=LOG.slice(-120).map(l=>`<div class="logline ${l.level}">[${l.t}] ${escp(l.msg)}</div>`).join(""); b.scrollTop=b.scrollHeight; }
+const escp = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+window.addEventListener("error", e=>log("err","JS error: "+(e.message||e)+(e.filename?(" @"+e.filename+":"+e.lineno):"")));
+window.addEventListener("unhandledrejection", e=>log("err","Unhandled promise: "+((e.reason&&e.reason.message)||e.reason)));
+
+const I18N={
+ es:{ tagline:"Noticias del ORF para leer y aprender alemán", ui:"Interfaz", trans:"Traducir a", refresh:"Actualizar", logLbl:"Registro", feed:"Titulares de hoy",
+  loadingHeads:"Cargando los titulares del ORF…", emptyH:"Elegí un titular para empezar",
+  emptyP:"Cada artículo se muestra en alemán con traducción, audio, análisis de género/caso/declinación y ejercicios creados a partir del texto.",
+  masc:"der · masculino", fem:"die · femenino", neut:"das · neutro", colDe:"Alemán", colTr:"Traducción", translating:"traduciendo…",
+  listen:"Escuchar", pause:"Pausar", resume:"Seguir", playSentence:"Leer esta frase", speed:"Velocidad",
+  tabGram:"Gramática", tabEx:"Ejercicios", gNouns:"Sustantivos y género", gCases:"Caso: Akkusativ / Dativ", gAdj:"Declinación de adjetivos",
+  adjTable:"Tabla de terminaciones (tras artículo definido)", autoNote:"Detección automática; puede no ser perfecta.", genNote:"Género de Wiktionary; las palabras no encontradas no se colorean.",
+  exGender:"Identificar el género", exCases:"Akkusativ o Dativ", exDecl:"Declinación del adjetivo", exTrans:"Traducción al alemán",
+  promptTrans:"Traducí al alemán:", yourAnswer:"Escribí tu traducción…", reveal:"Ver solución", model:"Frase original",
+  whichGender:"¿Qué artículo lleva?", whichCase:"¿Qué caso rige?", correct:"¡Correcto!", wrong:"No es correcto.",
+  loadingArt:"Cargando el artículo…", aiWorking:"Analizando con IA (Pollinations)…", aiFallback:"IA no disponible; usando traducción abierta…",
+  err:"Algo salió mal al cargar.", retry:"Reintentar", openLog:"Ver registro",
+  errFeed:"No se pudieron cargar los titulares del ORF.", sampleBtn:"Practicar con un texto de muestra",
+  source:"Fuente", openOrf:"Abrir en orf.at",
+  note:"Lernblatt usa APIs abiertas sin clave: titulares del ORF (rss.orf.at), análisis con IA de Pollinations (con respaldo de Google Translate + Wiktionary + reglas). Puede contener errores. El audio usa la voz de tu navegador. Tocá «Registro» para ver qué hace cada llamada.",
+  noVoice:"Tu navegador no tiene voz en alemán; el audio puede sonar con otra. Podés agregar «Deutsch (de-DE)» en el sistema.",
+  score:"aciertos", logTitle:"Registro de red — mostrá esto si algo falla", llmLbl:"Usar IA (Pollinations)", logCopy:"Copiar",
+  engAI:"Análisis con IA (Pollinations)", engOpen:"APIs abiertas (Google/MyMemory + Wiktionary + reglas)",
+  wNoBody:"sin cuerpo del artículo; uso titular + resumen", wLLM:"IA no disponible:", wLLMoff:"IA desactivada",
+  wTransVia:"traducción vía", wTransFail:"frases sin traducir", wTransAll:"traducción no disponible (Google y MyMemory fallaron)", wGender:"Wiktionary no devolvió géneros", trFail:"traducción no disponible",
+  samples:sampleData("es") },
+ en:{ tagline:"ORF news to read and learn German", ui:"Interface", trans:"Translate to", refresh:"Refresh", logLbl:"Log", feed:"Today's headlines",
+  loadingHeads:"Loading ORF headlines…", emptyH:"Pick a headline to begin",
+  emptyP:"Each story appears in German with a translation, audio, a gender/case/declension breakdown, and exercises generated from the text.",
+  masc:"der · masculine", fem:"die · feminine", neut:"das · neuter", colDe:"German", colTr:"Translation", translating:"translating…",
+  listen:"Listen", pause:"Pause", resume:"Resume", playSentence:"Read this sentence", speed:"Speed",
+  tabGram:"Grammar", tabEx:"Exercises", gNouns:"Nouns & gender", gCases:"Case: accusative / dative", gAdj:"Adjective declension",
+  adjTable:"Endings reference (after a definite article)", autoNote:"Auto-detected; may not be perfect.", genNote:"Gender from Wiktionary; words not found are left uncoloured.",
+  exGender:"Identify the gender", exCases:"Accusative or dative", exDecl:"Adjective declension", exTrans:"Translate into German",
+  promptTrans:"Translate into German:", yourAnswer:"Type your translation…", reveal:"Show solution", model:"Original sentence",
+  whichGender:"Which article does it take?", whichCase:"Which case does it govern?", correct:"Correct!", wrong:"Not quite.",
+  loadingArt:"Loading the article…", aiWorking:"Analysing with AI (Pollinations)…", aiFallback:"AI unavailable; using open translation…",
+  err:"Something went wrong while loading.", retry:"Try again", openLog:"View log",
+  errFeed:"Couldn't load the ORF headlines.", sampleBtn:"Practise with a sample text",
+  source:"Source", openOrf:"Open on orf.at",
+  note:"Lernblatt uses key-free open APIs: ORF headlines (rss.orf.at), AI analysis via Pollinations (with Google Translate + Wiktionary + rules as fallback). It may contain mistakes. Audio uses your browser's voice. Tap “Log” to see what each call does.",
+  noVoice:"Your browser has no German voice; audio may use another. You can add “Deutsch (de-DE)” in your system settings.",
+  score:"correct", logTitle:"Network log — share this if something fails", llmLbl:"Use AI (Pollinations)", logCopy:"Copy",
+  engAI:"AI analysis (Pollinations)", engOpen:"Open APIs (Google/MyMemory + Wiktionary + rules)",
+  wNoBody:"no article body; using headline + teaser", wLLM:"AI unavailable:", wLLMoff:"AI turned off",
+  wTransVia:"translation via", wTransFail:"sentences untranslated", wTransAll:"translation unavailable (Google and MyMemory failed)", wGender:"Wiktionary returned no genders", trFail:"translation unavailable",
+  samples:sampleData("en") }
 };
-
-const state = { uiLang:"es", transLang:"es", headlines:null, activeId:null, tab:"gram", rate:0.95, cache:{} };
-const $ = (s,r=document)=>r.querySelector(s);
-const el = (t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
-const T = ()=>I18N[state.uiLang];
-const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-const todayHuman = new Date().toLocaleDateString("de-AT",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
-
-/* ---------------- networking helpers ---------------- */
-function timeoutFetch(url, opts, ms){
-  const c=new AbortController(); const id=setTimeout(()=>c.abort(), ms||15000);
-  return fetch(url, Object.assign({}, opts, {signal:c.signal})).finally(()=>clearTimeout(id));
+function sampleData(lang){
+  const cat = lang==="es"?["Política","Economía","Ciencia"]:["Politics","Economy","Science"];
+  return [
+    {h:"Nationalrat beschließt neues Klimaschutzgesetz", t:"Die Abgeordneten stimmten über strengere Regeln ab.", c:cat[0],
+     body:"Der Nationalrat hat am Donnerstag ein neues Klimaschutzgesetz beschlossen. Die Abgeordneten stimmten nach einer langen Debatte über die strengeren Regeln ab. Die Regierung will damit den Ausstoß von Treibhausgasen deutlich senken. Mit dem Gesetz sollen Unternehmen mehr in saubere Energie investieren. Die Opposition kritisierte den Plan als zu wenig ehrgeizig. Umweltgruppen begrüßten hingegen den Schritt der Regierung."},
+    {h:"Wiener Linien erhöhen die Preise für die Jahreskarte", t:"Ab Jänner kostet das Ticket mehr als bisher.", c:cat[1],
+     body:"Die Wiener Linien erhöhen ab Jänner die Preise für die Jahreskarte. Das Ticket kostet dann mehr als bisher. Das Unternehmen begründet die Erhöhung mit den gestiegenen Kosten für Energie und Personal. Viele Fahrgäste zeigten sich enttäuscht über die Entscheidung. Die Stadt Wien betonte, dass die Öffis trotzdem günstig blieben. Für Studierende soll es weiterhin ermäßigte Tarife geben."},
+    {h:"Forscher der Universität Wien stellen neue Studie vor", t:"Das Team arbeitete mehrere Jahre an dem Projekt.", c:cat[2],
+     body:"Forscher der Universität Wien haben am Montag eine neue Studie vorgestellt. Das Team arbeitete mehrere Jahre an dem Projekt. Die Wissenschaftler untersuchten, wie sich das Klima auf die Wälder auswirkt. Die Ergebnisse zeigen einen klaren Zusammenhang zwischen Trockenheit und dem Zustand der Bäume. Die Studie wurde in einer internationalen Fachzeitschrift veröffentlicht. Weitere Untersuchungen sind bereits geplant."}
+  ];
 }
-async function fetchJSON(url, ms){ const r=await timeoutFetch(url,{},ms); if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }
-async function fetchTextP(url, ms){ const r=await timeoutFetch(url,{},ms); if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); }
 
-const PROXIES = [
-  u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}`,
-  u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
-  u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
-];
-const RAW_PROXIES = [
-  u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}`
-];
+const state={ uiLang:"es", transLang:"es", useLLM:true, headlines:null, activeId:null, tab:"gram", rate:0.95, cache:{} };
+const $=(s,r=document)=>r.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const T=()=>I18N[state.uiLang];
+const esc=s=>(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const todayHuman=new Date().toLocaleDateString("de-AT",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 
-/* ---------------- ORF headlines (RSS) ---------------- */
-const ORF_FEED = "https://rss.orf.at/news.xml";
+/* ---------------- networking ---------------- */
+function timeoutFetch(url,opts,ms){ const c=new AbortController(); const id=setTimeout(()=>c.abort(),ms||15000); return fetch(url,Object.assign({},opts,{signal:c.signal})).finally(()=>clearTimeout(id)); }
+async function fetchJSON(url,ms){ const r=await timeoutFetch(url,{},ms); if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }
+
+const PROXIES=[ u=>`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(u)}`, u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`, u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}` ];
+const PROXY_NAMES=["rss2json","allorigins","codetabs"];
+const RAW_PROXIES=[ u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`, u=>`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}` ];
+
+const ORF_FEED="https://rss.orf.at/news.xml";
 function stripTags(s){ const d=document.createElement("div"); d.innerHTML=s||""; return (d.textContent||"").replace(/\s+/g," ").trim(); }
-function tidyCat(c){ return (c||"").replace(/^.*[\/:]/,"").trim() || "ORF"; }
-function normItem(title,link,cat,desc,idx){
-  return { id:idx+1, headline_de:stripTags(title).trim(), teaser_de:stripTags(desc).trim(), category_de:tidyCat(cat), url:(link||"").trim() };
-}
-function parseFeedXML(xml){
-  const doc=new DOMParser().parseFromString(xml,"text/xml");
-  const items=[...doc.querySelectorAll("item")];
-  if(!items.length) throw new Error("no items");
-  const tx=(n,s)=>{ const e=n.querySelector(s); return e?e.textContent:""; };
-  return items.map((it,i)=>normItem(tx(it,"title"),tx(it,"link"),tx(it,"category")||tx(it,"subject"),tx(it,"description"),i));
-}
+function tidyCat(c){ return (c||"").replace(/^.*[\/:]/,"").trim()||"ORF"; }
+function normItem(title,link,cat,desc,idx){ return {id:idx+1,headline_de:stripTags(title).trim(),teaser_de:stripTags(desc).trim(),category_de:tidyCat(cat),url:(link||"").trim()}; }
+function parseFeedXML(xml){ const doc=new DOMParser().parseFromString(xml,"text/xml"); const items=[...doc.querySelectorAll("item")]; if(!items.length) throw new Error("no <item> in feed"); const tx=(n,s)=>{const e=n.querySelector(s);return e?e.textContent:"";}; return items.map((it,i)=>normItem(tx(it,"title"),tx(it,"link"),tx(it,"category")||tx(it,"subject"),tx(it,"description"),i)); }
 async function fetchHeadlines(){
   let last;
   for(let i=0;i<PROXIES.length;i++){
     try{
+      log("info","Feed via "+PROXY_NAMES[i]+" …");
       const res=await timeoutFetch(PROXIES[i](ORF_FEED),{},15000);
       if(!res.ok) throw new Error("HTTP "+res.status);
-      if(i===0){ const j=await res.json(); if(j.status!=="ok"||!j.items||!j.items.length) throw new Error("empty"); return j.items.map((it,idx)=>normItem(it.title,it.link,(it.categories||[])[0],it.description,idx)); }
-      if(i===1){ const j=await res.json(); return parseFeedXML(j.contents||""); }
-      return parseFeedXML(await res.text());
-    }catch(e){ last=e; }
+      let items;
+      if(i===0){ const j=await res.json(); if(j.status!=="ok"||!j.items||!j.items.length) throw new Error("rss2json status="+j.status); items=j.items.map((it,idx)=>normItem(it.title,it.link,(it.categories||[])[0],it.description,idx)); }
+      else if(i===1){ const j=await res.json(); items=parseFeedXML(j.contents||""); }
+      else { items=parseFeedXML(await res.text()); }
+      log("ok","Feed OK via "+PROXY_NAMES[i]+": "+items.length+" headlines");
+      return items;
+    }catch(e){ log("warn","Feed via "+PROXY_NAMES[i]+" failed: "+e.message); last=e; }
   }
-  throw last||new Error("all proxies failed");
+  throw last||new Error("all feed proxies failed");
 }
 async function fetchArticleText(url){
   if(!url) return "";
-  for(let i=0;i<PROXIES.length;i++){
+  for(let i=1;i<PROXIES.length;i++){
     try{
-      const res=await timeoutFetch(PROXIES[i](url),{},15000); if(!res.ok) continue;
-      let html;
-      if(i===0){ continue; }
-      else if(i===1){ const j=await res.json(); html=j.contents; }
-      else { html=await res.text(); }
+      const res=await timeoutFetch(PROXIES[i](url),{},15000); if(!res.ok) throw new Error("HTTP "+res.status);
+      let html; if(i===1){ const j=await res.json(); html=j.contents; } else { html=await res.text(); }
       const doc=new DOMParser().parseFromString(html||"","text/html");
-      const ps=[...doc.querySelectorAll("p")].map(p=>p.textContent.trim()).filter(t=>t.length>45 && !/^\s*(Cookie|Datenschutz)/i.test(t));
+      const ps=[...doc.querySelectorAll("p")].map(p=>p.textContent.trim()).filter(t=>t.length>45);
       const joined=ps.join(" ").replace(/\s+/g," ").trim();
-      if(joined.length>140) return joined.slice(0,2000);
-    }catch(e){}
+      if(joined.length>140){ log("ok","Article body via "+PROXY_NAMES[i]+": "+joined.length+" chars"); return joined.slice(0,2000); }
+      log("warn","Article body via "+PROXY_NAMES[i]+": too short ("+joined.length+")");
+    }catch(e){ log("warn","Article body via "+PROXY_NAMES[i]+" failed: "+e.message); }
   }
   return "";
 }
 
-/* ---------------- translation (Google Translate, open) ---------------- */
-function gURL(text,tl){ return `https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`; }
-function parseGoogle(j){ if(Array.isArray(j)&&Array.isArray(j[0])) return j[0].map(s=>s[0]).join(""); return ""; }
-async function translate(text, tl){
-  const g=gURL(text,tl);
-  try{ const j=await fetchJSON(g,12000); const t=parseGoogle(j); if(t) return t; }catch(e){}
-  for(const mk of RAW_PROXIES){ try{ const j=await fetchJSON(mk(g),14000); const t=parseGoogle(j); if(t) return t; }catch(e){} }
-  try{ const m=await fetchJSON(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=de|${tl}`,12000); if(m&&m.responseData&&m.responseData.translatedText) return m.responseData.translatedText; }catch(e){}
-  return "";
+/* ---------------- LLM (Pollinations, key-free) ---------------- */
+async function callLLM(prompt){
+  const res=await timeoutFetch("https://text.pollinations.ai/openai",{ method:"POST", headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ model:"openai", messages:[{role:"system",content:"You output only raw valid JSON, no markdown."},{role:"user",content:prompt}], temperature:0.2, referrer:"lernblatt" }) }, 60000);
+  if(res.status===429) throw new Error("rate-limited (429; anon tier ~1 req/15s)");
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  const data=await res.json();
+  const txt=data&&data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content;
+  if(!txt) throw new Error("empty content");
+  return txt.trim();
+}
+function extractJSON(text){
+  let t=(text||"").trim().replace(/^```(?:json)?/i,"").replace(/```\s*$/,"").trim();
+  try{ return JSON.parse(t); }catch(e){}
+  const oi=t.indexOf("{"), ai=t.indexOf("[");
+  let start=-1,close; if(ai!==-1&&(oi===-1||ai<oi)){start=ai;close="]";} else if(oi!==-1){start=oi;close="}";}
+  if(start===-1) throw new Error("no JSON in response");
+  return JSON.parse(t.slice(start,t.lastIndexOf(close)+1));
+}
+function articleLLMPrompt(src){
+  const L=state.transLang==="es"?"Spanish":"English";
+  return `Du bist Deutschlehrer. Lerner: Muttersprache ${L}, Niveau A2-B1. Deutscher ORF-Text:
+"""${src.slice(0,1400)}"""
+Antworte NUR mit gültigem JSON (keine Markdown-Zäune) in genau dieser Form:
+{"title_de":"...","sentences":[{"de":"kurzer Satz","tr":"Übersetzung auf ${L}"}],
+"nouns":[{"word":"Substantiv","article":"der|die|das","meaning":"auf ${L}"}],
+"cases":[{"phrase":"Phrase","case":"Akkusativ|Dativ|Nominativ|Genitiv","explanation":"kurz auf ${L}"}],
+"adjectives":[{"phrase":"Phrase","adjective":"Adj","ending":"-e/-en/-es","explanation":"kurz auf ${L}"}],
+"exercises":{"gender":[{"word":"Substantiv","answer":"der|die|das"}],
+"cases":[{"prompt":"Satz/Präposition","options":["Akkusativ","Dativ"],"answer":"...","explanation":"auf ${L}"}],
+"declension":[{"sentence":"Satz mit ___","options":["4 Formen"],"answer":"Form","explanation":"auf ${L}"}],
+"translation":[{"prompt":"Satz auf ${L}","answer":"deutscher Satz"}]}}
+6-8 Sätze, bis 8 nouns, 3-4 Übungen je Typ. Nur Wörter aus dem Text.`;
 }
 
-/* ---------------- German rules: sentences, cases, adjectives ---------------- */
-function splitSentences(text){
-  text=(text||"").replace(/\s+/g," ").trim();
-  const parts = text.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || (text?[text]:[]);
-  return parts.map(s=>s.trim()).filter(s=>s.length>1).slice(0,9);
+/* ---------------- translation (Google Translate / MyMemory) ---------------- */
+function gURL(text,tl){ return `https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`; }
+function parseGoogle(j){ return (Array.isArray(j)&&Array.isArray(j[0]))? j[0].map(s=>s[0]).join(""):""; }
+async function translate(text,tl){
+  const g=gURL(text,tl);
+  try{ const j=await fetchJSON(g,12000); const t=parseGoogle(j); if(t) return {text:t,via:"Google"}; }catch(e){ }
+  for(let i=0;i<RAW_PROXIES.length;i++){ try{ const j=await fetchJSON(RAW_PROXIES[i](g),14000); const t=parseGoogle(j); if(t) return {text:t,via:"Google·proxy"}; }catch(e){ } }
+  try{ const m=await fetchJSON(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=de|${tl}`,12000); if(m&&m.responseData&&m.responseData.translatedText) return {text:m.responseData.translatedText,via:"MyMemory"}; }catch(e){ }
+  return {text:"",via:null};
 }
-const CASE_OF = (()=>{
-  const m={};
-  const put=(arr,c)=>arr.forEach(w=>m[w]=c);
+
+/* ---------------- German rules ---------------- */
+function splitSentences(text){ text=(text||"").replace(/\s+/g," ").trim(); const p=text.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g)||(text?[text]:[]); return p.map(s=>s.trim()).filter(s=>s.length>1).slice(0,9); }
+const CASE_OF=(()=>{ const m={}; const put=(a,c)=>a.forEach(w=>m[w]=c);
   put(["durch","für","gegen","ohne","um","bis","entlang","wider"],"Akkusativ");
   put(["aus","außer","bei","gegenüber","mit","nach","seit","von","zu","ab","laut","binnen"],"Dativ");
   put(["an","auf","hinter","in","neben","über","unter","vor","zwischen"],"Wechsel");
-  put(["während","wegen","trotz","statt","anstatt","innerhalb","außerhalb","aufgrund","oberhalb","unterhalb"],"Genitiv");
-  put(["ins","ans","aufs","durchs","fürs","ums"],"Akkusativ");
-  put(["im","am","beim","vom","zum","zur","z35"],"Dativ");
-  return m;
-})();
-function detectCases(sentences){
-  const out=[]; const seenTrig={};
-  sentences.forEach(s=>{
-    const tokens=s.split(/(\s+)/);
-    for(let i=0;i<tokens.length;i++){
-      const raw=tokens[i]; const w=raw.toLowerCase().replace(/[^a-zäöüß]/g,"");
-      if(CASE_OF[w]){
-        const after=[]; for(let j=i+1;j<tokens.length && after.length<4;j++){ const t=tokens[j].trim(); if(!t) continue; if(/[.,;:!?]$/.test(t)){ after.push(t.replace(/[.,;:!?]+$/,"")); break;} after.push(t); }
-        const phrase = raw.replace(/[^A-Za-zäöüÄÖÜß]/g,"") + " " + after.join(" ");
-        out.push({trigger:w, display:raw.replace(/[^A-Za-zäöüÄÖÜß]/g,""), phrase:phrase.trim(), case:CASE_OF[w]});
-        if(!seenTrig[w]) seenTrig[w]=CASE_OF[w];
-      }
-    }
-  });
-  return { list: out.slice(0,8), triggers: seenTrig };
-}
-const ADJ_STOP = new Set(["aber","oder","sondern","denn","wenn","dann","auch","schon","noch","sehr","mehr","immer","wieder","hier","oben","unten","gegen","neben","über","unter","während","wegen","ohne","gegenüber","gestern","heute","morgen","wie","wo","wer","der","die","das","den","dem","des","eine","einen","einem","einer","eines"]);
-function detectAdjectives(sentences){
-  const out=[]; const re=/\b(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|seine[rmn]?|ihre[rmn]?|keine[rmn]?|diese[rmns]?)?\s*([a-zäöüß]{3,}(e|en|er|es|em))\s+([A-ZÄÖÜ][a-zäöüß]+)/g;
-  sentences.forEach(s=>{ let m; re.lastIndex=0; while((m=re.exec(s))){ const adj=m[1], ending=m[2], noun=m[3]; if(ADJ_STOP.has(adj)) continue; out.push({adj, ending:"-"+ending, noun}); } });
-  const seen=new Set(); return out.filter(a=>{ const k=a.adj+a.noun; if(seen.has(k))return false; seen.add(k); return true; }).slice(0,6);
-}
+  put(["während","wegen","trotz","statt","anstatt","innerhalb","außerhalb","aufgrund"],"Genitiv");
+  put(["ins","ans","aufs","durchs","fürs","ums"],"Akkusativ"); put(["im","am","beim","vom","zum","zur"],"Dativ"); return m; })();
+function detectCases(sentences){ const out=[],trig={};
+  sentences.forEach(s=>{ const tk=s.split(/(\s+)/);
+    for(let i=0;i<tk.length;i++){ const w=tk[i].toLowerCase().replace(/[^a-zäöüß]/g,""); if(CASE_OF[w]){ const after=[]; for(let j=i+1;j<tk.length&&after.length<4;j++){ const t=tk[j].trim(); if(!t)continue; if(/[.,;:!?]$/.test(t)){after.push(t.replace(/[.,;:!?]+$/,""));break;} after.push(t);} const disp=tk[i].replace(/[^A-Za-zäöüÄÖÜß]/g,""); out.push({display:disp,phrase:(disp+" "+after.join(" ")).trim(),case:CASE_OF[w]}); if(!trig[w])trig[w]=CASE_OF[w]; } } });
+  return {list:out.slice(0,8),triggers:trig}; }
+const ADJ_STOP=new Set(["aber","oder","sondern","denn","wenn","dann","auch","schon","noch","sehr","mehr","immer","wieder","hier","gegen","neben","über","unter","während","wegen","ohne","gegenüber","wie","wo","der","die","das","den","dem","des","eine","einen","einem","einer","eines"]);
+function detectAdjectives(sentences){ const out=[],seen=new Set(); const re=/\b(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|seine[rmn]?|ihre[rmn]?|keine[rmn]?|diese[rmns]?)?\s*([a-zäöüß]{3,}(e|en|er|es|em))\s+([A-ZÄÖÜ][a-zäöüß]+)/g;
+  sentences.forEach(s=>{ let m; re.lastIndex=0; while((m=re.exec(s))){ if(ADJ_STOP.has(m[1]))continue; const k=m[1]+m[3]; if(seen.has(k))continue; seen.add(k); out.push({adj:m[1],noun:m[3],ending:"-"+m[2],phrase:m[1]+" "+m[3],explanation:""}); } });
+  return out.slice(0,6); }
 
-/* ---------------- gender via Wiktionary (open) ---------------- */
+/* ---------------- gender via Wiktionary ---------------- */
 const GENDER_CACHE={};
-async function lookupGender(noun){
-  const key=noun.toLowerCase();
-  if(key in GENDER_CACHE) return GENDER_CACHE[key];
-  try{
-    const url=`https://de.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(noun)}&prop=wikitext&format=json&origin=*`;
-    const j=await fetchJSON(url,9000);
-    const wt=j&&j.parse&&j.parse.wikitext&&j.parse.wikitext["*"];
-    let g=null;
-    if(wt && /\{\{Wortart\|Substantiv\|Deutsch\}\}/.test(wt)){
-      const mm=wt.match(/Genus[^=]*=\s*([mfn])/);
-      if(mm) g = mm[1]==="m"?"der":mm[1]==="f"?"die":"das";
-    }
+async function lookupGender(noun){ const key=noun.toLowerCase(); if(key in GENDER_CACHE)return GENDER_CACHE[key];
+  try{ const j=await fetchJSON(`https://de.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(noun)}&prop=wikitext&format=json&origin=*`,9000);
+    const wt=j&&j.parse&&j.parse.wikitext&&j.parse.wikitext["*"]; let g=null;
+    if(wt&&/\{\{Wortart\|Substantiv\|Deutsch\}\}/.test(wt)){ const mm=wt.match(/Genus[^=]*=\s*([mfn])/); if(mm) g=mm[1]==="m"?"der":mm[1]==="f"?"die":"das"; }
     GENDER_CACHE[key]=g; return g;
-  }catch(e){ GENDER_CACHE[key]=null; return null; }
-}
-async function buildGenders(sentences){
-  const caps=new Set();
-  sentences.forEach(s=>{ (s.match(/[A-ZÄÖÜ][a-zäöüß]{2,}/g)||[]).forEach(w=>caps.add(w)); });
+  }catch(e){ GENDER_CACHE[key]=null; return null; } }
+async function buildGenders(sentences){ const caps=new Set(); sentences.forEach(s=>{(s.match(/[A-ZÄÖÜ][a-zäöüß]{2,}/g)||[]).forEach(w=>caps.add(w));});
   const words=[...caps].slice(0,18);
-  const results=await Promise.all(words.map(async w=>[w, await lookupGender(w)]));
-  const map={}, nouns=[];
-  results.forEach(([w,g])=>{ if(g){ map[w.toLowerCase()]=g; nouns.push({word:w, article:g}); } });
-  return {map, nouns};
-}
+  const res=await Promise.all(words.map(async w=>[w,await lookupGender(w)]));
+  const map={},nouns=[]; res.forEach(([w,g])=>{ if(g){ map[w.toLowerCase().replace(/[^a-zäöüß]/g,"")]=g; nouns.push({word:w,article:g,meaning:""}); } });
+  log("info","Wiktionary gender: "+nouns.length+"/"+words.length+" found"); return {map,nouns}; }
 
 /* ---------------- gender colouring ---------------- */
 let GENDER_MAP={};
-function colourNouns(sentence){
-  return sentence.replace(/([A-ZÄÖÜ][a-zäöüßA-ZÄÖÜ\-]+)/g,(m)=>{
-    const art=GENDER_MAP[m.toLowerCase().replace(/[^a-zäöüß]/g,"")];
-    return art ? `<span class="n ${art}">${m}</span>` : m;
-  });
-}
+function colourNouns(s){ return s.replace(/([A-ZÄÖÜ][a-zäöüßA-ZÄÖÜ\-]+)/g,(m)=>{ const a=GENDER_MAP[m.toLowerCase().replace(/[^a-zäöüß]/g,"")]; return a?`<span class="n ${a}">${m}</span>`:m; }); }
 
 /* ---------------- speech ---------------- */
-const synth=window.speechSynthesis;
-let deVoice=null, voiceMissing=false, queue=[], qIndex=0, playing=false;
+const synth=window.speechSynthesis; let deVoice=null,voiceMissing=false,queue=[],qIndex=0,playing=false;
 function pickVoice(){ const vs=synth.getVoices(); deVoice=vs.find(v=>v.lang==="de-DE")||vs.find(v=>v.lang&&v.lang.startsWith("de"))||null; voiceMissing=!deVoice; }
 if(synth){ pickVoice(); synth.onvoiceschanged=pickVoice; }
-function stopSpeech(){ if(synth)synth.cancel(); playing=false; queue=[]; qIndex=0; clearSpeakHighlight(); updatePlayBtn(); }
-function clearSpeakHighlight(){ document.querySelectorAll(".srow.speaking").forEach(r=>r.classList.remove("speaking")); }
-function speakOne(text){ if(!synth)return; synth.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice; synth.speak(u); }
-function playArticle(sentences){
-  if(!synth)return;
-  if(playing){ if(synth.paused)synth.resume(); else synth.pause(); updatePlayBtn(); return; }
-  synth.cancel(); queue=sentences.slice(); qIndex=0; playing=true; updatePlayBtn(); speakNext();
-}
-function speakNext(){
-  if(qIndex>=queue.length){ stopSpeech(); return; }
-  clearSpeakHighlight();
-  const row=document.querySelector(`.srow[data-i="${qIndex}"]`);
-  if(row){ row.classList.add("speaking"); row.scrollIntoView({block:"nearest",behavior:"smooth"}); }
-  const u=new SpeechSynthesisUtterance(queue[qIndex]); u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice;
-  u.onend=()=>{ qIndex++; if(playing) speakNext(); }; synth.speak(u);
-}
-function updatePlayBtn(){
-  const b=$("#playBtn"); if(!b)return;
-  const paused=synth&&synth.paused;
-  $("#playLabel").textContent = !playing ? T().listen : (paused?T().resume:T().pause);
-  b.querySelector(".ic").innerHTML = (playing&&!paused)
-    ? '<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'
-    : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-}
+function stopSpeech(){ if(synth)synth.cancel(); playing=false; queue=[]; qIndex=0; clearHi(); updatePlayBtn(); }
+function clearHi(){ document.querySelectorAll(".srow.speaking").forEach(r=>r.classList.remove("speaking")); }
+function speakOne(t){ if(!synth)return; synth.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice; synth.speak(u); }
+function playArticle(arr){ if(!synth)return; if(playing){ if(synth.paused)synth.resume(); else synth.pause(); updatePlayBtn(); return; } synth.cancel(); queue=arr.slice(); qIndex=0; playing=true; updatePlayBtn(); speakNext(); }
+function speakNext(){ if(qIndex>=queue.length){ stopSpeech(); return; } clearHi(); const row=document.querySelector(`.srow[data-i="${qIndex}"]`); if(row){row.classList.add("speaking");row.scrollIntoView({block:"nearest",behavior:"smooth"});} const u=new SpeechSynthesisUtterance(queue[qIndex]); u.lang="de-DE"; u.rate=state.rate; if(deVoice)u.voice=deVoice; u.onend=()=>{qIndex++; if(playing)speakNext();}; synth.speak(u); }
+function updatePlayBtn(){ const b=$("#playBtn"); if(!b)return; const paused=synth&&synth.paused; $("#playLabel").textContent=!playing?T().listen:(paused?T().resume:T().pause); b.querySelector(".ic").innerHTML=(playing&&!paused)?'<svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>':'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; }
 
 /* ---------------- headlines UI ---------------- */
-function renderHeadlinesLoading(){
-  const list=$("#hlist"); list.innerHTML="";
-  for(let i=0;i<6;i++){ const c=el("div","hcard"); c.innerHTML=`<div class="skel" style="height:10px;width:40%;margin-bottom:8px"></div><div class="skel" style="height:16px;width:90%;margin-bottom:6px"></div><div class="skel" style="height:16px;width:70%"></div>`; list.appendChild(c); }
-}
-async function loadHeadlines(){
-  renderHeadlinesLoading();
-  $("#read").innerHTML=`<div class="panel"><div class="spinwrap"><span class="spin"></span>${T().loadingHeads}</div></div>`;
-  try{
-    const items=await fetchHeadlines();
-    state.headlines=items.filter(h=>h.headline_de).slice(0,10);
-    if(!state.headlines.length) throw new Error("empty");
-    renderHeadlines(); renderEmpty();
-  }catch(e){
-    console.error(e); $("#hlist").innerHTML="";
-    $("#read").innerHTML=errorBox(()=>loadHeadlines(), T().errFeed, {label:T().sampleBtn, fn:loadSampleHeadlines});
-  }
-}
-function loadSampleHeadlines(){
-  state.headlines=T().samples.map((s,i)=>({id:i+1, headline_de:s.h, teaser_de:s.t, category_de:s.c, url:"", body:s.body}));
-  state.activeId=null; renderHeadlines(); renderEmpty();
-}
-function renderHeadlines(){
-  const list=$("#hlist"); list.innerHTML="";
-  (state.headlines||[]).forEach(h=>{
-    const c=el("button","hcard"+(h.id===state.activeId?" active":""));
-    c.innerHTML=`<div class="hcat">${esc(h.category_de||"")}</div><div class="htitle">${esc(h.headline_de||"")}</div>${h.teaser_de?`<div class="hteaser">${esc(h.teaser_de)}</div>`:""}`;
-    c.onclick=()=>openArticle(h); list.appendChild(c);
-  });
-}
+function renderHeadlinesLoading(){ const l=$("#hlist"); l.innerHTML=""; for(let i=0;i<6;i++){ const c=el("div","hcard"); c.innerHTML=`<div class="skel" style="height:10px;width:40%;margin-bottom:8px"></div><div class="skel" style="height:16px;width:90%;margin-bottom:6px"></div><div class="skel" style="height:16px;width:70%"></div>`; l.appendChild(c);} }
+async function loadHeadlines(){ renderHeadlinesLoading(); $("#read").innerHTML=`<div class="panel"><div class="spinwrap"><span class="spin"></span>${T().loadingHeads}</div></div>`;
+  try{ const items=await fetchHeadlines(); state.headlines=items.filter(h=>h.headline_de).slice(0,10); if(!state.headlines.length) throw new Error("no usable items"); renderHeadlines(); renderEmpty(); }
+  catch(e){ log("err","Headlines failed: "+e.message); $("#hlist").innerHTML=""; $("#read").innerHTML=errorBox(()=>loadHeadlines(),T().errFeed+" ("+e.message+")",{label:T().sampleBtn,fn:loadSampleHeadlines}); } }
+function loadSampleHeadlines(){ state.headlines=T().samples.map((s,i)=>({id:i+1,headline_de:s.h,teaser_de:s.t,category_de:s.c,url:"",body:s.body})); state.activeId=null; log("info","Loaded sample headlines"); renderHeadlines(); renderEmpty(); }
+function renderHeadlines(){ const l=$("#hlist"); l.innerHTML=""; (state.headlines||[]).forEach(h=>{ const c=el("button","hcard"+(h.id===state.activeId?" active":"")); c.innerHTML=`<div class="hcat">${esc(h.category_de||"")}</div><div class="htitle">${esc(h.headline_de||"")}</div>${h.teaser_de?`<div class="hteaser">${esc(h.teaser_de)}</div>`:""}`; c.onclick=()=>openArticle(h); l.appendChild(c); }); }
 
-/* ---------------- reading area ---------------- */
-function renderEmpty(){
-  const t=T();
-  $("#read").innerHTML=`<div class="empty"><h3 class="serif">${t.emptyH}</h3><p style="max-width:440px;margin:0 auto">${t.emptyP}</p>
-    <div class="legend"><span><i class="swatch" style="background:var(--der)"></i>${t.masc}</span><span><i class="swatch" style="background:var(--die)"></i>${t.fem}</span><span><i class="swatch" style="background:var(--das)"></i>${t.neut}</span></div></div>`;
+/* ---------------- reading ---------------- */
+function renderEmpty(){ const t=T(); $("#read").innerHTML=`<div class="empty"><h3 class="serif">${t.emptyH}</h3><p style="max-width:440px;margin:0 auto">${t.emptyP}</p><div class="legend"><span><i class="swatch" style="background:var(--der)"></i>${t.masc}</span><span><i class="swatch" style="background:var(--die)"></i>${t.fem}</span><span><i class="swatch" style="background:var(--das)"></i>${t.neut}</span></div></div>`; }
+function errorBox(retryFn,msg,extra){ const id="e"+Math.random().toString(36).slice(2),id2="e"+Math.random().toString(36).slice(2),id3="e"+Math.random().toString(36).slice(2);
+  setTimeout(()=>{ const b=document.getElementById(id);if(b)b.onclick=retryFn; const b3=document.getElementById(id3);if(b3)b3.onclick=()=>toggleLog(true); if(extra){const b2=document.getElementById(id2);if(b2)b2.onclick=extra.fn;} },0);
+  return `<div class="errbox">${esc(msg||T().err)}<br><button class="ghost" id="${id}">${T().retry}</button> <button class="ghost" id="${id3}">${T().openLog}</button>${extra?` <button class="ghost" id="${id2}">${esc(extra.label)}</button>`:""}</div>`; }
+function cacheKey(h){ return `${h.id}|${state.transLang}|${state.useLLM?"ai":"open"}`; }
+function shellLoading(h,status){ $("#read").innerHTML=`<div class="panel"><div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div><h1 class="art-title serif">${esc(h.headline_de||"")}</h1></div><div class="spinwrap"><span class="spin"></span><span id="loadStatus">${esc(status)}</span></div></div>`; }
+function setStatus(s){ const e=$("#loadStatus"); if(e)e.textContent=s; }
+
+function bundleFromLLM(j,h){
+  const sentences=(j.sentences||[]).map(s=>({de:s.de||"",tr:s.tr||""})).filter(s=>s.de);
+  const nouns=(j.nouns||[]).filter(n=>n.word&&/^(der|die|das)$/.test(n.article||"")).map(n=>({word:n.word,article:n.article,meaning:n.meaning||""}));
+  const map={}; nouns.forEach(n=>map[n.word.toLowerCase().replace(/[^a-zäöüß]/g,"")]=n.article);
+  const ex=j.exercises||{};
+  return { title_de:j.title_de||h.headline_de, sentences, nouns,
+    cases:(j.cases||[]).map(c=>({display:"",phrase:c.phrase||"",case:c.case||"Nominativ",explanation:c.explanation||""})),
+    adjs:(j.adjectives||[]).map(a=>({adj:a.adjective||"",noun:"",phrase:a.phrase||"",ending:a.ending||"",explanation:a.explanation||""})),
+    ex:{ gender:(ex.gender||[]).filter(g=>g.word).map(g=>({word:g.word,answer:g.answer})), cases:(ex.cases||[]), declension:(ex.declension||[]), translation:(ex.translation||[]) },
+    genderMap:map, source:"ai" };
 }
-function errorBox(retryFn,msg,extra){
-  const id="e"+Math.random().toString(36).slice(2), id2="e"+Math.random().toString(36).slice(2);
-  setTimeout(()=>{ const b=document.getElementById(id); if(b)b.onclick=retryFn; if(extra){ const b2=document.getElementById(id2); if(b2)b2.onclick=extra.fn; } },0);
-  return `<div class="errbox">${esc(msg||T().err)}<br><button class="ghost" id="${id}">${T().retry}</button>${extra?`<button class="ghost" id="${id2}" style="margin-left:8px">${esc(extra.label)}</button>`:""}</div>`;
+function bundleFromRules(sentences,cases,adjs,nouns,h){
+  const map={}; nouns.forEach(n=>map[n.word.toLowerCase().replace(/[^a-zäöüß]/g,"")]=n.article);
+  return { title_de:h.headline_de, sentences:sentences.map(s=>({de:s,tr:null})), nouns,
+    cases:cases.list.map(c=>({display:c.display,phrase:c.phrase,case:c.case,explanation:caseExplain(c.display,c.case)})),
+    adjs:adjs,
+    ex:{ gender:nouns.slice(0,5).map(n=>({word:n.word,answer:n.article})),
+         cases:Object.entries(cases.triggers).filter(([w,c])=>c==="Akkusativ"||c==="Dativ").slice(0,4).map(([w,c])=>({prompt:"«"+w+"»",options:["Akkusativ","Dativ"],answer:c,explanation:caseExplain(w,c)})),
+         declension:[], translation:[] },
+    genderMap:map, source:"open" };
 }
-function cacheKey(h){ return `${h.id}|${state.transLang}`; }
 
 async function openArticle(h){
   state.activeId=h.id; renderHeadlines(); stopSpeech();
   const key=cacheKey(h);
   if(state.cache[key]){ GENDER_MAP=state.cache[key].genderMap||{}; paintArticle(h,state.cache[key]); return; }
-
-  $("#read").innerHTML=`<div class="panel"><div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div><h1 class="art-title serif">${esc(h.headline_de||"")}</h1></div><div class="spinwrap"><span class="spin"></span>${T().loadingArt}</div></div>`;
+  shellLoading(h,T().loadingArt);
+  log("info","── Opening: "+h.headline_de);
+  const warns=[];
+  const warn=(level,msg)=>{ warns.push({level,msg}); log(level,msg); };
   try{
-    let src = h.body || await fetchArticleText(h.url);
-    if(!src || src.length<80) src = (h.headline_de||"") + ". " + (h.teaser_de||"");
-    const sentences = splitSentences(src);
-    const cases = detectCases(sentences);
-    const adjs = detectAdjectives(sentences);
-    const bundle = { title_de:h.headline_de, sentences:sentences.map(s=>({de:s, tr:null})), cases, adjs, nouns:[], genderMap:{} };
-    GENDER_MAP={}; state.cache[key]=bundle;
-    paintArticle(h, bundle);
+    let src=h.body||"";
+    if(!src){ src=await fetchArticleText(h.url); }
+    if(!src||src.length<80){ src=(h.headline_de||"")+". "+(h.teaser_de||""); warn("warn", T().wNoBody); }
 
-    // translations (fill progressively)
-    sentences.forEach((s,i)=>{ translate(s, state.transLang).then(tr=>{ bundle.sentences[i].tr = tr || "—"; const cell=document.querySelector(`.s-tr[data-i="${i}"]`); if(cell && state.activeId===h.id){ cell.textContent=bundle.sentences[i].tr; cell.classList.remove("pending"); } }); });
+    if(state.useLLM){
+      try{
+        setStatus(T().aiWorking); log("info","LLM → text.pollinations.ai");
+        const raw=await callLLM(articleLLMPrompt(src)); log("ok","LLM responded ("+raw.length+" chars)");
+        const j=extractJSON(raw); const bundle=bundleFromLLM(j,h);
+        if(!bundle.sentences.length) throw new Error("JSON had no sentences");
+        bundle.warnings=warns; bundle.engineNote=T().engAI;
+        log("ok","AI: "+bundle.sentences.length+" sentences, "+bundle.nouns.length+" nouns");
+        GENDER_MAP=bundle.genderMap||{}; state.cache[key]=bundle; paintArticle(h,bundle); return;
+      }catch(e){ warn("warn", T().wLLM+" "+e.message); setStatus(T().aiFallback); }
+    } else {
+      warn("warn", T().wLLMoff);
+    }
 
-    // gender (Wiktionary) then recolour + grammar/exercises
+    // open-API fallback: translation + Wiktionary + rules
+    const sentences=splitSentences(src);
+    const cases=detectCases(sentences), adjs=detectAdjectives(sentences);
+    const bundle=bundleFromRules(sentences,cases,adjs,[],h);
+    bundle.warnings=warns; bundle.engineNote=T().engOpen;
+    GENDER_MAP={}; state.cache[key]=bundle; paintArticle(h,bundle);
+
+    log("info","Translating "+sentences.length+" sentences…");
+    const settle=await Promise.all(sentences.map((s,i)=> translate(s,state.transLang).then(r=>{
+      bundle.sentences[i].tr = r.text || null;
+      const cell=document.querySelector(`.s-tr[data-i="${i}"]`);
+      if(cell&&state.activeId===h.id){ cell.classList.remove("pending"); if(r.text){ cell.textContent=r.text; } else { cell.innerHTML=`<span style="color:var(--bad)">⚠ ${esc(T().trFail)}</span>`; } }
+      return r;
+    })));
+    const used=[...new Set(settle.map(r=>r.via).filter(Boolean))];
+    const failed=settle.filter(r=>!r.via).length;
+    if(used.length) warn("info", T().wTransVia+" "+used.join(", "));
+    if(failed) warn("err", failed+" "+T().wTransFail);
+    if(!used.length && failed) warn("err", T().wTransAll);
+
     buildGenders(sentences).then(({map,nouns})=>{
-      bundle.genderMap=map; bundle.nouns=nouns; GENDER_MAP=map;
-      if(state.activeId===h.id) paintArticle(h, bundle);
+      bundle.genderMap=map; bundle.nouns=nouns; bundle.ex.gender=nouns.slice(0,5).map(n=>({word:n.word,answer:n.article})); GENDER_MAP=map;
+      if(!nouns.length) warn("warn", T().wGender);
+      if(state.activeId===h.id) paintArticle(h,bundle);
     });
+    updateStatusBar(bundle);
   }catch(e){
-    console.error(e);
-    $("#read").innerHTML=errorBox(()=>openArticle(h), T().err);
+    warn("err","Article load failed: "+e.message);
+    $("#read").innerHTML=errorBox(()=>openArticle(h), T().err+" — "+e.message);
   }
 }
 
-function paintArticle(h, bundle){
-  const t=T();
-  GENDER_MAP = bundle.genderMap||{};
-  const rows=bundle.sentences.map((s,i)=>`
-    <div class="srow" data-i="${i}">
-      <div class="s-de serif">
-        <button class="playbtn small mini" title="${esc(t.playSentence)}" data-speak="${i}" aria-label="${esc(t.playSentence)}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-        ${colourNouns(esc(s.de))}
-      </div>
-      <div class="s-tr ${s.tr==null?'pending':''}" data-i="${i}">${s.tr==null?esc(t.translating):esc(s.tr)}</div>
-    </div>`).join("");
-  const srcLink = h.url ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${t.openOrf} ↗</a>` : "";
-
-  $("#read").innerHTML=`<div class="panel">
-    <div class="art-head"><div class="art-cat">${esc(h.category_de||"")}</div><h1 class="art-title serif">${esc(bundle.title_de||h.headline_de||"")}</h1>${srcLink?`<p class="art-note" style="font-style:normal">${t.source}: ${srcLink}</p>`:""}</div>
+function paintArticle(h,bundle){
+  const t=T(); GENDER_MAP=bundle.genderMap||{};
+  const rows=bundle.sentences.map((s,i)=>`<div class="srow" data-i="${i}"><div class="s-de serif"><button class="playbtn small mini" title="${esc(t.playSentence)}" data-speak="${i}" aria-label="${esc(t.playSentence)}"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>${colourNouns(esc(s.de))}</div><div class="s-tr ${s.tr==null?'pending':''}" data-i="${i}">${s.tr==null?esc(t.translating):esc(s.tr)}</div></div>`).join("");
+  const srcLink=h.url?`<a href="${esc(h.url)}" target="_blank" rel="noopener">${t.openOrf} ↗</a>`:"";
+  const badge = bundle.source==="ai" ? "AI" : "open APIs";
+  $("#read").innerHTML=`<div class="panel"><div class="art-head"><div class="art-cat">${esc(h.category_de||"")} · ${badge}</div><h1 class="art-title serif">${esc(bundle.title_de||h.headline_de||"")}</h1>${srcLink?`<p class="art-note">${t.source}: ${srcLink}</p>`:""}</div>${statusBarHTML(bundle)}
     <div class="audiobar"><button class="playbtn" id="playBtn" aria-label="${esc(t.listen)}"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button><span class="audio-label" id="playLabel">${t.listen}</span><label class="rate">${t.speed}<input type="range" min="0.6" max="1.2" step="0.05" value="${state.rate}" id="rate"></label></div>
     <div class="col-tags"><div style="flex:1">${t.colDe}</div><div style="flex:1">${t.colTr}</div></div>
     <div class="sentences" id="sentences">${rows}</div>
     <div class="tabs"><button class="tab ${state.tab==='gram'?'on':''}" data-tab="gram">${t.tabGram}</button><button class="tab ${state.tab==='ex'?'on':''}" data-tab="ex">${t.tabEx}</button></div>
-    <div class="tabbody" id="tabbody"></div>
-  </div>`;
-
+    <div class="tabbody" id="tabbody"></div></div>`;
   $("#playBtn").onclick=()=>playArticle(bundle.sentences.map(s=>s.de));
-  $("#rate").oninput=(e)=>{ state.rate=parseFloat(e.target.value); };
+  $("#rate").oninput=e=>{ state.rate=parseFloat(e.target.value); };
   $("#sentences").querySelectorAll("[data-speak]").forEach(b=>{ b.onclick=()=>{ stopSpeech(); speakOne(bundle.sentences[+b.dataset.speak].de); }; });
   $("#tabbody").parentElement.querySelectorAll(".tab").forEach(tb=>{ tb.onclick=()=>{ state.tab=tb.dataset.tab; paintArticle(h,bundle); }; });
   updatePlayBtn();
-  if(state.tab==="gram") renderGrammar($("#tabbody"), bundle); else renderExercises($("#tabbody"), bundle);
+  if(state.tab==="gram") renderGrammar($("#tabbody"),bundle); else renderExercises($("#tabbody"),bundle);
+}
+
+/* ---------- visible status bar ---------- */
+function statusBarHTML(bundle){
+  if(!bundle) return "";
+  const w=bundle.warnings||[];
+  const cls = w.some(x=>x.level==="err")?"err":(w.some(x=>x.level==="warn")?"warn":"ok");
+  const parts=[`<b>${esc(bundle.engineNote||"")}</b>`].concat(w.map(x=>esc(x.msg)));
+  return `<div class="statusbar ${cls}" id="statusBar">${parts.join(" · ")}</div>`;
+}
+function updateStatusBar(bundle){
+  const cur=$("#statusBar"); if(!cur)return;
+  const tmp=document.createElement("div"); tmp.innerHTML=statusBarHTML(bundle);
+  if(tmp.firstChild) cur.replaceWith(tmp.firstChild);
 }
 
 /* ---------- grammar ---------- */
-function caseClassOf(c){ return {Akkusativ:"akk",Dativ:"dat",Wechsel:"wex",Genitiv:"gen"}[c]||"akk"; }
-function caseExplain(w,c){
-  const es={Akkusativ:`«${w}» siempre rige acusativo.`,Dativ:`«${w}» siempre rige dativo.`,Wechsel:`«${w}»: acusativo con movimiento (¿adónde?), dativo con ubicación (¿dónde?).`,Genitiv:`«${w}» rige genitivo.`};
-  const en={Akkusativ:`“${w}” always takes the accusative.`,Dativ:`“${w}” always takes the dative.`,Wechsel:`“${w}”: accusative for movement, dative for location.`,Genitiv:`“${w}” takes the genitive.`};
-  return (state.uiLang==="es"?es:en)[c];
-}
-function renderGrammar(body, bundle){
-  const t=T();
-  const nouns=(bundle.nouns||[]).map(n=>`<div class="ncard ${n.article}"><span class="art">${n.article}</span> <span class="word">${esc(n.word)}</span></div>`).join("");
-  const cases=(bundle.cases.list||[]).map(c=>`<div class="gline"><span class="gphrase"><b>${esc(c.display)}</b> ${esc(c.phrase.replace(c.display,"").trim())}</span><span class="pill ${caseClassOf(c.case)}">${c.case}</span><div class="gexp">${esc(caseExplain(c.display,c.case))}</div></div>`).join("");
-  const adjs=(bundle.adjs||[]).map(a=>`<div class="gline"><span class="gphrase">${esc(a.adj)} ${esc(a.noun)}</span><span class="gend">${esc(a.adj)} → ${esc(a.ending)}</span></div>`).join("");
+function caseClassOf(c){ return {Akkusativ:"akk",Dativ:"dat",Wechsel:"wex",Genitiv:"gen",Nominativ:"nom"}[c]||"nom"; }
+function caseExplain(w,c){ const es={Akkusativ:`«${w}» rige acusativo.`,Dativ:`«${w}» rige dativo.`,Wechsel:`«${w}»: acusativo con movimiento, dativo con ubicación.`,Genitiv:`«${w}» rige genitivo.`,Nominativ:`Nominativo.`}; const en={Akkusativ:`“${w}” takes the accusative.`,Dativ:`“${w}” takes the dative.`,Wechsel:`“${w}”: accusative for movement, dative for location.`,Genitiv:`“${w}” takes the genitive.`,Nominativ:`Nominative.`}; return (state.uiLang==="es"?es:en)[c]||""; }
+function renderGrammar(body,bundle){ const t=T();
+  const nouns=(bundle.nouns||[]).map(n=>`<div class="ncard ${n.article}"><span class="art">${n.article}</span> <span class="word">${esc(n.word)}</span>${n.meaning?`<div class="meta">${esc(n.meaning)}</div>`:""}</div>`).join("");
+  const cases=(bundle.cases||[]).map(c=>{ const disp=c.display?`<b>${esc(c.display)}</b> ${esc(c.phrase.replace(c.display,"").trim())}`:esc(c.phrase); return `<div class="gline"><span class="gphrase">${disp}</span><span class="pill ${caseClassOf(c.case)}">${esc(c.case)}</span>${c.explanation?`<div class="gexp">${esc(c.explanation)}</div>`:""}</div>`; }).join("");
+  const adjs=(bundle.adjs||[]).map(a=>`<div class="gline"><span class="gphrase">${esc(a.phrase||(a.adj+" "+a.noun))}</span><span class="gend">${esc(a.adj)} → ${esc(a.ending)}</span>${a.explanation?`<div class="gexp">${esc(a.explanation)}</div>`:""}</div>`).join("");
   const declTable=`<table class="decl"><tr><th></th><th>der (m)</th><th>die (f)</th><th>das (n)</th><th>Plural</th></tr>
     <tr><th>Nom.</th><td>der gut<b>e</b></td><td>die gut<b>e</b></td><td>das gut<b>e</b></td><td>die gut<b>en</b></td></tr>
     <tr><th>Akk.</th><td>den gut<b>en</b></td><td>die gut<b>e</b></td><td>das gut<b>e</b></td><td>die gut<b>en</b></td></tr>
     <tr><th>Dat.</th><td>dem gut<b>en</b></td><td>der gut<b>en</b></td><td>dem gut<b>en</b></td><td>den gut<b>en</b></td></tr>
     <tr><th>Gen.</th><td>des gut<b>en</b></td><td>der gut<b>en</b></td><td>des gut<b>en</b></td><td>der gut<b>en</b></td></tr></table>`;
-  body.innerHTML=`
-    <div class="sec-label">${t.gNouns}</div><div class="hint">${esc(t.genNote)}</div><div class="ngrid">${nouns||"—"}</div>
+  body.innerHTML=`<div class="sec-label">${t.gNouns}</div>${bundle.source==="open"?`<div class="hint">${esc(t.genNote)}</div>`:""}<div class="ngrid">${nouns||"—"}</div>
     <div class="sec-label">${t.gCases}</div>${cases||"—"}
-    <div class="sec-label">${t.gAdj}</div>
-    ${adjs?`<div class="hint">${esc(t.adjFound)} · ${esc(t.autoNote)}</div>${adjs}`:""}
-    <div class="hint" style="margin-top:14px">${esc(t.adjTable)}</div>${declTable}`;
+    <div class="sec-label">${t.gAdj}</div>${adjs?`<div class="hint">${esc(t.autoNote)}</div>${adjs}`:""}<div class="hint" style="margin-top:14px">${esc(t.adjTable)}</div>${declTable}`;
 }
 
 /* ---------- exercises ---------- */
 let exScore={correct:0,total:0};
 function secLabel(txt){ return el("div","sec-label",txt+` <span class="scorechip" data-score></span>`); }
 function feedbackEl(){ return el("div","feedback"); }
-function updateScoreChips(){ document.querySelectorAll("[data-score]").forEach(s=>{ s.textContent = exScore.total?`${exScore.correct}/${exScore.total} ${T().score}`:""; }); }
-function mcAnswer(btn,opts,isCorrect,answer,explanation,card){
-  opts.querySelectorAll(".opt").forEach(b=>b.disabled=true);
-  btn.classList.add(isCorrect?"correct":"wrong");
-  if(!isCorrect) opts.querySelectorAll(".opt").forEach(b=>{ if(b.dataset.val===answer) b.classList.add("correct"); });
-  const fb=card.querySelector(".feedback"); fb.className="feedback show "+(isCorrect?"good":"warn");
-  fb.textContent=(isCorrect?T().correct:T().wrong)+(explanation?(" "+explanation):(isCorrect?"":(" "+answer)));
-  exScore.total++; if(isCorrect)exScore.correct++; updateScoreChips();
-}
-function renderExercises(body, bundle){
-  const t=T(); exScore={correct:0,total:0}; body.innerHTML="";
-
-  // gender quiz
-  const gNouns=(bundle.nouns||[]).slice(0,5);
-  if(gNouns.length){
-    body.appendChild(secLabel(t.exGender));
-    gNouns.forEach(q=>{
-      const card=el("div","ex");
-      card.innerHTML=`<p class="ex-q"><strong>${esc(q.word)}</strong> &nbsp;<span style="font-size:13px;color:var(--muted)">${t.whichGender}</span></p>`;
-      const opts=el("div","opts");
-      ["der","die","das"].forEach(o=>{ const b=el("button","opt",o); b.dataset.val=o; b.onclick=()=>mcAnswer(b,opts,o===q.article,q.article,null,card); opts.appendChild(b); });
-      card.appendChild(opts); card.appendChild(feedbackEl()); body.appendChild(card);
-    });
-  }
-
-  // case quiz (Akk/Dativ triggers only)
-  const trig=Object.entries(bundle.cases.triggers||{}).filter(([w,c])=>c==="Akkusativ"||c==="Dativ").slice(0,4);
-  if(trig.length){
-    body.appendChild(secLabel(t.exCases));
-    trig.forEach(([w,c])=>{
-      const card=el("div","ex");
-      card.innerHTML=`<p class="ex-q"><span class="de">«${esc(w)}»</span> &nbsp;<span style="font-size:13px;color:var(--muted)">${t.whichCase}</span></p>`;
-      const opts=el("div","opts");
-      ["Akkusativ","Dativ"].forEach(o=>{ const b=el("button","opt",o); b.dataset.val=o; b.onclick=()=>mcAnswer(b,opts,o===c,c,caseExplain(w,c),card); opts.appendChild(b); });
-      card.appendChild(opts); card.appendChild(feedbackEl()); body.appendChild(card);
-    });
-  }
-
-  // reverse translation
-  const transItems=bundle.sentences.filter(s=>s.tr && s.tr!=="—" && s.tr!=null).slice(0,3);
-  if(transItems.length){
-    body.appendChild(secLabel(t.exTrans));
-    transItems.forEach(s=>{
-      const card=el("div","ex");
-      card.innerHTML=`<p class="ex-q">${t.promptTrans} <em>${esc(s.tr)}</em></p>`;
-      const ta=el("textarea","trans"); ta.placeholder=t.yourAnswer;
-      const btn=el("button","ghost reveal",t.reveal);
-      const ans=el("div","model-answer",`<span class="lab">${t.model}</span>${esc(s.de)}`);
-      btn.onclick=()=>ans.classList.add("show");
-      card.appendChild(ta); card.appendChild(btn); card.appendChild(ans); body.appendChild(card);
-    });
-  }
+function updateScoreChips(){ document.querySelectorAll("[data-score]").forEach(s=>{ s.textContent=exScore.total?`${exScore.correct}/${exScore.total} ${T().score}`:""; }); }
+function mcAnswer(btn,opts,isC,answer,expl,card){ opts.querySelectorAll(".opt").forEach(b=>b.disabled=true); btn.classList.add(isC?"correct":"wrong"); if(!isC) opts.querySelectorAll(".opt").forEach(b=>{ if(b.dataset.val===answer) b.classList.add("correct"); }); const fb=card.querySelector(".feedback"); fb.className="feedback show "+(isC?"good":"warn"); fb.textContent=(isC?T().correct:T().wrong)+(expl?(" "+expl):(isC?"":(" "+answer))); exScore.total++; if(isC)exScore.correct++; updateScoreChips(); }
+function mcBlock(body,label,items,getOpts,getAns,getPrompt,getExpl){ if(!items.length)return; body.appendChild(secLabel(label)); items.forEach(q=>{ const card=el("div","ex"); card.innerHTML=`<p class="ex-q">${getPrompt(q)}</p>`; const opts=el("div","opts"); getOpts(q).forEach(o=>{ const b=el("button","opt",esc(o)); b.dataset.val=o; b.onclick=()=>mcAnswer(b,opts,o===getAns(q),getAns(q),getExpl(q),card); opts.appendChild(b); }); card.appendChild(opts); card.appendChild(feedbackEl()); body.appendChild(card); }); }
+function renderExercises(body,bundle){ const t=T(); exScore={correct:0,total:0}; body.innerHTML="";
+  mcBlock(body,t.exGender,(bundle.ex.gender||[]).slice(0,5),()=>["der","die","das"],q=>q.answer,q=>`<strong>${esc(q.word)}</strong> &nbsp;<span style="font-size:13px;color:var(--muted)">${t.whichGender}</span>`,()=>"");
+  mcBlock(body,t.exCases,(bundle.ex.cases||[]).slice(0,4),q=>q.options||["Akkusativ","Dativ"],q=>q.answer,q=>`<span class="de">${esc(q.prompt)}</span> &nbsp;<span style="font-size:13px;color:var(--muted)">${t.whichCase}</span>`,q=>q.explanation||"");
+  mcBlock(body,t.exDecl,(bundle.ex.declension||[]).slice(0,3),q=>q.options||[],q=>q.answer,q=>`<span class="de">${esc((q.sentence||"").replace(/_+/g,'<span class="gap">?</span>'))}</span>`,q=>q.explanation||"");
+  let transItems=bundle.ex.translation||[]; if(!transItems.length) transItems=bundle.sentences.filter(s=>s.tr&&s.tr!=="⚠"&&s.tr!=null).slice(0,3).map(s=>({prompt:s.tr,answer:s.de}));
+  if(transItems.length){ body.appendChild(secLabel(t.exTrans)); transItems.forEach(s=>{ const card=el("div","ex"); card.innerHTML=`<p class="ex-q">${t.promptTrans} <em>${esc(s.prompt)}</em></p>`; const ta=el("textarea","trans"); ta.placeholder=t.yourAnswer; const btn=el("button","ghost reveal",t.reveal); const ans=el("div","model-answer",`<span class="lab">${t.model}</span>${esc(s.answer)}`); btn.onclick=()=>ans.classList.add("show"); card.appendChild(ta); card.appendChild(btn); card.appendChild(ans); body.appendChild(card); }); }
   if(!body.children.length) body.innerHTML=`<div class="hint">—</div>`;
   updateScoreChips();
 }
 
-/* ---------------- controls ---------------- */
-function applyI18N(){
-  const t=T();
-  document.documentElement.lang=state.uiLang;
-  $("#tagline").textContent=t.tagline;
-  $("#lblUi").textContent=t.ui; $("#lblTrans").textContent=t.trans; $("#refreshLbl").textContent=t.refresh;
-  $("#feedTitle").textContent=t.feed; $("#feedDate").textContent=todayHuman;
-  $("#footer").innerHTML=t.note + (voiceMissing?("<br>"+t.noVoice):"");
-}
+/* ---------------- controls + log ---------------- */
+function applyI18N(){ const t=T(); document.documentElement.lang=state.uiLang;
+  $("#tagline").textContent=t.tagline; $("#lblUi").textContent=t.ui; $("#lblTrans").textContent=t.trans; $("#refreshLbl").textContent=t.refresh; $("#logLbl").textContent=t.logLbl;
+  $("#feedTitle").textContent=t.feed; $("#feedDate").textContent=todayHuman; $("#logTitle").textContent=t.logTitle; $("#llmLbl").textContent=t.llmLbl; $("#logCopy").textContent=t.logCopy;
+  $("#footer").innerHTML=t.note+(voiceMissing?("<br>"+t.noVoice):""); }
 function bindSeg(id,key,after){ $(id).querySelectorAll("button").forEach(b=>{ b.onclick=()=>{ $(id).querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); state[key]=b.dataset.ui||b.dataset.tr; after&&after(); }; }); }
-function rerenderCurrent(){
-  applyI18N(); if(state.headlines) renderHeadlines();
-  if(state.activeId==null){ renderEmpty(); return; }
-  const h=(state.headlines||[]).find(x=>x.id===state.activeId); const b=h&&state.cache[cacheKey(h)];
-  if(h&&b){ GENDER_MAP=b.genderMap||{}; paintArticle(h,b);} else renderEmpty();
-}
+function rerenderCurrent(){ applyI18N(); if(state.headlines) renderHeadlines(); if(state.activeId==null){ renderEmpty(); return; } const h=(state.headlines||[]).find(x=>x.id===state.activeId); const b=h&&state.cache[cacheKey(h)]; if(h&&b){GENDER_MAP=b.genderMap||{};paintArticle(h,b);} else renderEmpty(); }
 function reloadCurrentArticle(){ if(state.activeId==null)return; const h=(state.headlines||[]).find(x=>x.id===state.activeId); if(h) openArticle(h); }
-function init(){
-  applyI18N();
+function toggleLog(force){ const p=$("#logPanel"); p.hidden = force===true?false:(force===false?true:!p.hidden); if(!p.hidden) renderLog(); }
+function init(){ applyI18N();
   bindSeg("#uiSeg","uiLang",()=>{ applyI18N(); rerenderCurrent(); });
   bindSeg("#transSeg","transLang",()=>{ reloadCurrentArticle(); });
-  $("#refreshBtn").onclick=()=>{ state.cache={}; state.activeId=null; loadHeadlines(); };
+  $("#refreshBtn").onclick=()=>{ state.cache={}; state.activeId=null; log("info","Refreshing headlines"); loadHeadlines(); };
+  $("#logBtn").onclick=()=>toggleLog();
+  $("#logClose").onclick=()=>toggleLog(false);
+  $("#llmToggle").onchange=e=>{ state.useLLM=e.target.checked; log("info","Use AI = "+state.useLLM); reloadCurrentArticle(); };
+  $("#logCopy").onclick=async()=>{ const txt=LOG.map(l=>`[${l.t}] ${l.level.toUpperCase()} ${l.msg}`).join("\n"); try{ await navigator.clipboard.writeText(txt); $("#logCopy").textContent="✓"; setTimeout(()=>$("#logCopy").textContent=T().logCopy,1200); }catch(e){ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); } };
+  log("info","Lernblatt started · "+location.href);
   loadHeadlines();
 }
 window.addEventListener("beforeunload", stopSpeech);
