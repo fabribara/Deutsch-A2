@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Netzwerk neu B1 · Meister</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   NETZWERK neu B1 — Meister · styles
+   Sprachlabor: warm paper, Playfair display, Plex Sans/Mono.
+   Functional color: teal=lab, rust=grammar, green=vocab, amber=exam.
+   ============================================================ */
+:root{
+  --paper:#F4F0E6; --ink:#23201A; --ink-soft:#5B554A; --line:#D8D0BE;
+  --card:#FBF8F0; --card-2:#FFFFFF;
+  --lab:#2B5563;       /* deep teal — primary */
+  --lab-2:#3E7180;
+  --gram:#B5552A;      /* rust — grammar */
+  --vocab:#3F7A4E;     /* green — vocab */
+  --exam:#B5852A;      /* amber — exam */
+  --rede:#6A4E8C;      /* violet — redemittel */
+  --ok:#2E7D52; --no:#C0392B;
+  --radius:14px; --shadow:0 1px 0 #fff inset, 0 8px 24px rgba(40,34,22,.08);
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --sans:'IBM Plex Sans',system-ui,sans-serif;
+  --disp:'Playfair Display',Georgia,serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit}
+h1,h2,h3{font-family:var(--disp);font-weight:700;letter-spacing:-.01em;margin:0}
+.eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.18em;
+  font-size:11px;color:var(--lab-2);margin:0 0 6px}
+.lede{color:var(--ink-soft);max-width:60ch;margin:.4em 0 0}
+
+/* ---- layout: HUD/topbar (shared) ---- */
+.hud{display:flex;align-items:center;gap:14px}
+.hud .pill{font-family:var(--mono);font-size:12px;background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:5px 11px;display:flex;gap:6px;align-items:center}
+.hud .pill b{color:var(--lab)}
+.iconbtn{font-family:var(--mono);font-size:12px;border:1px solid var(--line);background:var(--card);
+  border-radius:999px;padding:6px 12px}
+.iconbtn:hover{border-color:var(--lab-2);color:var(--lab)}
+
+/* ---- screen head ---- */
+.screen-head{margin:0 0 18px}
+.screen-head h1{font-size:clamp(26px,4vw,40px);line-height:1.05}
+.crumb-back{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:10px}
+.crumb-back:hover{color:var(--lab)}
+
+/* ---- dashboard: unit rings ---- */
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:6px 0 22px}
+.unit-card{display:flex;gap:14px;align-items:center;text-align:left;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);
+  transition:transform .15s,border-color .15s}
+.unit-card:hover{transform:translateY(-2px);border-color:var(--lab-2)}
+.ring{--p:0;width:54px;height:54px;border-radius:50%;flex:0 0 54px;display:grid;place-items:center;
+  background:conic-gradient(var(--lab) calc(var(--p)*1%),#E7E0CF 0)}
+.ring span{width:42px;height:42px;border-radius:50%;background:var(--card);display:grid;place-items:center;
+  font-family:var(--mono);font-size:14px;font-weight:600;color:var(--lab)}
+.ring small{font-size:9px}
+.unit-meta{display:flex;flex-direction:column}
+.unit-meta .kap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.unit-meta strong{font-family:var(--disp);font-size:18px;line-height:1.1}
+.unit-meta em{font-style:normal;color:var(--ink-soft);font-size:13px}
+
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px}
+.pillar{text-align:left;border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;
+  background:linear-gradient(180deg,var(--card-2),var(--card));box-shadow:var(--shadow)}
+.pillar:hover{border-color:var(--lab-2)}
+.pillar strong{display:block;font-family:var(--disp);font-size:20px}
+.pillar span{font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
+
+.stat-row{display:flex;gap:24px;border-top:1px solid var(--line);padding-top:16px}
+.stat b{font-family:var(--disp);font-size:24px;color:var(--lab)}
+.stat span{font-family:var(--mono);font-size:11px;color:var(--ink-soft);display:block}
+
+/* ---- grammar list ---- */
+.kap-block{margin:0 0 22px}
+.kap-h{font-size:20px;margin:0 0 10px;display:flex;gap:10px;align-items:baseline}
+.kap-h span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gram)}
+.mod-list{display:flex;flex-direction:column;gap:8px}
+.mod-row{display:grid;grid-template-columns:80px 1fr auto;gap:12px;align-items:center;text-align:left;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.mod-row:hover{border-color:var(--gram)}
+.mod-bar{height:6px;background:#E7E0CF;border-radius:3px;overflow:hidden}
+.mod-bar i{display:block;height:100%;background:var(--gram)}
+.mod-txt strong{font-weight:600}
+.mod-txt .tag{font-family:var(--mono);font-size:10px;color:var(--ink-soft);margin-left:8px}
+.mod-pct{font-family:var(--mono);font-size:13px;color:var(--ink-soft)}
+
+/* ---- rule + practice ---- */
+.rule-pane{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gram);
+  border-radius:12px;padding:20px 22px;margin:0 0 16px}
+.rule-title{font-size:26px;margin:.1em 0 .5em}
+.rule-block{margin:0 0 14px}
+.rule-block h4{margin:0 0 4px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--gram)}
+.rule-block p{margin:0;color:var(--ink)}
+.rule-block i{font-family:var(--mono);font-style:normal;font-size:.92em;background:#F0EAD8;
+  padding:1px 4px;border-radius:4px}
+.rule-block b{color:var(--ink)}
+.practice-pane{min-height:10px}
+
+/* ---- exercise card ---- */
+.ex-card,.vocab-card{background:var(--card-2);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;box-shadow:var(--shadow)}
+.ex-prog{display:flex;gap:5px;margin:0 0 14px}
+.ex-prog i{width:18px;height:5px;border-radius:3px;background:#E2DBC9}
+.ex-prog i.done{background:var(--ok)}
+.ex-prog i.now{background:var(--lab)}
+.ex-type{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--lab-2)}
+.ex-q{font-size:17px;margin:.4em 0 .8em}
+.blank{font-family:var(--mono);color:var(--gram);letter-spacing:1px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--card);border-radius:10px;
+  padding:11px 14px;font-size:15px;transition:.12s}
+.opt:hover{border-color:var(--lab-2)}
+.opt.ok{border-color:var(--ok);background:#E9F4ED;color:#1d5e3a}
+.opt.no{border-color:var(--no);background:#FBEDEB;color:#922}
+.art-opts{flex-direction:row}
+.art-opts .opt{flex:1;text-align:center;font-family:var(--mono)}
+.input-row{display:flex;gap:8px}
+.txt{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:15px;background:var(--card)}
+.txt:focus{outline:2px solid var(--lab-2);outline-offset:0;border-color:var(--lab-2)}
+.txt.ok{border-color:var(--ok);background:#E9F4ED}
+.txt.no{border-color:var(--no);background:#FBEDEB}
+.fb{margin:12px 0 4px;font-size:14px;padding:10px 12px;border-radius:10px}
+.fb.ok{background:#E9F4ED;color:#1d5e3a}
+.fb.no{background:#FBEDEB;color:#922}
+.fb span{display:block;color:var(--ink-soft);margin-top:3px;font-size:13px}
+.fb u{font-family:var(--mono);text-decoration:none;border-bottom:2px solid currentColor}
+
+/* tokens (order) */
+.token-line{min-height:44px;border:1px dashed var(--line);border-radius:10px;padding:8px;display:flex;
+  flex-wrap:wrap;gap:6px;margin-bottom:10px;background:#FCFAF3}
+.token-line.ok{border-color:var(--ok);border-style:solid;background:#E9F4ED}
+.token-line.no{border-color:var(--no);border-style:solid;background:#FBEDEB}
+.token-pool{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.token{font-family:var(--mono);font-size:14px;border:1px solid var(--line);background:var(--card);
+  border-radius:8px;padding:7px 11px}
+.token:hover{border-color:var(--lab-2)}
+.token.used{opacity:.32;pointer-events:none}
+.token.in-line{background:var(--lab);color:#fff;border-color:var(--lab)}
+
+/* buttons */
+.primary{background:var(--lab);color:#fff;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:600;
+  margin-top:14px}
+.primary:hover{background:var(--lab-2)}
+.primary.big{font-size:16px;padding:13px 26px}
+.ghost{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:11px 18px;
+  font-size:15px;margin-top:14px}
+.ghost:hover{border-color:var(--lab-2);color:var(--lab)}
+.ghost.wide{width:100%}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.done-h{font-size:22px;margin:6px 0}
+
+/* ---- vocab ---- */
+.deck-card{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--vocab);
+  border-radius:12px;padding:16px 18px;margin:0 0 12px}
+.deck-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.deck-top strong{font-family:var(--disp);font-size:18px}
+.deck-num{font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
+.deck-modes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{border:1px solid var(--line);background:var(--card-2);border-radius:999px;padding:7px 14px;font-size:13px}
+.chip:hover{border-color:var(--vocab);color:var(--vocab)}
+.flip-front{display:flex;align-items:center;gap:10px;justify-content:center;padding:26px 10px;
+  font-family:var(--disp);font-size:30px;position:relative}
+.flip-front .art{font-family:var(--mono);font-size:16px;color:var(--vocab)}
+.flip-back{text-align:center;padding:10px 4px 4px}
+.flip-back .en{font-size:20px;margin:0}
+.flip-back .ex{font-family:var(--mono);font-size:13px;color:var(--ink-soft);margin:8px 0 0}
+.art-word{text-align:center;font-family:var(--disp);font-size:30px;margin:10px 0 16px}
+.art-word.small{font-size:22px;font-family:var(--sans);color:var(--ink-soft)}
+.spk{font-size:16px;border:1px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--card)}
+.spk.small{font-size:12px;padding:1px 6px;margin-left:8px}
+.spk:hover{border-color:var(--lab-2)}
+
+/* ---- exam ---- */
+.exam-task{background:var(--card-2);border:1px solid var(--line);border-left:4px solid var(--exam);
+  border-radius:12px;padding:20px 22px}
+.instruction{font-weight:600;margin:0 0 12px}
+.exam-text{background:#FCFAF3;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  font-size:15px;line-height:1.6;margin:0 0 14px}
+.rf-row{border-top:1px solid var(--line);padding:12px 0}
+.rf-q{margin:0 0 8px}
+.rf-opts{display:flex;gap:8px}
+.rf-opts .opt{flex:0 0 120px;text-align:center}
+.points{margin:0 0 10px;padding-left:18px}
+.points li{margin:3px 0}
+.hint-line{font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:#F0EAD8;
+  border-radius:8px;padding:10px 12px}
+.writer{width:100%;min-height:160px;border:1px solid var(--line);border-radius:10px;padding:12px;
+  font-size:15px;background:var(--card);resize:vertical}
+.wordcount{font-family:var(--mono);font-size:12px;color:var(--ink-soft);text-align:right;margin:6px 0 0}
+
+/* ---- redemittel ---- */
+.rede-card{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--rede);
+  border-radius:12px;padding:14px 18px;margin:0 0 12px}
+.rede-card h3{font-size:16px;margin:0 0 8px;color:var(--rede)}
+.rede-card ul{margin:0;padding-left:0;list-style:none}
+.rede-card li{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:5px 0;border-top:1px dashed var(--line);font-size:14px}
+.rede-card li:first-child{border-top:none}
+
+/* ---- overlay (backup) ---- */
+.overlay{position:fixed;inset:0;background:rgba(30,26,18,.45);display:grid;place-items:center;z-index:50;padding:20px}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:520px;width:100%;
+  box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.sheet h3{font-size:20px;margin:0 0 6px}
+.sheet p{color:var(--ink-soft);font-size:14px;margin:0 0 12px}
+.code-area{width:100%;min-height:90px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);
+  border-radius:10px;padding:10px;background:var(--card)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:focus-visible{outline:2px solid var(--lab-2);outline-offset:2px}
+
+</style>
+<style>
+  body{padding-bottom:78px}
+  .mtop{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+    gap:10px;padding:12px 16px;background:rgba(244,240,230,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line)}
+  .mbrand{font-family:var(--disp);font-size:17px;line-height:1}
+  .mbrand small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--lab-2)}
+  .mtools{display:flex;gap:6px;align-items:center}
+  .mmain{padding:18px 16px 8px}
+  /* bottom tab bar */
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);
+    background:var(--card-2);border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom)}
+  .tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;
+    font-size:10.5px;color:var(--ink-soft)}
+  .tabbar button .ic{font-size:18px;line-height:1}
+  .tabbar button.active{color:var(--lab)}
+  .tabbar button.active .ic{transform:translateY(-1px)}
+  /* bigger tap targets on mobile */
+  .opt,.chip,.token,.primary,.ghost{min-height:46px}
+  .unit-grid{grid-template-columns:1fr 1fr}
+  .pillars{grid-template-columns:1fr}
+  @media(max-width:360px){.unit-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <header class="mtop">
+    <div class="mbrand">Netzwerk B1<small>Meister</small></div>
+    <div class="mtools">
+      <span class="pill">XP <b id="hud-xp">0</b></span>
+      <span class="pill">🔥 <b id="hud-streak">0</b></span>
+      <button class="iconbtn" id="btn-backup">⤓</button>
+    </div>
+  </header>
+  <main class="mmain"><div id="view"></div></main>
+  <nav class="tabbar">
+    <button data-nav="dash"><span class="ic">◎</span>Übersicht</button>
+    <button data-nav="grammar"><span class="ic">¶</span>Grammatik</button>
+    <button data-nav="vocab"><span class="ic">▭</span>Wortschatz</button>
+    <button data-nav="exam"><span class="ic">✓</span>Prüfung</button>
+    <button data-nav="redemittel"><span class="ic">❝</span>Redemittel</button>
+  </nav>
+  <button id="btn-reset" style="display:none"></button>
+<script>window.APP_MODE="mobile";</script>
+<script>
+/* ============================================================
+   NETZWERK neu B1 — Meister · Units descriptor
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  G.meta = {
+    title: "Netzwerk neu B1 · Meister",
+    subtitle: "Grammatik · Wortschatz · Prüfung",
+    source: "Netzwerk neu B1 — Kapitel 1–6"
+  };
+  G.units = [
+    { id: 1, title: "Gute Reise!", theme: "Reisen & Urlaub",
+      grammar: ["k1-infinitiv-zu", "k1-da-weil", "k1-obwohl"], vocab: "k1",
+      aussprache: "n, ng, nk" },
+    { id: 2, title: "Das ist ja praktisch!", theme: "Technik & Werbung",
+      grammar: ["k2-lassen", "k2-folgen", "k2-genitiv", "k2-wegen-trotz"], vocab: "k2",
+      aussprache: "ts und tst" },
+    { id: 3, title: "Veränderungen", theme: "Leben, Glück & Benehmen",
+      grammar: ["k3-praeteritum", "k3-perfekt-praeteritum", "k3-zeitangaben"], vocab: "k3",
+      aussprache: "mehrere Konsonanten" },
+    { id: 4, title: "Arbeitswelt", theme: "Arbeit & Bewerbung",
+      grammar: ["k4-konjunktiv2", "k4-irreale-bedingung", "k4-pronominaladverbien"], vocab: "k4",
+      aussprache: "freundlich/unfreundlich" },
+    { id: 5, title: "Umweltfreundlich?", theme: "Umwelt & Vergleiche",
+      grammar: ["k5-komp-super-nomen", "k5-damit-umzu"], vocab: "k5",
+      aussprache: "lange Sätze" },
+    { id: 6, title: "Blick nach vorn", theme: "Zukunft & Stadt",
+      grammar: ["k6-futur1", "k6-n-deklination", "k6-relativsaetze"], vocab: "k6",
+      aussprache: "Vokallänge vor ss/ß" }
+  ];
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister
+   Grammar modules · Kapitel 1 & 2
+   Authored from the captured Netzwerk neu B1 Kursbuch/Übungsbuch
+   and the Grammatikübersicht appendix.
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  G.grammar = G.grammar || {};
+
+  /* ---------- K1: Infinitiv mit zu ---------- */
+  G.grammar["k1-infinitiv-zu"] = {
+    title: "Infinitiv mit zu",
+    unit: 1,
+    tag: "Satzbau",
+    rule: [
+      { h: "Wann benutzt man den Infinitiv mit zu?",
+        body: "Der Infinitiv mit <b>zu</b> steht nach bestimmten Verben, nach <i>Adjektiv + sein/finden</i> und nach <i>Nomen + haben/machen</i>. Das <b>zu</b> + Infinitiv steht am Satzende." },
+      { h: "Nach bestimmten Verben",
+        body: "anfangen, aufhören, sich entscheiden, planen, vergessen, versuchen, vorhaben, vorschlagen …<br><i>Anna schlägt vor, nach Berlin <b>zu fahren</b>.</i> · <i>Ich habe vergessen, dich <b>anzurufen</b>.</i>" },
+      { h: "Nach Adjektiv + sein/finden",
+        body: "<i>Es ist langweilig, den ganzen Tag am Strand <b>zu sein</b>.</i> · <i>Es ist gut, sich im Urlaub <b>auszuruhen</b>.</i>" },
+      { h: "Nach Nomen + haben/machen",
+        body: "(keine) Lust haben, (keine) Zeit haben, (keinen) Spaß machen …<br><i>Anna hat keine Zeit, ins Reisebüro <b>zu gehen</b>.</i>" },
+      { h: "Achtung: trennbare Verben",
+        body: "Bei trennbaren Verben steht <b>zu</b> zwischen Präfix und Verbstamm: <i>an<b>zu</b>rufen, ein<b>zu</b>laden, aus<b>zu</b>ruhen</i>." },
+      { h: "Kein zu nach Modalverben",
+        body: "Nach Modalverben steht der Infinitiv <u>ohne</u> zu: <i>Sie kann nicht <b>mitkommen</b>.</i> Aber: <i>Es ist für sie möglich <b>mitzukommen</b>.</i>" }
+    ],
+    exercises: [
+      { type: "mc", q: "Anna schlägt vor, am Wochenende ___.",
+        options: ["zu wandern", "wandern", "wandern zu", "zu wandern gehen mögen"], answer: 0,
+        hint: "Nach 'vorschlagen' → Infinitiv mit zu am Satzende." },
+      { type: "gap", q: "Es ist wichtig, sich im Urlaub gut ___ (sich erholen).",
+        answer: "zu erholen", alt: ["zu erholen"], hint: "Adjektiv (wichtig) + sein → zu + Infinitiv." },
+      { type: "gap", q: "Ich habe keine Lust, lange nach einer Unterkunft ___ (suchen).",
+        answer: "zu suchen", hint: "Nomen (Lust) + haben → zu + Infinitiv." },
+      { type: "gap", q: "Hast du vergessen, mich ___ (anrufen)?",
+        answer: "anzurufen", hint: "Trennbares Verb: zu steht zwischen Präfix und Stamm." },
+      { type: "mc", q: "Welcher Satz ist korrekt?",
+        options: ["Sie hat vor, im Sommer wegzufahren.", "Sie hat vor, im Sommer zu wegfahren.", "Sie hat vor, im Sommer wegfahren.", "Sie hat vor, im Sommer weg zu fahren."], answer: 0,
+        hint: "wegfahren ist trennbar → wegzufahren (ein Wort)." },
+      { type: "transform", prompt: "Verbinden Sie: Ich finde es interessant. + Ich besichtige die Stadt.",
+        answer: "Ich finde es interessant, die Stadt zu besichtigen.",
+        accept: ["Ich finde es interessant, die Stadt zu besichtigen"], hint: "es … finden + Komma + zu-Infinitiv am Ende." },
+      { type: "order", q: "Bilden Sie den Satz:",
+        tokens: ["Ich", "habe", "vor,", "heute", "ins", "Kino", "zu", "gehen"],
+        answer: "Ich habe vor, heute ins Kino zu gehen", hint: "Hauptsatz + Komma + … zu + Infinitiv." },
+      { type: "mc", q: "Nach welchem Wort steht KEIN 'zu'?",
+        options: ["möchte", "versucht", "plant", "hat Lust"], answer: 0,
+        hint: "Modalverben (möchte) nehmen den reinen Infinitiv." }
+    ]
+  };
+
+  /* ---------- K1: Nebensatz mit da / weil ---------- */
+  G.grammar["k1-da-weil"] = {
+    title: "Nebensatz mit da / weil (Grund)",
+    unit: 1,
+    tag: "Kausalsatz",
+    rule: [
+      { h: "Grund angeben",
+        body: "<b>weil</b> und <b>da</b> nennen einen Grund (Kausalsatz). Sie haben die gleiche Bedeutung. Das konjugierte Verb steht im Nebensatz <b>am Ende</b>." },
+      { h: "weil — nach dem Hauptsatz",
+        body: "<i>Es kommen viele Touristen, <b>weil</b> die Strände schön <b>sind</b>.</i>" },
+      { h: "da — oft am Satzanfang",
+        body: "<b>Da</b> steht häufig vor dem Hauptsatz. Dann beginnt der Hauptsatz mit dem Verb (Position 1).<br><i><b>Da</b> Rothenburg sehr bekannt <b>ist</b>, kommen viele Touristen in die Stadt.</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "Viele Touristen kommen, ___ die Stadt sehr schön ist. (Grund, nach dem Hauptsatz)",
+        answer: "weil", alt: ["da"], hint: "Grund nach dem Hauptsatz → weil (oder da)." },
+      { type: "order", q: "Bilden Sie den Nebensatz:",
+        tokens: ["weil", "die", "Strände", "schön", "sind"],
+        answer: "weil die Strände schön sind", hint: "Verb am Ende des Nebensatzes." },
+      { type: "transform", prompt: "Beginnen Sie mit 'Da': Rothenburg ist bekannt. Viele Touristen kommen.",
+        answer: "Da Rothenburg bekannt ist, kommen viele Touristen.",
+        accept: ["Da Rothenburg bekannt ist, kommen viele Touristen"], hint: "Da + Nebensatz, dann Verb des Hauptsatzes direkt nach dem Komma." },
+      { type: "mc", q: "Wo steht das Verb im weil-Satz: 'Ich bleibe zu Hause, weil ich krank ___'?",
+        options: ["bin (am Ende)", "bin (nach weil)", "krank bin nicht", "—"], answer: 0,
+        hint: "Im Nebensatz steht das konjugierte Verb ganz am Ende." },
+      { type: "gap", q: "___ ich keine Zeit hatte, bin ich zu Hause geblieben.",
+        answer: "Da", alt: ["Weil"], hint: "Am Satzanfang ist 'Da' typisch (Weil ist auch möglich)." }
+    ]
+  };
+
+  /* ---------- K1: Nebensatz mit obwohl ---------- */
+  G.grammar["k1-obwohl"] = {
+    title: "Nebensatz mit obwohl (Gegensatz)",
+    unit: 1,
+    tag: "Konzessivsatz",
+    rule: [
+      { h: "Widerspruch / Gegensatz",
+        body: "<b>obwohl</b> drückt einen Widerspruch oder Gegensatz aus (Konzessivsatz). Das Verb steht am Ende des Nebensatzes." },
+      { h: "Beispiel",
+        body: "<i>Melina hatte schöne Tage in Heringsdorf, <b>obwohl</b> das Wetter schlecht <b>war</b>.</i>" },
+      { h: "obwohl vs. trotzdem",
+        body: "Gleiche Bedeutung, andere Struktur:<br>Nebensatz: <i>Ich fahre in die Schweiz, <b>obwohl</b> ich nicht viel Urlaub <b>habe</b>.</i><br>Hauptsatz: <i>Ich habe nicht viel Urlaub, <b>trotzdem</b> fahre ich in die Schweiz.</i> (Verb auf Position 2)" }
+    ],
+    exercises: [
+      { type: "gap", q: "Der Urlaub war schön, ___ es viel geregnet hat.",
+        answer: "obwohl", hint: "Gegensatz im Nebensatz → obwohl." },
+      { type: "order", q: "Bilden Sie den Satz:",
+        tokens: ["Herr", "Kruse", "schwimmt", "im", "Meer,", "obwohl", "es", "kalt", "ist"],
+        answer: "Herr Kruse schwimmt im Meer, obwohl es kalt ist", hint: "Verb am Ende des obwohl-Satzes." },
+      { type: "transform", prompt: "Schreiben Sie mit 'obwohl': Das Hotel hat uns gefallen. Die Zimmer waren klein.",
+        answer: "Das Hotel hat uns gefallen, obwohl die Zimmer klein waren.",
+        accept: ["Das Hotel hat uns gefallen, obwohl die Zimmer klein waren"], hint: "Gegensatz: gefallen ↔ kleine Zimmer." },
+      { type: "mc", q: "Welcher Konnektor passt: 'Ich will Geld sparen, ___ verreise ich dieses Jahr nicht.'",
+        options: ["deshalb", "obwohl", "weil", "da"], answer: 0,
+        hint: "Hauptsatz mit Verb auf Position 2 → deshalb (Folge), nicht obwohl." },
+      { type: "transform", prompt: "Von obwohl zu trotzdem: 'Obwohl es teuer ist, kaufe ich es.'",
+        answer: "Es ist teuer, trotzdem kaufe ich es.",
+        accept: ["Es ist teuer, trotzdem kaufe ich es"], hint: "trotzdem → Verb direkt danach (Position 2)." }
+    ]
+  };
+
+  /* ---------- K2: lassen + Infinitiv ---------- */
+  G.grammar["k2-lassen"] = {
+    title: "lassen + Infinitiv",
+    unit: 2,
+    tag: "Verb",
+    rule: [
+      { h: "selbst machen oder machen lassen?",
+        body: "<b>etwas machen</b> = man macht es selbst. <b>etwas machen lassen</b> = eine andere Person macht es.<br><i>Sie repariert ihr Handy.</i> (selbst) ↔ <i>Sie <b>lässt</b> ihr Handy <b>reparieren</b>.</i> (eine andere Person)" },
+      { h: "Konjugation von lassen",
+        body: "ich lasse · du lässt · er/es/sie lässt · wir lassen · ihr lasst · sie/Sie lassen" },
+      { h: "Perfekt",
+        body: "Im Perfekt mit Infinitiv: <i>Sie <b>hat</b> ihr Handy reparieren <b>lassen</b>.</i> (nicht: gelassen)" }
+    ],
+    exercises: [
+      { type: "gap", q: "Mein Auto ist kaputt. Ich ___ es in der Werkstatt reparieren. (lassen, Präsens)",
+        answer: "lasse", hint: "ich-Form von lassen." },
+      { type: "gap", q: "Du machst die Haare nicht selbst? Nein, ich ___ sie schneiden.",
+        answer: "lasse", hint: "ich-Form." },
+      { type: "transform", prompt: "Nicht selbst: 'Wir putzen am Wochenende die Fenster.' → mit lassen",
+        answer: "Wir lassen am Wochenende die Fenster putzen.",
+        accept: ["Wir lassen am Wochenende die Fenster putzen"], hint: "lassen konjugiert + Objekt + Infinitiv am Ende." },
+      { type: "mc", q: "Welche Form ist richtig: 'Er ___ sein Fahrrad reparieren.'",
+        options: ["lässt", "lasst", "lasse", "lassen"], answer: 0,
+        hint: "er/es/sie → lässt." },
+      { type: "order", q: "Bilden Sie den Satz (Perfekt):",
+        tokens: ["Ich", "habe", "mein", "Handy", "reparieren", "lassen"],
+        answer: "Ich habe mein Handy reparieren lassen", hint: "haben + Infinitiv + lassen am Ende." }
+    ]
+  };
+
+  /* ---------- K2: Folgen ausdrücken ---------- */
+  G.grammar["k2-folgen"] = {
+    title: "Folgen ausdrücken: deshalb / sodass / so … dass",
+    unit: 2,
+    tag: "Konsekutivsatz",
+    rule: [
+      { h: "deshalb / deswegen / darum / daher (Hauptsatz)",
+        body: "Diese vier Konnektoren haben die gleiche Bedeutung. Sie verbinden zwei Hauptsätze; das Verb steht direkt danach (Position 2).<br><i>Tarik ist viel unterwegs, <b>darum</b> braucht er eine Powerbank.</i>" },
+      { h: "sodass (Nebensatz)",
+        body: "<b>sodass</b> leitet einen Nebensatz ein; das Verb steht am Ende.<br><i>Online gibt es keine Beratung, <b>sodass</b> Tarik lieber ins Geschäft <b>geht</b>.</i>" },
+      { h: "so … dass (mit Adjektiv/Adverb)",
+        body: "Wenn im Hauptsatz ein Adjektiv oder Adverb steht, steht <b>so</b> meistens davor.<br><i>Der Kopfhörer war <b>so</b> teuer, <b>dass</b> sie lange sparen <b>musste</b>.</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "Mein Handy ist alt, ___ will ich ein neues kaufen. (Hauptsatz)",
+        answer: "deshalb", alt: ["deswegen", "darum", "daher"], hint: "Folge im Hauptsatz, Verb danach." },
+      { type: "gap", q: "Das Zentrum war so weit weg, ___ sie den Bus genommen hat.",
+        answer: "sodass", hint: "Nebensatz, Verb am Ende → sodass." },
+      { type: "order", q: "Bilden Sie den Satz:",
+        tokens: ["Das", "Essen", "schmeckt", "so", "gut,", "dass", "wir", "oft", "dort", "essen"],
+        answer: "Das Essen schmeckt so gut, dass wir oft dort essen", hint: "so + Adjektiv … dass + Verb am Ende." },
+      { type: "mc", q: "Welcher Konnektor braucht das Verb am ENDE?",
+        options: ["sodass", "deshalb", "darum", "daher"], answer: 0,
+        hint: "Nur sodass leitet einen Nebensatz ein." },
+      { type: "transform", prompt: "Mit 'so … dass': Marias Herd ist kaputt. Sie kann nicht zu Hause kochen.",
+        answer: "Marias Herd ist so kaputt, dass sie nicht zu Hause kochen kann.",
+        accept: ["Marias Herd ist so kaputt, dass sie nicht zu Hause kochen kann"], hint: "so + Adjektiv, dann dass-Satz mit Verb am Ende." }
+    ]
+  };
+
+  /* ---------- K2: Genitiv ---------- */
+  G.grammar["k2-genitiv"] = {
+    title: "Genitiv",
+    unit: 2,
+    tag: "Kasus",
+    rule: [
+      { h: "Wessen? — Besitz und Zugehörigkeit",
+        body: "Der Genitiv antwortet auf <b>Wessen?</b><br><i>der Inhalt <b>des</b> Kühlschrank<b>s</b></i> · <i>die Bewohner <b>des</b> Hause<b>s</b></i> · <i>das Haus <b>der</b> Familie</i> · <i>die Nachrichten <b>der</b> Gäste</i>" },
+      { h: "Artikel im Genitiv",
+        body: "maskulin/neutrum: <b>des / eines / keines / meines</b> · feminin/Plural: <b>der / einer / keiner / meiner</b>" },
+      { h: "Endung -s oder -es",
+        body: "Maskuline und neutrale Nomen bekommen <b>-s</b> oder <b>-es</b>: einsilbige Nomen meist <b>-es</b> (<i>des Hauses, des Raumes</i>), mehrsilbige meist <b>-s</b> (<i>des Gartens</i>). Feminine Nomen haben <u>keine</u> Endung." },
+      { h: "von + Dativ (Alternative)",
+        body: "In der gesprochenen Sprache oft: <i>Das ist das Haus <b>von meinen</b> Eltern.</i> = das Haus meiner Eltern." }
+    ],
+    exercises: [
+      { type: "gap", q: "Familie Singer kann in jedem Raum sehen, wer zu Besuch kommt: der Inhalt ___ Hauses. (best. Artikel)",
+        answer: "des", hint: "neutrum Genitiv → des." },
+      { type: "gap", q: "Die Lage ___ Hauses ist toll. (best. Artikel + Endung am Nomen schon da)",
+        answer: "des", hint: "das Haus → des Hauses." },
+      { type: "transform", prompt: "Mit Genitiv: 'die Form von dem Sofa'",
+        answer: "die Form des Sofas",
+        accept: ["die Form des Sofas"], hint: "das Sofa → des Sofas." },
+      { type: "mc", q: "Welche Form ist feminin Genitiv: 'die Farbe ___ Wand'?",
+        options: ["der", "des", "dem", "den"], answer: 0,
+        hint: "die Wand (feminin) → der Wand." },
+      { type: "gap", q: "Wessen Handy ist das? — Bilden Sie die Frage: ___ Handy ist das?",
+        answer: "Wessen", hint: "Frage nach dem Besitzer." }
+    ]
+  };
+
+  /* ---------- K2: wegen / trotz + Genitiv ---------- */
+  G.grammar["k2-wegen-trotz"] = {
+    title: "Präpositionen wegen und trotz + Genitiv",
+    unit: 2,
+    tag: "Präposition",
+    rule: [
+      { h: "wegen (Grund)",
+        body: "<b>wegen</b> + Genitiv nennt einen Grund.<br><i>Wir haben <b>wegen der</b> hohen Kosten kein Smart Home.</i>" },
+      { h: "trotz (Gegensatz)",
+        body: "<b>trotz</b> + Genitiv nennt einen Widerspruch.<br><i>Die Wohnung ist <b>trotz der</b> smarten Technik gemütlich.</i>" },
+      { h: "Adjektivendung",
+        body: "Adjektive haben nach Artikelwörtern im Genitiv immer die Endung <b>-en</b>: <i>wegen <b>der</b> hoh<b>en</b> Kosten</i>." },
+      { h: "Gesprochene Sprache",
+        body: "Oft mit Dativ: <i>wegen <b>den</b> niedrigen Preisen</i>. Bei Personalpronomen immer Dativ: <i>wegen <b>dir</b></i>." }
+    ],
+    exercises: [
+      { type: "gap", q: "___ des ständigen Lärms wohnen viele Leute nicht gern in der Stadt. (Grund)",
+        answer: "Trotz", alt: ["Wegen"], hint: "Lärm als Gegensatz zum Wohnen-Wollen → Trotz." },
+      { type: "gap", q: "Wir haben ___ der hohen Kosten kein Smart Home. (Grund)",
+        answer: "wegen", hint: "Grund → wegen + Genitiv." },
+      { type: "mc", q: "Welche Endung hat das Adjektiv: 'trotz der smart__ Technik'?",
+        options: ["-en", "-e", "-er", "-es"], answer: 0,
+        hint: "Genitiv nach Artikelwort → immer -en." },
+      { type: "transform", prompt: "Mit 'wegen': Die Kosten sind hoch. Wir haben kein Smart Home.",
+        answer: "Wegen der hohen Kosten haben wir kein Smart Home.",
+        accept: ["Wegen der hohen Kosten haben wir kein Smart Home", "Wir haben wegen der hohen Kosten kein Smart Home"], hint: "wegen + Genitiv, Adjektiv -en." },
+      { type: "gap", q: "___ der strengen Regeln mache ich mir Sorgen um die Daten. (Gegensatz)",
+        answer: "Trotz", hint: "Widerspruch → trotz." }
+    ]
+  };
+
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister · Grammar modules · Kapitel 3 & 4
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  G.grammar = G.grammar || {};
+
+  /* ---------- K3: Präteritum ---------- */
+  G.grammar["k3-praeteritum"] = {
+    title: "Präteritum",
+    unit: 3,
+    tag: "Vergangenheit",
+    rule: [
+      { h: "Regelmäßige Verben",
+        body: "Stamm + <b>-(e)t-</b> + Endung:<br>ich arbeit<b>ete</b>, du arbeit<b>etest</b>, er/es/sie arbeit<b>ete</b>, wir arbeit<b>eten</b>, ihr arbeit<b>etet</b>, sie/Sie arbeit<b>eten</b>.<br>Verben mit d/t am Stamm bilden das Präteritum mit <b>-et-</b>." },
+      { h: "Unregelmäßige Verben",
+        body: "Vokaländerung im Stamm: <i>sehen → er <b>sah</b></i>, <i>gefallen → er <b>gefiel</b></i>. Bei <i>ich</i> und <i>er/es/sie</i> gibt es <u>keine</u> Endung." },
+      { h: "Wichtige unregelmäßige Formen",
+        body: "denken → dachte · wissen → wusste · bringen → brachte · mögen → mochte · kennen → kannte · nennen → nannte" }
+    ],
+    exercises: [
+      { type: "gap", q: "Susanne ___ sich (entscheiden), ihr Leben zu ändern. (Präteritum)",
+        answer: "entschied", hint: "entscheiden → entschied (unregelmäßig)." },
+      { type: "gap", q: "Sie ___ (arbeiten) als Event-Managerin. (Präteritum, regelmäßig)",
+        answer: "arbeitete", hint: "Stamm + -ete (t am Stamm)." },
+      { type: "mc", q: "Präteritum von 'sehen' (er):",
+        options: ["sah", "sahte", "sehte", "sehte"], answer: 0,
+        hint: "Vokaländerung e→a, keine Endung." },
+      { type: "gap", q: "Ich ___ (denken), dass wir uns morgen sehen. (Präteritum)",
+        answer: "dachte", hint: "denken → dachte (Mischverb)." },
+      { type: "transform", prompt: "Ins Präteritum: 'Nach der Schule studiert er in Köln.'",
+        answer: "Nach der Schule studierte er in Köln.",
+        accept: ["Nach der Schule studierte er in Köln"], hint: "studieren → studierte." },
+      { type: "order", q: "Bilden Sie den Satz im Präteritum:",
+        tokens: ["Kristina", "Vogel", "stürzte", "beim", "Training"],
+        answer: "Kristina Vogel stürzte beim Training", hint: "stürzen → stürzte." }
+    ]
+  };
+
+  /* ---------- K3: Perfekt oder Präteritum ---------- */
+  G.grammar["k3-perfekt-praeteritum"] = {
+    title: "Über Vergangenes berichten: Perfekt oder Präteritum",
+    unit: 3,
+    tag: "Vergangenheit",
+    rule: [
+      { h: "Perfekt — beim Sprechen",
+        body: "Beim Sprechen und in persönlichen Texten wie E-Mails verwendet man meistens das <b>Perfekt</b>.<br><i>Ich <b>bin</b> gestern ins Kino <b>gegangen</b>. Ich <b>habe</b> einen lustigen Film <b>gesehen</b>.</i>" },
+      { h: "Präteritum — in offiziellen/schriftlichen Texten",
+        body: "In Zeitungsartikeln, Berichten und literarischen Texten verwendet man häufig das <b>Präteritum</b>.<br><i>Sebastian Hilpert <b>war</b> zwölf Jahre lang Berufssoldat.</i>" },
+      { h: "Fast immer Präteritum",
+        body: "Einige Verben verwendet man fast immer im Präteritum: <b>sein, haben</b> und die <b>Modalverben</b>.<br><i>Ich <b>war</b> im Kino. Ich <b>hatte</b> zuerst keine Lust, aber dann <b>wollte</b> ich den Film doch sehen.</i>" }
+    ],
+    exercises: [
+      { type: "mc", q: "In einer E-Mail an einen Freund schreiben Sie meistens im …",
+        options: ["Perfekt", "Präteritum", "Futur I", "Konjunktiv II"], answer: 0,
+        hint: "Persönliche Texte / Sprechen → Perfekt." },
+      { type: "mc", q: "In einem Zeitungsartikel über eine Sportlerin steht meistens das …",
+        options: ["Präteritum", "Perfekt", "Präsens", "Futur"], answer: 0,
+        hint: "Offizielle/literarische Texte → Präteritum." },
+      { type: "gap", q: "Auch beim Sprechen sagt man oft: Ich ___ keine Zeit. (haben, Vergangenheit)",
+        answer: "hatte", hint: "haben fast immer Präteritum → hatte." },
+      { type: "gap", q: "Beim Sprechen: Ich ___ gestern ins Kino ___. (gehen, Perfekt)",
+        answer: "bin gegangen", accept: ["bin gegangen"], hint: "sein + gegangen (Ortsveränderung)." },
+      { type: "transform", prompt: "Sprechsprache (Perfekt): 'Ich sah einen lustigen Film.'",
+        answer: "Ich habe einen lustigen Film gesehen.",
+        accept: ["Ich habe einen lustigen Film gesehen"], hint: "sehen → habe … gesehen." }
+    ]
+  };
+
+  /* ---------- K3: Zeitangaben — Präpositionen mit Dativ und Genitiv ---------- */
+  G.grammar["k3-zeitangaben"] = {
+    title: "Zeitangaben: Präpositionen mit Dativ und Genitiv",
+    unit: 3,
+    tag: "Präposition",
+    rule: [
+      { h: "Präpositionen mit Dativ",
+        body: "<b>ab, an, bis zu, in, nach, seit, vor</b><br><i><b>ab</b> der nächsten Woche</i> · <i><b>am</b> Wochenende</i> · <i><b>bis zum</b> Urlaub</i> · <i><b>im</b> Urlaub</i> · <i><b>nach</b> der Arbeit</i> · <i><b>vor</b> der Arbeit</i>" },
+      { h: "Präpositionen mit Genitiv",
+        body: "<b>außerhalb, innerhalb, während</b><br><i><b>außerhalb des</b> Urlaubs</i> · <i><b>innerhalb einer</b> Stunde</i> · <i><b>während eines</b> Konzerts</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "Ich habe Elisa ___ einem Monat gesehen. (Dativ-Präposition 'vor')",
+        answer: "vor", hint: "vor + Dativ." },
+      { type: "gap", q: "Sie müssen Ihren Antrag ___ eines Monats stellen. (Genitiv)",
+        answer: "innerhalb", hint: "innerhalb + Genitiv (eines Monats)." },
+      { type: "mc", q: "Welche Präposition steht mit Genitiv?",
+        options: ["während", "nach", "seit", "ab"], answer: 0,
+        hint: "während/innerhalb/außerhalb → Genitiv." },
+      { type: "gap", q: "___ der nächsten Woche habe ich frei. (Dativ, Beginn)",
+        answer: "Ab", hint: "ab + Dativ." },
+      { type: "transform", prompt: "Ergänzen Sie: 'Praxis hat geschlossen ___ (während) ___ (diese Zeit).'",
+        answer: "während dieser Zeit",
+        accept: ["während dieser Zeit"], hint: "während + Genitiv: dieser Zeit (feminin)." }
+    ]
+  };
+
+  /* ---------- K4: Konjunktiv II ---------- */
+  G.grammar["k4-konjunktiv2"] = {
+    title: "Konjunktiv II",
+    unit: 4,
+    tag: "Modus",
+    rule: [
+      { h: "Bildung",
+        body: "<b>haben/sein:</b> ich hätte, ich wäre · <b>Modalverben:</b> könnte, müsste, dürfte, wollte, sollte · <b>andere Verben:</b> meist <b>würde + Infinitiv</b>.<br><i>Ich <b>würde</b> gern noch einen Kaffee <b>trinken</b>.</i>" },
+      { h: "Verwendung",
+        body: "höfliche Bitte: <i><b>Könntest</b> du mir helfen?</i> · Wunsch: <i>Ich <b>hätte</b> gern mehr Zeit.</i> · Ratschlag: <i>An deiner Stelle <b>wäre</b> ich pünktlich. / Du <b>solltest</b> mit der U-Bahn fahren.</i> · irreale Bedingung: <i>Ich <b>würde</b> noch einen Kaffee trinken, wenn ich Zeit <b>hätte</b>.</i>" },
+      { h: "Konjugation hätte / wäre",
+        body: "ich hätte/wäre · du hättest/wärst · er hätte/wäre · wir hätten/wären · ihr hättet/wärt · sie hätten/wären" }
+    ],
+    exercises: [
+      { type: "gap", q: "___ du mir bitte helfen? Mein Drucker funktioniert nicht. (höfliche Bitte, können)",
+        answer: "Könntest", hint: "könnte für höfliche Bitten." },
+      { type: "gap", q: "Mein Computer ist langsam. Ich ___ wirklich gern einen neuen Computer. (Wunsch, haben)",
+        answer: "hätte", hint: "hätte gern = Wunsch." },
+      { type: "mc", q: "Ratschlag: 'An deiner Stelle ___ ich mehr schlafen.'",
+        options: ["würde", "werde", "wird", "war"], answer: 0,
+        hint: "würde + Infinitiv für andere Verben." },
+      { type: "transform", prompt: "Höflicher: 'Hilf mir!' → mit Konjunktiv II (du)",
+        answer: "Würdest du mir helfen?",
+        accept: ["Würdest du mir helfen", "Könntest du mir helfen", "Könntest du mir helfen?"], hint: "würde/könnte + du." },
+      { type: "gap", q: "Du ___ mit deinem Kollegen reden. Er unterstützt dich bestimmt. (Ratschlag)",
+        answer: "solltest", hint: "sollte für Ratschläge." },
+      { type: "order", q: "Bilden Sie den Wunsch:",
+        tokens: ["Ich", "wäre", "gern", "ein", "bisschen", "sportlicher"],
+        answer: "Ich wäre gern ein bisschen sportlicher", hint: "wäre gern = Wunsch." }
+    ]
+  };
+
+  /* ---------- K4: Irreale Bedingungssätze ---------- */
+  G.grammar["k4-irreale-bedingung"] = {
+    title: "Irreale Bedingungssätze mit Konjunktiv II",
+    unit: 4,
+    tag: "wenn-Satz",
+    rule: [
+      { h: "Was nicht real ist",
+        body: "Irreale Bedingungssätze drücken etwas aus, das nicht Realität ist. Sie bestehen aus einem Hauptsatz und einem Nebensatz mit <b>wenn</b>. In beiden Satzteilen stehen die Verben im <b>Konjunktiv II</b>." },
+      { h: "Beispiele",
+        body: "<i>Ich <b>würde</b> noch einen Kaffee <b>trinken</b>, wenn ich Zeit <b>hätte</b>.</i><br><i>Wenn Boris nicht so gestresst <b>wäre</b>, <b>wäre</b> die Pause lustiger.</i><br><i>Wenn ich nicht so lange arbeiten <b>müsste</b>, <b>würde</b> ich gern mitkommen.</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "Wenn ich Zeit ___ (haben), würde ich mitkommen.",
+        answer: "hätte", hint: "Konjunktiv II von haben." },
+      { type: "transform", prompt: "Bilden Sie den irrealen Satz: 'Zeit haben / mitkommen' (ich)",
+        answer: "Wenn ich Zeit hätte, würde ich mitkommen.",
+        accept: ["Wenn ich Zeit hätte, würde ich mitkommen", "Ich würde mitkommen, wenn ich Zeit hätte"], hint: "wenn + hätte … würde + Infinitiv." },
+      { type: "gap", q: "Wenn ich viel Geld ___ (haben), ___ ich eine Weltreise ___ (machen).",
+        answer: "hätte würde machen", accept: ["hätte würde machen", "hätte, würde, machen"], hint: "hätte … würde … machen." },
+      { type: "mc", q: "Welcher Satz ist ein korrekter irrealer Bedingungssatz?",
+        options: ["Wenn ich morgen nicht arbeiten müsste, würde ich den ganzen Tag im Bett bleiben.",
+          "Wenn ich morgen nicht arbeiten muss, bleibe ich im Bett.",
+          "Wenn ich morgen nicht arbeiten müsste, bleibe ich im Bett.",
+          "Wenn ich morgen nicht arbeiten würde müssen, bin ich im Bett."], answer: 0,
+        hint: "Beide Teile im Konjunktiv II: müsste … würde bleiben." },
+      { type: "order", q: "Bilden Sie den Satz:",
+        tokens: ["Wenn", "Boris", "nicht", "so", "gestresst", "wäre,", "wäre", "die", "Pause", "lustiger"],
+        answer: "Wenn Boris nicht so gestresst wäre, wäre die Pause lustiger",
+        hint: "wäre … wäre (beide Konjunktiv II)." }
+    ]
+  };
+
+  /* ---------- K4: Pronomen und Pronominaladverbien ---------- */
+  G.grammar["k4-pronominaladverbien"] = {
+    title: "Pronomen und Pronominaladverbien",
+    unit: 4,
+    tag: "Pronomen",
+    rule: [
+      { h: "Personen: Präposition + Pronomen",
+        body: "Bei Personen benutzt man <b>Präposition + Pronomen</b>.<br><i>Rufen Sie <b>den Personalchef</b> an. <b>Mit ihm</b> können Sie sprechen, wenn Sie Fragen haben.</i>" },
+      { h: "Dinge und Ereignisse: da(r) + Präposition",
+        body: "Bei Dingen/Ereignissen benutzt man <b>da(r)- + Präposition</b>.<br><i>Viele bieten <b>Bewerbungstrainings</b> an. <b>Daran</b> kann jeder teilnehmen.</i><br>Beginnt die Präposition mit einem Vokal, kommt <b>dar-</b>: daran, darauf, darüber …" },
+      { h: "Frage: wo(r) + Präposition",
+        body: "Bei Dingen fragt man mit <b>wo(r)- + Präposition</b>: <i><b>Worüber</b> ärgerst du dich? — Über die Prüfung.</i> Bei Personen: <b>Präposition + Fragewort</b>: <i><b>Mit wem</b> hast du gesprochen?</i>" },
+      { h: "Verb + Präposition + Nebensatz",
+        body: "<i>Er wartet <b>darauf, dass</b> eine Antwort kommt.</i> · <i>Er wartet <b>darauf</b>, eine Antwort <b>zu bekommen</b>.</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "Ich interessiere mich für die Stelle. Ich interessiere mich ___. (Ding)",
+        answer: "dafür", hint: "für + Ding → dafür." },
+      { type: "gap", q: "Ich habe mit dem Personalchef gesprochen. Ich habe ___ gesprochen. (Person)",
+        answer: "mit ihm", hint: "mit + Person → mit ihm." },
+      { type: "mc", q: "Frage nach einem Ding: 'Ich ärgere mich über die Prüfung.' → ?",
+        options: ["Worüber ärgerst du dich?", "Über wen ärgerst du dich?", "Wofür ärgerst du dich?", "Worauf ärgerst du dich?"], answer: 0,
+        hint: "sich ärgern über + Ding → worüber." },
+      { type: "gap", q: "Sie freut sich ___, dass sie ein Vorstellungsgespräch hat. (sich freuen auf)",
+        answer: "darauf", hint: "auf + dass-Satz → darauf, dass." },
+      { type: "transform", prompt: "Mit Pronominaladverb: 'Ich denke oft an meine alten Kollegen.' (sie sind Personen!)",
+        answer: "Ich denke oft an sie.",
+        accept: ["Ich denke oft an sie"], hint: "Personen → Präposition + Pronomen, nicht daran." }
+    ]
+  };
+
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister · Grammar modules · Kapitel 5 & 6
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  G.grammar = G.grammar || {};
+
+  /* ---------- K5: Komparativ und Superlativ vor Nomen ---------- */
+  G.grammar["k5-komp-super-nomen"] = {
+    title: "Komparativ und Superlativ vor Nomen",
+    unit: 5,
+    tag: "Adjektiv",
+    rule: [
+      { h: "Wie Adjektive dekliniert",
+        body: "Komparative und Superlative, die vor einem Nomen stehen, muss man deklinieren. Sie haben die gleichen Endungen wie die Grundform der Adjektive.<br><i>Der Geschirrspüler ist die <b>bessere</b> Wahl.</i> · <i>Mehrwegflaschen sind die <b>beste</b> Alternative.</i>" },
+      { h: "Keine Endung bei mehr/weniger",
+        body: "<b>mehr</b> und <b>weniger</b> bekommen keine Endung: <i>Der Geschirrspüler verbraucht <b>weniger</b> Wasser.</i>" },
+      { h: "Superlativ mit Artikel",
+        body: "Der Superlativ vor Nomen steht nie mit unbestimmtem Artikel. Meist mit bestimmtem Artikel oder Possessivartikel: <i>die <b>beste</b> Wahl</i> · <i>unser <b>umweltfreundlichstes</b> Gerät</i>." }
+    ],
+    exercises: [
+      { type: "gap", q: "Mehrwegflaschen sind die ___ Alternative. (gut, Superlativ + Endung)",
+        answer: "beste", hint: "gut → best- → die beste." },
+      { type: "gap", q: "Ich hätte gern ein ___ Handy. (modern, Komparativ + Endung)",
+        answer: "moderneres", hint: "modern → moderner → ein moderneres." },
+      { type: "mc", q: "Welche Form hat KEINE Endung?",
+        options: ["weniger Wasser", "bessere Wahl", "beste Alternative", "teuerster Saft"], answer: 0,
+        hint: "mehr/weniger bleiben endungslos." },
+      { type: "gap", q: "Kaufen Sie einen umweltfreundlicher___ Geschirrspüler! (Komparativ, unbest. Artikel mask. Akk.)",
+        answer: "en", hint: "einen + Adjektiv-en (mask. Akkusativ)." },
+      { type: "transform", prompt: "Superlativ vor Nomen: 'Der Saft ist teuer.' → der … Saft",
+        answer: "der teuerste Saft",
+        accept: ["der teuerste Saft"], hint: "teuer → teuerst- → der teuerste." }
+    ]
+  };
+
+  /* ---------- K5: damit und um … zu ---------- */
+  G.grammar["k5-damit-umzu"] = {
+    title: "Nebensätze mit damit und um … zu (Finalsatz)",
+    unit: 5,
+    tag: "Finalsatz",
+    rule: [
+      { h: "Ziel ausdrücken",
+        body: "<b>damit</b> und <b>um … zu</b> drücken ein Ziel aus und haben die gleiche Bedeutung.<br><i>Die Taschen haben einen Akku, <b>damit</b> man das Handy immer aufladen <b>kann</b>.</i>" },
+      { h: "Wann damit, wann um … zu?",
+        body: "Man verwendet <b>immer damit</b>, wenn die Subjekte in Haupt- und Nebensatz <u>nicht gleich</u> sind.<br>Man verwendet <b>damit oder um … zu</b>, wenn die Subjekte <u>gleich</u> sind." },
+      { h: "Struktur",
+        body: "In Sätzen mit <b>um … zu</b> entfällt das Subjekt; das Verb steht im Infinitiv.<br><i>Viele kaufen die Taschen, <b>um</b> in der Natur Strom <b>zu haben</b>.</i> (= damit sie Strom haben)" }
+    ],
+    exercises: [
+      { type: "mc", q: "Welcher Konnektor MUSS hier stehen: 'Lea erklärt es ihren Freunden, ___ sie das Konzept besser verstehen.' (Subjekte verschieden!)",
+        options: ["damit", "um … zu", "weil", "obwohl"], answer: 0,
+        hint: "Verschiedene Subjekte (Lea / sie) → nur damit." },
+      { type: "transform", prompt: "Mit 'um … zu' (gleiches Subjekt): 'Ich fahre zum Supermarkt, damit ich einkaufe.'",
+        answer: "Ich fahre zum Supermarkt, um einzukaufen.",
+        accept: ["Ich fahre zum Supermarkt, um einzukaufen"], hint: "Subjekt entfällt, Verb im Infinitiv mit zu." },
+      { type: "gap", q: "Ich fahre jeden Tag Fahrrad, ___ fit zu bleiben.",
+        answer: "um", hint: "um … zu (gleiches Subjekt)." },
+      { type: "order", q: "Bilden Sie den Satz:",
+        tokens: ["Ich", "nehme", "eine", "Tasche", "mit,", "um", "weniger", "Plastikmüll", "zu", "produzieren"],
+        answer: "Ich nehme eine Tasche mit, um weniger Plastikmüll zu produzieren",
+        hint: "um … zu, Infinitiv am Ende." },
+      { type: "gap", q: "Viele kaufen die Taschen, ___ sie in der Natur Strom haben. (verschiedene/gleiche Subjekte? → Subjekt 'sie' bleibt)",
+        answer: "damit", hint: "Subjekt bleibt im Nebensatz → damit." }
+    ]
+  };
+
+  /* ---------- K6: Futur I ---------- */
+  G.grammar["k6-futur1"] = {
+    title: "Futur I (Zukunft ausdrücken)",
+    unit: 6,
+    tag: "Zukunft",
+    rule: [
+      { h: "Bildung",
+        body: "<b>werden + Infinitiv</b>. <i>werden</i> steht auf Position 2, der Infinitiv am Satzende.<br><i>Ich <b>werde</b> oft in der Bibliothek <b>sein</b>.</i> · <i>Angelo <b>wird</b> einen Spaziergang <b>machen</b>.</i>" },
+      { h: "Konjugation von werden",
+        body: "ich werde · du wirst · er/es/sie wird · wir werden · ihr werdet · sie/Sie werden" },
+      { h: "Zukunft auch anders ausdrücken",
+        body: "Zeitangabe + Verb im Präsens: <i><b>Morgen</b> bringe ich etwas Süßes mit.</i> · Modalverb wollen/möchten: <i>Ich <b>will</b> nicht alles im letzten Moment machen.</i> · Verben wie vorhaben, anfangen: <i>Ich <b>habe vor</b>, die Ruhe zu genießen.</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "Ich ___ nicht mehr so lange schlafen. (Futur I, werden)",
+        answer: "werde", hint: "ich-Form von werden." },
+      { type: "gap", q: "Was ist mit dir? ___ du in Zukunft gesünder leben? (Futur I, du)",
+        answer: "Wirst", hint: "du → wirst." },
+      { type: "order", q: "Bilden Sie den Satz im Futur I:",
+        tokens: ["Paula", "wird", "ihre", "Eltern", "morgen", "besuchen"],
+        answer: "Paula wird ihre Eltern morgen besuchen", hint: "wird … Infinitiv am Ende." },
+      { type: "mc", q: "Welcher Satz drückt Zukunft mit Präsens aus?",
+        options: ["Morgen bringe ich etwas Süßes mit.", "Ich werde etwas Süßes mitbringen.", "Ich habe etwas Süßes mitgebracht.", "Ich würde etwas Süßes mitbringen."], answer: 0,
+        hint: "Zeitangabe + Präsens = Zukunft." },
+      { type: "transform", prompt: "Ins Futur I: 'Mirjam trainiert jeden Tag im Fitness-Studio.'",
+        answer: "Mirjam wird jeden Tag im Fitness-Studio trainieren.",
+        accept: ["Mirjam wird jeden Tag im Fitness-Studio trainieren"], hint: "wird + Infinitiv." }
+    ]
+  };
+
+  /* ---------- K6: n-Deklination ---------- */
+  G.grammar["k6-n-deklination"] = {
+    title: "n-Deklination (maskuline Nomen)",
+    unit: 6,
+    tag: "Nomen",
+    rule: [
+      { h: "Die Regel",
+        body: "Bestimmte maskuline Nomen haben außer im <b>Nominativ Singular</b> immer die Endung <b>-(e)n</b>.<br><i>Siehst du <b>den Elefanten</b>? Das ist das Auto meines <b>Nachbarn</b>.</i>" },
+      { h: "Welche Nomen?",
+        body: "1) maskuline Nomen auf <b>-e</b>: der Kollege, der Junge, der Kunde, der Name, der Löwe, der Affe …<br>2) viele Bezeichnungen für <b>Personen, Berufe und Tiere</b>: der Mensch, der Herr, der Nachbar, der Architekt, der Bauer, der Bär, der Elefant, der Planet …<br>3) Internationalismen mit Endung <b>-and, -ant, -at, -ent, -graf, -ist, -oge</b>: der Doktorand, der Praktikant, der Automat, der Student, der Fotograf, der Journalist, der Pädagoge …" }
+    ],
+    exercises: [
+      { type: "gap", q: "Ich will meinem Nachbar___ in Zukunft mehr helfen.",
+        answer: "n", hint: "Nachbar (Person) → Dativ: dem Nachbarn." },
+      { type: "gap", q: "Der Student___ aus unserem Haus ist sehr nett. (Nominativ Singular!)",
+        answer: "", accept: ["", "—"], hint: "Nominativ Singular bekommt KEINE Endung." },
+      { type: "mc", q: "Welches Nomen gehört zur n-Deklination?",
+        options: ["der Kollege", "der Tisch", "der Computer", "der Stuhl"], answer: 0,
+        hint: "maskulin auf -e → n-Deklination." },
+      { type: "gap", q: "Mit meinem Neffe___ werde ich regelmäßig etwas unternehmen.",
+        answer: "n", hint: "der Neffe → Dativ: dem Neffen." },
+      { type: "transform", prompt: "Akkusativ: 'Ich kenne ___ (der Elefant) im Zoo.'",
+        answer: "den Elefanten",
+        accept: ["den Elefanten"], hint: "der Elefant → den Elefanten (Akk.)." }
+    ]
+  };
+
+  /* ---------- K6: Relativsätze ---------- */
+  G.grammar["k6-relativsaetze"] = {
+    title: "Relativsätze (Nominativ, Akkusativ, Dativ, mit Präposition)",
+    unit: 6,
+    tag: "Satzbau",
+    rule: [
+      { h: "Relativpronomen = bestimmter Artikel",
+        body: "Die Relativpronomen im Nominativ, Akkusativ und Dativ haben die gleichen Formen wie der bestimmte Artikel — nur der <b>Dativ Plural</b> ist anders: <b>denen</b>." },
+      { h: "Nominativ / Akkusativ",
+        body: "<i>2050 gibt es sehr viele Menschen, <b>die</b> in Städten leben.</i> (Nom.)<br><i>Der Strom, <b>den</b> die Hausbewohner brauchen, entsteht durch Solarzellen.</i> (Akk.)" },
+      { h: "Dativ",
+        body: "<i>Man trifft vielleicht einen Nachbarn, <b>dem</b> man bei etwas helfen kann.</i><br><i>Zu Menschen, <b>denen</b> man oft begegnet, hat man eine engere Beziehung.</i> (Dativ Plural)" },
+      { h: "Mit Präposition",
+        body: "Die Präposition steht <b>vor</b> dem Relativpronomen und bestimmt den Kasus.<br><i>Man trifft andere Bewohner, <b>mit denen</b> man sich unterhalten kann.</i><br><i>Alle Dinge, <b>auf die</b> man im Alltag nicht verzichten kann, findet man in der Nähe.</i>" }
+    ],
+    exercises: [
+      { type: "gap", q: "In meiner Stadt gibt es einen Platz, ___ ich besonders mag. (Akkusativ mask.)",
+        answer: "den", hint: "einen Platz (Akk. mask.) → den." },
+      { type: "gap", q: "Dort ist das Café, ___ meinen Freunden gehört. (Nominativ neutrum)",
+        answer: "das", hint: "das Café (Nom.) → das." },
+      { type: "gap", q: "Zu Menschen, ___ man oft begegnet, hat man eine engere Beziehung. (Dativ Plural)",
+        answer: "denen", hint: "Dativ Plural → denen." },
+      { type: "mc", q: "Welches Relativpronomen passt: 'Der Bus, ___ man kostenlos fahren kann, …' (mit + Dativ mask.)",
+        options: ["mit dem", "mit den", "mit denen", "mit der"], answer: 0,
+        hint: "mit + Dativ, der Bus → mit dem." },
+      { type: "transform", prompt: "Verbinden Sie zum Relativsatz (Nom.): 'Es gibt einige Geschäfte. Sie verkaufen schöne Dinge.'",
+        answer: "Es gibt einige Geschäfte, die schöne Dinge verkaufen.",
+        accept: ["Es gibt einige Geschäfte, die schöne Dinge verkaufen"], hint: "Plural Nominativ → die." },
+      { type: "order", q: "Bilden Sie den Relativsatz:",
+        tokens: ["Menschen,", "denen", "man", "oft", "begegnet,", "werden", "Freunde"],
+        answer: "Menschen, denen man oft begegnet, werden Freunde", hint: "eingeschobener Relativsatz (Dativ Plural)." }
+    ]
+  };
+
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister · Vocabulary decks · Kapitel 1–3
+   Drawn from the captured Lernwortschatz lists.
+   Card: { de, en, art (article), pl, ex }
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  G.vocab = G.vocab || {};
+
+  G.vocab["k1"] = {
+    title: "Kapitel 1 · Gute Reise!",
+    unit: 1,
+    cards: [
+      { de: "der Winterurlaub", en: "winter holiday", art: "der" },
+      { de: "das Skigebiet", en: "ski area", art: "das" },
+      { de: "der Strandurlaub", en: "beach holiday", art: "der" },
+      { de: "die Küste", en: "coast", art: "die", pl: "-n" },
+      { de: "die Strandpromenade", en: "beach promenade", art: "die", pl: "-n" },
+      { de: "der Zeitpunkt", en: "point in time", art: "der", ex: "Ein guter Zeitpunkt für einen Rückblick." },
+      { de: "rechtzeitig", en: "on time, in good time" },
+      { de: "gründlich", en: "thorough(ly)" },
+      { de: "buchen", en: "to book", ex: "ein schickes Hotel buchen" },
+      { de: "sich entscheiden", en: "to decide", ex: "er entscheidet, hat entschieden" },
+      { de: "die Halbpension", en: "half board", art: "die" },
+      { de: "die Vollpension", en: "full board", art: "die" },
+      { de: "der Kompromiss", en: "compromise", art: "der", pl: "-e" },
+      { de: "der Einfall", en: "idea", art: "der", pl: "ä-e", ex: "Das ist ein guter Einfall." },
+      { de: "einpacken", en: "to pack" },
+      { de: "auspacken", en: "to unpack" },
+      { de: "das Urlaubsziel", en: "holiday destination", art: "das", pl: "-e" },
+      { de: "die Entfernung", en: "distance", art: "die", pl: "-en" },
+      { de: "der Hauptbahnhof", en: "main station", art: "der", pl: "ö-e" },
+      { de: "der Kofferraum", en: "car boot/trunk", art: "der", pl: "äu-e" },
+      { de: "die Alm", en: "alpine pasture", art: "die", pl: "-en" },
+      { de: "der Wanderer", en: "hiker", art: "der", pl: "-" },
+      { de: "das Gebirge", en: "mountains/range", art: "das", pl: "-" },
+      { de: "die Wiese", en: "meadow", art: "die", pl: "-n" },
+      { de: "reif", en: "ripe" },
+      { de: "brennen", en: "to burn", ex: "es brennt, hat gebrannt" },
+      { de: "giftig", en: "poisonous" },
+      { de: "der Schutz", en: "protection", art: "der", ex: "einen Insektenschutz verwenden" },
+      { de: "die Einsamkeit", en: "loneliness, solitude", art: "die" },
+      { de: "der Ausblick", en: "view", art: "der", pl: "-e" },
+      { de: "herrlich", en: "wonderful, glorious" },
+      { de: "der Aufenthalt", en: "stay", art: "der", pl: "-e" },
+      { de: "vorbei sein", en: "to be over", ex: "Der Aufenthalt ist fast vorbei." },
+      { de: "das Heimweh", en: "homesickness", art: "das" },
+      { de: "sich erkälten", en: "to catch a cold" },
+      { de: "begeistert sein", en: "to be enthusiastic" },
+      { de: "enttäuscht sein", en: "to be disappointed" },
+      { de: "verzweifelt sein", en: "to be desperate" }
+    ]
+  };
+
+  G.vocab["k2"] = {
+    title: "Kapitel 2 · Das ist ja praktisch!",
+    unit: 2,
+    cards: [
+      { de: "der Staubsauger", en: "vacuum cleaner", art: "der", pl: "-" },
+      { de: "die Waschmaschine", en: "washing machine", art: "die", pl: "-n" },
+      { de: "der Kopfhörer", en: "headphones", art: "der", pl: "-" },
+      { de: "die Powerbank", en: "power bank", art: "die", pl: "-s" },
+      { de: "der USB-Stick", en: "USB stick", art: "der", pl: "-s" },
+      { de: "der Knopf", en: "button", art: "der", pl: "ö-e" },
+      { de: "die Taste", en: "key (button)", art: "die", pl: "-n" },
+      { de: "der Monitor", en: "monitor", art: "der", pl: "-e" },
+      { de: "einschalten", en: "to switch on", ex: "den Monitor einschalten" },
+      { de: "installieren", en: "to install" },
+      { de: "anschließen", en: "to connect", ex: "er schließt an, hat angeschlossen" },
+      { de: "aufladen", en: "to charge", ex: "er lädt auf, hat aufgeladen" },
+      { de: "sparsam", en: "economical, sparing" },
+      { de: "stumm schalten", en: "to mute", ex: "das Handy stumm schalten" },
+      { de: "sich anschaffen", en: "to acquire/get", ex: "sich ein neues Handy anschaffen" },
+      { de: "reklamieren", en: "to make a complaint" },
+      { de: "umtauschen", en: "to exchange" },
+      { de: "zurückgeben", en: "to return/give back", ex: "er gibt zurück, hat zurückgegeben" },
+      { de: "die Garantie", en: "guarantee", art: "die", pl: "-n" },
+      { de: "die Quittung", en: "receipt", art: "die", pl: "-en" },
+      { de: "kaputtgehen", en: "to break (down)", ex: "ist kaputt gegangen" },
+      { de: "zufrieden", en: "satisfied" },
+      { de: "die Anleitung", en: "instructions", art: "die", pl: "-en" },
+      { de: "bedienen", en: "to operate", ex: "etwas von Hand bedienen" },
+      { de: "steuern", en: "to control" },
+      { de: "anpassen", en: "to adjust", ex: "das Licht an die Stimmung anpassen" },
+      { de: "berühren", en: "to touch" },
+      { de: "technisch", en: "technical" },
+      { de: "die Technologie", en: "technology", art: "die", pl: "-n" },
+      { de: "smart", en: "smart" },
+      { de: "die Alarmanlage", en: "alarm system", art: "die", pl: "-n" },
+      { de: "der Einbruch", en: "break-in", art: "der", pl: "ü-e" },
+      { de: "der Fingerabdruck", en: "fingerprint", art: "der", pl: "ü-e" },
+      { de: "der Sprachassistent", en: "voice assistant", art: "der", pl: "-en" },
+      { de: "der Tagesablauf", en: "daily routine", art: "der", pl: "äu-e" },
+      { de: "das Produkt", en: "product", art: "das", pl: "-e" },
+      { de: "das Kaufverhalten", en: "buying behaviour", art: "das" },
+      { de: "der Slogan", en: "slogan", art: "der", pl: "-s" },
+      { de: "ansprechen", en: "to appeal to/address", ex: "Werbung spricht Gefühle an." },
+      { de: "das Sonderangebot", en: "special offer", art: "das", pl: "-e" },
+      { de: "ausgezeichnet", en: "excellent" },
+      { de: "beeinflussen", en: "to influence" }
+    ]
+  };
+
+  G.vocab["k3"] = {
+    title: "Kapitel 3 · Veränderungen",
+    unit: 3,
+    cards: [
+      { de: "die Gewohnheit", en: "habit", art: "die", pl: "-en" },
+      { de: "gewohnt", en: "usual, accustomed" },
+      { de: "üblich", en: "usual, customary" },
+      { de: "die Krise", en: "crisis", art: "die", pl: "-n" },
+      { de: "die Trennung", en: "separation", art: "die", pl: "-en" },
+      { de: "die Rückkehr", en: "return", art: "die" },
+      { de: "verschwinden", en: "to disappear", ex: "verschwand, ist verschwunden" },
+      { de: "verursachen", en: "to cause" },
+      { de: "führen (zu + D.)", en: "to lead to", ex: "Das führt zu Veränderungen." },
+      { de: "der Prozess", en: "process", art: "der", pl: "-e" },
+      { de: "der Gegensatz", en: "opposite, contrast", art: "der", pl: "ä-e", ex: "Im Gegensatz zu früher …" },
+      { de: "sich ereignen", en: "to happen/occur" },
+      { de: "stürzen", en: "to fall, to crash" },
+      { de: "aufgeben", en: "to give up", ex: "er gibt auf, hat aufgegeben" },
+      { de: "der Mut", en: "courage", art: "der", ex: "jemandem Mut machen" },
+      { de: "sich beruflich engagieren", en: "to get involved professionally" },
+      { de: "die Herausforderung", en: "challenge", art: "die", pl: "-en" },
+      { de: "kämpfen (für + A.)", en: "to fight for", ex: "für die Selbstständigkeit kämpfen" },
+      { de: "ehren", en: "to honour" },
+      { de: "während", en: "during / while" },
+      { de: "mittlerweile", en: "meanwhile, by now" },
+      { de: "schließlich", en: "finally, in the end" },
+      { de: "seitdem", en: "since then" },
+      { de: "jahrelang", en: "for years" },
+      { de: "die Ernährung", en: "nutrition, diet", art: "die" },
+      { de: "sich ernähren", en: "to eat/feed oneself", ex: "sich bewusst gesund ernähren" },
+      { de: "die Diät", en: "diet", art: "die", pl: "-en" },
+      { de: "das Nahrungsmittel", en: "food(stuff)", art: "das", pl: "-" },
+      { de: "vegetarisch", en: "vegetarian" },
+      { de: "biologisch", en: "organic" },
+      { de: "die Beziehung", en: "relationship", art: "die", pl: "-en" },
+      { de: "das Benehmen", en: "behaviour, manners", art: "das" },
+      { de: "sich verhalten", en: "to behave", ex: "er verhält sich, hat verhalten" },
+      { de: "sich begrüßen", en: "to greet each other" },
+      { de: "sich umarmen", en: "to hug" },
+      { de: "siezen ↔ duzen", en: "to use 'Sie' / 'du'" },
+      { de: "die EC-Karte", en: "debit card", art: "die", pl: "-n" },
+      { de: "der Geldautomat", en: "ATM", art: "der", pl: "-en" },
+      { de: "sich lohnen", en: "to be worth it", ex: "Das lohnt sich nicht." },
+      { de: "merkwürdig", en: "strange, odd" },
+      { de: "der Reisepass", en: "passport", art: "der", pl: "ä-e" },
+      { de: "die Grenze", en: "border", art: "die", pl: "-n", ex: "eine Grenze überqueren" }
+    ]
+  };
+
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister · Vocabulary decks · Kapitel 4–6
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  G.vocab = G.vocab || {};
+
+  G.vocab["k4"] = {
+    title: "Kapitel 4 · Arbeitswelt",
+    unit: 4,
+    cards: [
+      { de: "der Briefträger", en: "postman", art: "der", pl: "-" },
+      { de: "die Chemikerin", en: "chemist (f.)", art: "die", pl: "-nen" },
+      { de: "der Elektroingenieur", en: "electrical engineer", art: "der", pl: "-e" },
+      { de: "die Mechatronikerin", en: "mechatronics technician (f.)", art: "die", pl: "-nen" },
+      { de: "der Profi", en: "professional, pro", art: "der", pl: "-s" },
+      { de: "der Schreiner", en: "carpenter", art: "der", pl: "-" },
+      { de: "der Unternehmer", en: "entrepreneur", art: "der", pl: "-" },
+      { de: "das Gericht", en: "court", art: "das", pl: "-e" },
+      { de: "die Rechtsanwältin", en: "lawyer (f.)", art: "die", pl: "-nen" },
+      { de: "das Urteil", en: "verdict, judgement", art: "das", pl: "-e" },
+      { de: "das Verbrechen", en: "crime", art: "das", pl: "-" },
+      { de: "fair", en: "fair" },
+      { de: "gerecht", en: "just, fair" },
+      { de: "die Reportage", en: "report(age)", art: "die", pl: "-n" },
+      { de: "die Branche", en: "sector, industry", art: "die", pl: "-n" },
+      { de: "die Industrie", en: "industry", art: "die", pl: "-n" },
+      { de: "die Landwirtschaft", en: "agriculture", art: "die" },
+      { de: "ausjtragen", en: "to deliver", ex: "Pakete zustellen / austragen" },
+      { de: "herstellen", en: "to produce/manufacture" },
+      { de: "das Inserat", en: "advertisement", art: "das", pl: "-e" },
+      { de: "der Interessent", en: "interested party", art: "der", pl: "-en" },
+      { de: "sich eignen (für + A.)", en: "to be suitable for" },
+      { de: "der Stundenlohn", en: "hourly wage", art: "der", pl: "ö-e" },
+      { de: "der Teilzeitjob", en: "part-time job", art: "der", pl: "-s" },
+      { de: "die Voraussetzung", en: "prerequisite", art: "die", pl: "-en" },
+      { de: "zukünftig", en: "future, prospective" },
+      { de: "die Bewerberin", en: "applicant (f.)", art: "die", pl: "-nen" },
+      { de: "die Personalien", en: "personal details", art: "die" },
+      { de: "die Bewerbungsunterlagen", en: "application documents", art: "die" },
+      { de: "die Bescheinigung", en: "certificate, confirmation", art: "die", pl: "-en" },
+      { de: "der Lebenslauf", en: "CV", art: "der", pl: "ä-e" },
+      { de: "ankommen (auf + A.)", en: "to depend on", ex: "Es kommt auf eine gute Bewerbung an." },
+      { de: "aussagekräftig", en: "meaningful, expressive" },
+      { de: "sich beziehen (auf + A.)", en: "to refer to", ex: "er bezieht sich, hat bezogen" },
+      { de: "enthalten", en: "to contain", ex: "er enthält, hat enthalten" },
+      { de: "zählen (zu + D.)", en: "to count among", ex: "Pünktlichkeit zählt zu den Eigenschaften." },
+      { de: "der Auftritt", en: "appearance", art: "der", pl: "-e" },
+      { de: "die Geduld", en: "patience", art: "die" },
+      { de: "der Eindruck", en: "impression", art: "der", pl: "ü-e", ex: "einen guten Eindruck machen" },
+      { de: "sich erkundigen (nach + D.)", en: "to inquire about" },
+      { de: "überzeugen (von + D.)", en: "to convince of" },
+      { de: "der Arbeitnehmer", en: "employee", art: "der", pl: "-" },
+      { de: "das Einkommen", en: "income", art: "das", pl: "-" }
+    ]
+  };
+
+  G.vocab["k5"] = {
+    title: "Kapitel 5 · Umweltfreundlich?",
+    unit: 5,
+    cards: [
+      { de: "die Gegend", en: "area, region", art: "die", pl: "-en", ex: "eine ländliche Gegend" },
+      { de: "der Vorort", en: "suburb", art: "der", pl: "-e" },
+      { de: "die Region", en: "region", art: "die", pl: "-en" },
+      { de: "regional", en: "regional" },
+      { de: "die Herkunft", en: "origin", art: "die", pl: "ü-e" },
+      { de: "die Bevölkerung", en: "population", art: "die", pl: "-en" },
+      { de: "der Bürger", en: "citizen", art: "der", pl: "-" },
+      { de: "die Erde", en: "earth", art: "die" },
+      { de: "das Trinkwasser", en: "drinking water", art: "das" },
+      { de: "ökologisch", en: "ecological", ex: "Öko-/Bio-Produkte" },
+      { de: "die Ernte", en: "harvest", art: "die", pl: "-n" },
+      { de: "das Rind", en: "cattle/beef", art: "das", pl: "-er" },
+      { de: "das Huhn", en: "chicken", art: "das", pl: "ü-er" },
+      { de: "die Umweltverschmutzung", en: "environmental pollution", art: "die" },
+      { de: "verschmutzen", en: "to pollute" },
+      { de: "das Klima", en: "climate", art: "das" },
+      { de: "der Klimawandel", en: "climate change", art: "der" },
+      { de: "entstehen", en: "to arise/develop", ex: "entstand, ist entstanden" },
+      { de: "der Abfall", en: "waste", art: "der", pl: "ä-e" },
+      { de: "der Mülleimer", en: "rubbish bin", art: "der", pl: "-" },
+      { de: "der Kunststoff", en: "plastic", art: "der", pl: "-e" },
+      { de: "landen", en: "to end up/land", ex: "im Müll landen" },
+      { de: "die Tonne", en: "tonne", art: "die", pl: "-n", ex: "2 Millionen Tonnen Lebensmittel" },
+      { de: "das Abgas", en: "exhaust gas", art: "das", pl: "-e" },
+      { de: "schädlich", en: "harmful" },
+      { de: "die Ursache", en: "cause", art: "die", pl: "-n" },
+      { de: "der Stromverbrauch", en: "electricity consumption", art: "der" },
+      { de: "verschwenden", en: "to waste" },
+      { de: "zerstören", en: "to destroy" },
+      { de: "der Umweltschutz", en: "environmental protection", art: "der" },
+      { de: "die Alternative", en: "alternative", art: "die", pl: "-n" },
+      { de: "das Pfand", en: "deposit", art: "das", ex: "Pfand verlangen" },
+      { de: "verlangen", en: "to demand/charge" },
+      { de: "die Maßnahme", en: "measure", art: "die", pl: "-n" },
+      { de: "messen", en: "to measure", ex: "er misst, hat gemessen" },
+      { de: "berechnen", en: "to calculate" },
+      { de: "das Resultat", en: "result", art: "das", pl: "-e" },
+      { de: "die Aktion", en: "campaign, action", art: "die", pl: "-en" },
+      { de: "dagegen", en: "against it", ex: "Ich bin dagegen." },
+      { de: "sich engagieren (für/gegen)", en: "to get involved for/against" },
+      { de: "sich anschließen", en: "to join", ex: "sich einer Gruppe anschließen" },
+      { de: "unterstützen", en: "to support" },
+      { de: "sich beteiligen (an + D.)", en: "to participate in" },
+      { de: "retten", en: "to save/rescue" },
+      { de: "schützen (vor + D.)", en: "to protect from" },
+      { de: "aufklären", en: "to inform, educate" },
+      { de: "vermelden", en: "to report", ex: "er vermeldet, hat vermeldet" },
+      { de: "beobachten", en: "to observe" },
+      { de: "pflanzen", en: "to plant" }
+    ]
+  };
+
+  G.vocab["k6"] = {
+    title: "Kapitel 6 · Blick nach vorn",
+    unit: 6,
+    cards: [
+      { de: "die Prognose", en: "forecast, prognosis", art: "die", pl: "-n", ex: "Die Prognose lautet: …" },
+      { de: "ausgehen (von + D.)", en: "to assume", ex: "Experten gehen davon aus, dass …" },
+      { de: "irgendwann", en: "at some point" },
+      { de: "voraussichtlich", en: "probably, expected" },
+      { de: "eventuell", en: "possibly" },
+      { de: "möglicherweise", en: "possibly" },
+      { de: "längst", en: "long since" },
+      { de: "der Fortschritt", en: "progress", art: "der", pl: "-e" },
+      { de: "das Labor", en: "laboratory", art: "das", pl: "-e" },
+      { de: "die Passagierin", en: "passenger (f.)", art: "die", pl: "-nen" },
+      { de: "der Chip", en: "chip", art: "der", pl: "-s" },
+      { de: "die Haut", en: "skin", art: "die", pl: "äu-e" },
+      { de: "der Anteil", en: "share, proportion", art: "der", pl: "-e" },
+      { de: "das Fünftel", en: "fifth (fraction)", art: "das" },
+      { de: "wachsen", en: "to grow", ex: "er wächst, ist gewachsen" },
+      { de: "die Akademie", en: "academy", art: "die", pl: "-n" },
+      { de: "das Altenheim", en: "retirement home", art: "das", pl: "-e" },
+      { de: "das Fundbüro", en: "lost & found", art: "das", pl: "-s" },
+      { de: "die Fußgängerzone", en: "pedestrian zone", art: "die", pl: "-n" },
+      { de: "das Hallenbad", en: "indoor pool", art: "das", pl: "ä-er" },
+      { de: "die Kindertagesstätte", en: "daycare centre", art: "die", pl: "-n" },
+      { de: "der Kiosk", en: "kiosk", art: "der", pl: "-e" },
+      { de: "die Klinik", en: "clinic", art: "die", pl: "-en" },
+      { de: "der Tierpark", en: "zoo/animal park", art: "der", pl: "-s" },
+      { de: "die Volkshochschule", en: "adult education centre", art: "die", pl: "-n" },
+      { de: "das Stadtviertel", en: "city district", art: "das", pl: "-" },
+      { de: "die Wohnanlage", en: "housing estate", art: "die", pl: "-n" },
+      { de: "der Wohnraum", en: "living space", art: "der", pl: "äu-e" },
+      { de: "die Solarzelle", en: "solar cell", art: "die", pl: "-n" },
+      { de: "anonym", en: "anonymous" },
+      { de: "lebenswert", en: "worth living" },
+      { de: "miteinander", en: "with one another" },
+      { de: "frisch", en: "fresh", ex: "Ich genieße die frische Luft." },
+      { de: "sich befinden", en: "to be located", ex: "er befindet sich, hat befunden" },
+      { de: "begegnen", en: "to meet/encounter" },
+      { de: "die Bildung", en: "education", art: "die" },
+      { de: "das Homeoffice", en: "home office", art: "das", ex: "Ich arbeite im Homeoffice." },
+      { de: "die Lebensqualität", en: "quality of life", art: "die" },
+      { de: "die Mobilität", en: "mobility", art: "die" },
+      { de: "die Verkehrssituation", en: "traffic situation", art: "die", pl: "-en" },
+      { de: "der Bürgermeister", en: "mayor", art: "der", pl: "-" },
+      { de: "die Pädagogin", en: "educator (f.)", art: "die", pl: "-nen" },
+      { de: "der Praktikant", en: "intern", art: "der", pl: "-en" },
+      { de: "der Vorsatz", en: "resolution", art: "der", pl: "ä-e", ex: "einen Vorsatz fassen" },
+      { de: "sich vornehmen", en: "to resolve/plan", ex: "er nimmt vor, hat vorgenommen" },
+      { de: "realisieren", en: "to realise/carry out" },
+      { de: "gelingen", en: "to succeed", ex: "es gelingt, ist gelungen" },
+      { de: "der Anlass", en: "occasion", art: "der", pl: "ä-e" },
+      { de: "die Melodie", en: "melody", art: "die", pl: "-n" },
+      { de: "der Rhythmus", en: "rhythm", art: "der", pl: "Rhythmen" },
+      { de: "bewerten", en: "to evaluate/rate" },
+      { de: "die Vorfreude", en: "anticipation (joy)", art: "die" },
+      { de: "übernehmen", en: "to take over", ex: "er übernimmt, hat übernommen" }
+    ]
+  };
+
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister · Prüfungstraining + Redemittel
+   Task formats follow Zertifikat B1 / DTZ as used in the book.
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+
+  G.exam = {
+    /* --- Lesen, Teil: Aussagen zu Texten zuordnen (richtig/falsch) --- */
+    lesen: [
+      { title: "Lesen · Richtig oder falsch?",
+        instruction: "Lesen Sie den Text und entscheiden Sie: richtig oder falsch?",
+        text: "Sebastian Hilpert war zwölf Jahre lang Berufssoldat, aber dann fühlte er sich nicht mehr glücklich und suchte beruflich andere Herausforderungen. Zufällig sah er einen Bericht über ein Schutzprojekt für Wildtiere in Afrika und wusste sofort, dass er so etwas selbst gern machen würde. Nach einem dreimonatigen Aufenthalt in Namibia lernte er das Leben aus einer anderen Perspektive kennen. Heute ist er Fotograf und Buchautor und fährt regelmäßig nach Afrika.",
+        items: [
+          { q: "Sebastian Hilpert war früher Berufssoldat.", answer: true },
+          { q: "Er war mit seinem Leben als Soldat immer zufrieden.", answer: false },
+          { q: "Heute arbeitet er als Fotograf und Autor.", answer: true },
+          { q: "Er fährt nie mehr nach Afrika.", answer: false }
+        ] },
+      { title: "Lesen · Globalverständnis",
+        instruction: "Lesen Sie den Forumstext und entscheiden Sie: richtig oder falsch?",
+        text: "Im Jahr 2050 werden ca. 70 Prozent der Menschen in Städten wohnen. Experten suchen nach Konzepten, damit das Leben in der Stadt auch in Zukunft lebenswert ist. Eine Prognose lautet: dass Privatautos die Ausnahme sein werden. Außerdem werden viele Fuß- und Radwege das Bewegen von A nach B einfacher machen. Die Menschen werden in kleineren Wohnungen wohnen und sich Räume teilen, z. B. die Küche.",
+        items: [
+          { q: "2050 werden die meisten Menschen auf dem Land leben.", answer: false },
+          { q: "Private Autos sollen in der Zukunft seltener werden.", answer: true },
+          { q: "Die Menschen werden größere Wohnungen haben als heute.", answer: false },
+          { q: "Manche Räume wie die Küche werden geteilt.", answer: true }
+        ] }
+    ],
+
+    /* --- Lesen · Überschriften zuordnen --- */
+    reading: [
+      { title: "Lesen · Überschrift zuordnen",
+        instruction: "Welche Überschrift (A–D) passt zum Text? Es gibt nur eine richtige Lösung.",
+        text: "Reisebüros bieten spezielle Rabatte an, wenn man den Sommerurlaub schon im Winter bucht. Die sogenannten „Frühbucher\" bezahlen aber meist mehr als Last-Minute-Reisende, die erst ganz kurz vor dem Urlaub buchen. Dafür ist das Angebot für Frühbucher viel größer.",
+        options: ["A: Wer früh bucht, hat die Wahl", "B: Last-Minute ist immer teurer", "C: Reisebüros schließen im Winter", "D: Sommerurlaub nur im Juli"],
+        answer: 0 },
+      { title: "Lesen · Überschrift zuordnen",
+        instruction: "Welche Überschrift (A–D) passt zum Text?",
+        text: "SIRPLUS kämpft gegen Lebensmittelverschwendung und hat mehrere Supermärkte eröffnet. Dort kann man Lebensmittel kaufen, die andere Supermärkte wegwerfen, weil sie offiziell nicht mehr haltbar sind oder kleine Fehler haben. Die Kunden können diese Waren dann günstig kaufen.",
+        options: ["A: Ein Supermarkt gegen Verschwendung", "B: Teure Bio-Produkte für alle", "C: Supermärkte schließen", "D: Online-Shopping wird beliebter"],
+        answer: 0 }
+    ],
+
+    /* --- Schreiben (Forumsbeitrag / E-Mail) --- */
+    schreiben: [
+      { title: "Schreiben · Forumsbeitrag",
+        instruction: "Schreiben Sie Ihre Meinung zum Thema „Gute Vorsätze\" (ca. 80 Wörter). Gehen Sie auf folgende Punkte ein:",
+        points: ["Nehmen Sie sich zu Silvester etwas vor?", "Welche Vorsätze sind realistisch?", "Was hilft, einen Vorsatz wirklich zu realisieren?"],
+        hints: "Nützliche Redemittel: Ich nehme mir vor, … · Im nächsten Jahr werde ich … · Ich will nicht mehr … · Ich finde, dass …" },
+      { title: "Schreiben · E-Mail (Reklamation)",
+        instruction: "Sie haben vor zwei Monaten einen Laptop gekauft. Jetzt ist er kaputt. Schreiben Sie eine E-Mail an die Firma. Vergessen Sie Anrede und Gruß nicht. Gehen Sie auf folgende Punkte ein:",
+        points: ["Grund für Ihr Schreiben", "Garantie", "Reparatur oder neuer Laptop?", "wie Sie erreichbar sind"],
+        hints: "Sehr geehrte Damen und Herren, … · Ich bin leider gar nicht zufrieden, weil … · Ich möchte das Gerät umtauschen / zurückgeben. · Mit freundlichen Grüßen" },
+      { title: "Schreiben · E-Mail an eine Freundin",
+        instruction: "Eine Freundin aus Österreich möchte Sie besuchen. Antworten Sie auf ihre E-Mail (ca. 80 Wörter). Gehen Sie auf folgende Punkte ein:",
+        points: ["Wie ist das Wetter in Ihrer Region?", "Welche Kleidung soll sie mitbringen?", "Welche Ausflüge können Sie zusammen machen?", "Wie kann sie sich am besten vorbereiten?"],
+        hints: "Liebe …, · endlich meldest du dich! · Bei uns ist es gerade … · Am besten bringst du … mit. · Wir könnten … unternehmen. · Liebe Grüße" }
+    ],
+
+    /* --- Sprechen --- */
+    sprechen: [
+      { title: "Sprechen · Gemeinsam etwas planen",
+        instruction: "Sie bekommen Besuch von Freunden, die Sie im Urlaub kennengelernt haben. Planen Sie zusammen ein Fest. Überlegen Sie: Wann? Wo? Wie viele Personen? Essen/Getränke? Wer bezahlt was?",
+        hints: "Vorschläge machen: Ich schlage vor, … / Wie wäre es mit …? · zustimmen: Das ist eine gute Idee. · widersprechen: Da bin ich anderer Meinung. · gemeinsam entscheiden: Dann machen wir das so." },
+      { title: "Sprechen · Über ein Thema sprechen",
+        instruction: "Sprechen Sie über das Thema „Soll man Autos in der Innenstadt verbieten?\" Sagen Sie Ihre Meinung und reagieren Sie auf Ihre Partnerin / Ihren Partner.",
+        hints: "die eigene Meinung: Ich bin der Meinung, dass … / Ich stehe auf dem Standpunkt, dass … · zustimmen: Da hast du völlig recht. · widersprechen: Da muss ich dir leider widersprechen." },
+      { title: "Sprechen · Über ein Bild/Foto sprechen",
+        instruction: "Beschreiben Sie ein Foto aus Ihrem Alltag und erzählen Sie, was es für Sie bedeutet (Thema „Musik\" oder „Erinnerungen\").",
+        hints: "Auf dem Foto sieht man … · Im Vordergrund / Hintergrund … · Für mich bedeutet das … · Das erinnert mich an …" }
+    ]
+  };
+
+  /* --- Redemittel-Bank (aus 'kurz und klar' und den Strategieboxen) --- */
+  G.redemittel = {
+    groups: [
+      { title: "Über Vorlieben und Abneigungen sprechen (K1)", items: [
+        "Ist es für dich wichtig, im Urlaub zu faulenzen?",
+        "Macht es dir Spaß, eine Stadt zu besichtigen?",
+        "Hast du Lust, Sport zu machen?",
+        "Ja, ich will mich im Urlaub immer ausruhen.",
+        "Nein, das finde ich langweilig." ] },
+      { title: "Ein Gespräch über die Reiseplanung führen (K1)", items: [
+        "Ich möchte eine Reise nach … buchen.",
+        "Was können Sie mir empfehlen?",
+        "Gibt es / Haben Sie noch andere Angebote?",
+        "Wie lange dauert die Fahrt / der Flug?",
+        "Was ist im Angebot enthalten?" ] },
+      { title: "Etwas reklamieren / umtauschen (K2)", items: [
+        "… funktioniert nicht (richtig).",
+        "Ich bin mit … leider gar nicht zufrieden.",
+        "Ich möchte … umtauschen.",
+        "Kann ich … zurückgeben?",
+        "Ich habe die Quittung noch. / Habe ich noch Garantie?" ] },
+      { title: "Die eigene Meinung äußern (K5)", items: [
+        "Ich bin (nicht) der Meinung, dass …",
+        "Meiner Meinung nach …",
+        "Ich stehe auf dem Standpunkt, dass …",
+        "Ich bin (nicht) davon überzeugt, dass …" ] },
+      { title: "Zustimmen / widersprechen (K5)", items: [
+        "Das sehe ich auch so, denn …",
+        "Da hast du völlig recht. Ich finde auch, dass …",
+        "Das stimmt meiner Meinung nach nicht, denn …",
+        "Da muss ich dir leider widersprechen.",
+        "Ich sehe das etwas anders: …" ] },
+      { title: "Vermutungen / Wünsche / Bewertung (K6)", items: [
+        "Es wird wahrscheinlich …",
+        "Ich kann mir vorstellen, dass …",
+        "Möglicherweise …",
+        "Es wäre toll, wenn …",
+        "Ich würde mir wünschen, dass …",
+        "Mir gefällt das Lied insgesamt sehr gut, besonders die Stelle …" ] },
+      { title: "Über Vergangenes / Veränderungen (K3)", items: [
+        "… hat sich stark/minimal verändert.",
+        "Im Gegensatz zu heute / früher …",
+        "Im Vergleich zu früher ist / gibt es heute …",
+        "Zum Glück / Leider …",
+        "Ich habe gehört, dass früher …" ] }
+    ]
+  };
+
+})();
+
+/* ============================================================
+   NETZWERK neu B1 · Meister — ERWEITERUNGSPAKET (B1.1-Mastery)
+   Original geschriebene Übungen, Regeln & Prüfungstraining.
+   Additiv: erweitert window.DATA, ohne die Engine zu ändern.
+   ============================================================ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  const add = (id, exs) => { if (G.grammar[id]) G.grammar[id].exercises.push(...exs); };
+
+  /* ---------- K1: Infinitiv mit zu ---------- */
+  add("k1-infinitiv-zu", [
+    { type:"gap", q:"Vergiss nicht, die Blumen ___ (gießen).", answer:"zu gießen",
+      hint:"vergessen + zu + Infinitiv am Satzende." },
+    { type:"gap", q:"Wir haben vor, im August ans Meer ___ (fahren).", answer:"zu fahren",
+      hint:"vorhaben + zu + Infinitiv." },
+    { type:"gap", q:"Er fängt an, seine Sachen ___ (einpacken).", answer:"einzupacken",
+      hint:"Trennbares Verb: zu steht zwischen Präfix und Stamm → ein·zu·packen." },
+    { type:"mc", q:"Welcher Satz ist richtig?",
+      options:["Ich hoffe, dich bald wiederzusehen.","Ich hoffe, dich bald wiedersehen.","Ich hoffe, zu dich bald wiedersehen."],
+      answer:0, hint:"hoffen + Infinitiv mit zu; bei trennbaren Verben: wieder·zu·sehen." },
+    { type:"mc", q:"Es ist wichtig, morgens früh ___.",
+      options:["aufzustehen","zu aufstehen","aufstehen zu"], answer:0,
+      hint:"auf|stehen ist trennbar → auf·zu·stehen." },
+    { type:"transform", prompt:"Schreiben Sie den Satz neu mit »Sie hat keine Lust …«: Sie will nicht mitkommen.",
+      answer:"Sie hat keine Lust mitzukommen.",
+      accept:["Sie hat keine Lust, mitzukommen."],
+      hint:"Nach Nomen + haben → Infinitiv mit zu; nach Modalverb (will) stünde kein zu." },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Es","macht","Spaß,","neue","Städte","zu","entdecken."],
+      answer:"Es macht Spaß, neue Städte zu entdecken.",
+      hint:"Nomen (Spaß) + machen → zu + Infinitiv am Ende." }
+  ]);
+
+  /* ---------- K1: Nebensätze mit da/weil ---------- */
+  add("k1-da-weil", [
+    { type:"gap", q:"Wir bleiben zu Hause, weil das Wetter schlecht ___ (sein).", answer:"ist",
+      hint:"Im Nebensatz steht das konjugierte Verb am Ende." },
+    { type:"gap", q:"Weil er krank ___ (sein, Präteritum), konnte er nicht kommen.", answer:"war",
+      hint:"sein im Präteritum: war." },
+    { type:"mc", q:"Ich nehme den Bus, weil mein Auto kaputt ___.",
+      options:["ist","es ist","ist es"], answer:0,
+      hint:"Nur das Verb ans Ende — das Subjekt steht schon da (mein Auto)." },
+    { type:"mc", q:"»Da« steht als Kausal-Konnektor besonders oft …",
+      options:["am Satzanfang","nur am Satzende","nur in Fragen"], answer:0,
+      hint:"Da der Zug Verspätung hat, warten wir. — gleiche Bedeutung wie weil." },
+    { type:"transform", prompt:"Verbinden Sie mit »weil«: Ich lerne Deutsch. Ich möchte in Wien arbeiten.",
+      answer:"Ich lerne Deutsch, weil ich in Wien arbeiten möchte.",
+      hint:"möchte (konjugiert) ganz ans Ende, nach dem Infinitiv arbeiten." },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Da","der Zug","Verspätung","hat,","warten","wir","im Café."],
+      answer:"Da der Zug Verspätung hat, warten wir im Café.",
+      hint:"Nebensatz vorne → Hauptsatz beginnt mit dem Verb (warten wir)." }
+  ]);
+
+  /* ---------- K1: Nebensätze mit obwohl ---------- */
+  add("k1-obwohl", [
+    { type:"gap", q:"Obwohl es regnet, ___ wir wandern. (gehen)", answer:"gehen",
+      hint:"Nebensatz vorne → Verb des Hauptsatzes direkt danach." },
+    { type:"gap", q:"Ich habe gut geschlafen, obwohl die Musik laut ___ (sein, Präteritum).", answer:"war" },
+    { type:"mc", q:"___ das Hotel teuer war, haben wir es gebucht.",
+      options:["Obwohl","Weil","Deshalb"], answer:0,
+      hint:"Widerspruch: teuer ↔ trotzdem gebucht → obwohl." },
+    { type:"mc", q:"Ein obwohl-Satz hat die gleiche Bedeutung wie ein Hauptsatz mit …",
+      options:["trotzdem","deshalb","denn"], answer:0,
+      hint:"Obwohl es regnet, … = Es regnet, trotzdem …" },
+    { type:"transform", prompt:"Verbinden Sie mit »obwohl« (obwohl-Satz zuerst): Sie ist müde. Sie arbeitet weiter.",
+      answer:"Obwohl sie müde ist, arbeitet sie weiter.",
+      accept:["Sie arbeitet weiter, obwohl sie müde ist."] },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Er","kauft","das Handy,","obwohl","er","wenig","Geld","hat."],
+      answer:"Er kauft das Handy, obwohl er wenig Geld hat." }
+  ]);
+
+  /* ---------- K2: lassen ---------- */
+  add("k2-lassen", [
+    { type:"gap", q:"Ich ___ mein Fahrrad in der Werkstatt reparieren. (lassen)", answer:"lasse" },
+    { type:"mc", q:"»Ich lasse meine Haare schneiden« bedeutet:",
+      options:["Jemand anderes (z. B. der Friseur) schneidet sie.","Ich schneide sie selbst.","Ich schneide sie nie."],
+      answer:0, hint:"lassen + Infinitiv = eine andere Person macht es für mich." },
+    { type:"mc", q:"Konjugation: du ___ dein Auto waschen.",
+      options:["lässt","lasst","lassest"], answer:0,
+      hint:"lassen: ich lasse, du lässt, er/sie lässt (a → ä)." },
+    { type:"gap", q:"Perfekt: Wir haben die Waschmaschine reparieren ___.", answer:"lassen",
+      hint:"Im Perfekt steht lassen als zweiter Infinitiv: haben + reparieren lassen." },
+    { type:"transform", prompt:"Schreiben Sie mit »lassen«: Der Mechaniker repariert mein Auto.",
+      answer:"Ich lasse mein Auto reparieren.",
+      accept:["Ich lasse mein Auto vom Mechaniker reparieren."] },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Sie","lässt","ihre","Wohnung","renovieren."],
+      answer:"Sie lässt ihre Wohnung renovieren." }
+  ]);
+
+  /* ---------- K2: Folgen ausdrücken ---------- */
+  add("k2-folgen", [
+    { type:"mc", q:"Der Akku war leer, ___ konnte ich dich nicht anrufen.",
+      options:["deshalb","weil","obwohl"], answer:0,
+      hint:"Folge → deshalb/deswegen/darum/daher, danach kommt sofort das Verb." },
+    { type:"gap", q:"Es war laut, deshalb ___ ich nicht schlafen. (können, Präteritum)", answer:"konnte",
+      hint:"deshalb = Position 1 → Verb auf Position 2." },
+    { type:"mc", q:"Der Koffer war ___ schwer, dass ich ihn kaum tragen konnte.",
+      options:["so","sehr","zu"], answer:0, hint:"so + Adjektiv …, dass = Folge mit Verstärkung." },
+    { type:"transform", prompt:"Verbinden Sie mit »sodass«: Der Film war langweilig. Wir sind früher gegangen.",
+      answer:"Der Film war langweilig, sodass wir früher gegangen sind.",
+      hint:"sodass leitet einen Nebensatz ein → Verb ans Ende." },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Das Internet","war","langsam,","deswegen","habe","ich","offline","gearbeitet."],
+      answer:"Das Internet war langsam, deswegen habe ich offline gearbeitet." },
+    { type:"mc", q:"Welche Wörter drücken KEINE Folge aus?",
+      options:["weil / da","deshalb / darum","sodass / so … dass"], answer:0,
+      hint:"weil/da nennen den Grund, nicht die Folge." }
+  ]);
+
+  /* ---------- K2: Genitiv ---------- */
+  add("k2-genitiv", [
+    { type:"gap", q:"die Farbe ___ Autos (das Auto)", answer:"des",
+      hint:"maskulin/neutral: des + Nomen mit -(e)s." },
+    { type:"gap", q:"die Meinung ___ Kundin (die Kundin)", answer:"der",
+      hint:"feminin: der — das Nomen bleibt ohne Endung." },
+    { type:"mc", q:"Am Ende ___ Tages war ich müde.",
+      options:["des","dem","der"], answer:0, hint:"der Tag → des Tages." },
+    { type:"gap", q:"Das ist das Handy ___ Bruders. (mein Bruder)", answer:"meines",
+      hint:"Possessivartikel im Genitiv maskulin: meines … -s." },
+    { type:"mc", q:"Namen: Das ist ___ Tasche.",
+      options:["Annas","Anna ihre","von die Anna"], answer:0,
+      hint:"Bei Namen: Name + s (ohne Apostroph): Annas Tasche." },
+    { type:"gap", q:"die Türen ___ alten Häuser (die Häuser, Plural)", answer:"der",
+      hint:"Genitiv Plural: der." }
+  ]);
+
+  /* ---------- K2: wegen & trotz + Genitiv ---------- */
+  add("k2-wegen-trotz", [
+    { type:"mc", q:"___ des Staus kamen wir zu spät.",
+      options:["Wegen","Trotz","Während? – nein"], answer:0, hint:"Grund → wegen + Genitiv." },
+    { type:"mc", q:"___ des Regens machten wir ein Picknick.",
+      options:["Trotz","Wegen","Denn"], answer:0, hint:"Widerspruch (Regen ↔ Picknick) → trotz." },
+    { type:"gap", q:"wegen ___ Baustelle (die Baustelle)", answer:"der" },
+    { type:"gap", q:"trotz ___ hohen Preises (der Preis)", answer:"des",
+      hint:"maskulin: des hohen Preises — Nomen bekommt -es." },
+    { type:"transform", prompt:"Sagen Sie es mit »wegen«: Weil das Wetter schlecht war, blieben wir zu Hause.",
+      answer:"Wegen des schlechten Wetters blieben wir zu Hause.",
+      hint:"wegen + Genitiv: des schlechten Wetters; danach Verb auf Position 2." },
+    { type:"mc", q:"trotz + … / wegen + … verlangen welchen Kasus?",
+      options:["Genitiv","Dativ","Akkusativ"], answer:0,
+      hint:"Standardsprache: Genitiv (umgangssprachlich hört man auch Dativ)." }
+  ]);
+
+  /* ---------- K3: Präteritum ---------- */
+  add("k3-praeteritum", [
+    { type:"gap", q:"Früher ___ ich in Salzburg. (wohnen)", answer:"wohnte",
+      hint:"Regelmäßig: Stamm + -te." },
+    { type:"gap", q:"Er ___ jeden Tag um 6 Uhr auf. (aufstehen)", answer:"stand",
+      hint:"stehen → stand; Präfix bleibt am Ende: … stand … auf." },
+    { type:"gap", q:"Wir ___ damals keine Zeit. (haben)", answer:"hatten" },
+    { type:"gap", q:"Als Kind ___ sie Ärztin werden. (wollen)", answer:"wollte",
+      hint:"Modalverben im Präteritum ohne Umlaut: wollte, konnte, musste, durfte." },
+    { type:"mc", q:"gehen → Präteritum:",
+      options:["ging","gehte","gang"], answer:0 },
+    { type:"mc", q:"bringen → Präteritum:",
+      options:["brachte","bringte","brang"], answer:0,
+      hint:"Mischverb: neuer Stamm + -te (brachte, dachte, wusste, kannte)." },
+    { type:"transform", prompt:"Ins Präteritum: Ich bin nach Graz gefahren.",
+      answer:"Ich fuhr nach Graz." }
+  ]);
+
+  /* ---------- K3: Perfekt vs. Präteritum ---------- */
+  add("k3-perfekt-praeteritum", [
+    { type:"mc", q:"Beim Sprechen über Vergangenes benutzt man meistens …",
+      options:["das Perfekt","das Präteritum","das Futur"], answer:0 },
+    { type:"mc", q:"sein, haben und die Modalverben stehen auch beim Sprechen meist im …",
+      options:["Präteritum","Perfekt","Konjunktiv"], answer:0,
+      hint:"war, hatte, wollte, konnte … klingen natürlicher als das Perfekt." },
+    { type:"gap", q:"Gestern ___ wir im Kino. (sein)", answer:"waren" },
+    { type:"gap", q:"Ich ___ am Wochenende viel gearbeitet. (haben)", answer:"habe" },
+    { type:"mc", q:"Er ___ sofort eingeschlafen.",
+      options:["ist","hat","wird"], answer:0,
+      hint:"Zustandswechsel (wach → schlafend) → Perfekt mit sein." },
+    { type:"transform", prompt:"Ins Perfekt: Sie las den ganzen Abend.",
+      answer:"Sie hat den ganzen Abend gelesen." }
+  ]);
+
+  /* ---------- K3: Zeitangaben ---------- */
+  add("k3-zeitangaben", [
+    { type:"mc", q:"___ Anfang war alles neu für mich.",
+      options:["Am","Im","Beim"], answer:0, hint:"am Anfang / am Ende / am Montag." },
+    { type:"gap", q:"___ der Arbeit treffe ich oft Freunde. (nach + die Arbeit)", answer:"Nach",
+      hint:"nach + Dativ: nach der Arbeit." },
+    { type:"gap", q:"seit ___ Umzug fühle ich mich wohler. (der Umzug)", answer:"dem",
+      hint:"seit + Dativ." },
+    { type:"mc", q:"___ eines Jahres hat sie sehr gut Deutsch gelernt.",
+      options:["Innerhalb","Seit","Nach"], answer:0,
+      hint:"innerhalb + Genitiv = in diesem Zeitraum." },
+    { type:"mc", q:"während ___ Sommerferien jobbt er im Café.",
+      options:["der","die","den"], answer:0,
+      hint:"während + Genitiv; Genitiv Plural = der." },
+    { type:"gap", q:"Vor zwei Jahr___ habe ich mit Deutsch angefangen.", answer:"en",
+      hint:"vor + Dativ; Dativ Plural: Jahren." }
+  ]);
+})();
+
+/* ============ K4–K6 Booster + Werkstatt-Module ============ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  const add = (id, exs) => { if (G.grammar[id]) G.grammar[id].exercises.push(...exs); };
+
+  /* ---------- K4: Konjunktiv II ---------- */
+  add("k4-konjunktiv2", [
+    { type:"gap", q:"Ich ___ gern mehr Freizeit. (haben)", answer:"hätte" },
+    { type:"gap", q:"___ Sie mir bitte kurz helfen? (können)", answer:"Könnten",
+      hint:"Höfliche Bitte: Könnten/Würden Sie …?" },
+    { type:"gap", q:"An deiner Stelle ___ ich früher schlafen gehen. (werden)", answer:"würde",
+      hint:"Ratschlag: An deiner Stelle würde ich …" },
+    { type:"mc", q:"___ es möglich, den Termin zu verschieben?",
+      options:["Wäre","Würde","Hätte"], answer:0 },
+    { type:"mc", q:"du ___ (sein, Konjunktiv II)",
+      options:["wärst","warst","bist"], answer:0,
+      hint:"Präteritum war + Umlaut → wäre, wärst, wären." },
+    { type:"transform", prompt:"Formulieren Sie höflicher: Machen Sie das Fenster zu!",
+      answer:"Könnten Sie bitte das Fenster zumachen?",
+      accept:["Würden Sie bitte das Fenster zumachen?","Könnten Sie das Fenster bitte zumachen?","Würden Sie das Fenster bitte zumachen?"] }
+  ]);
+
+  /* ---------- K4: Irreale Bedingungssätze ---------- */
+  add("k4-irreale-bedingung", [
+    { type:"gap", q:"Wenn ich Zeit ___, würde ich dich besuchen. (haben)", answer:"hätte" },
+    { type:"gap", q:"Wenn wir ein Haus hätten, ___ wir uns einen Hund anschaffen. (werden)", answer:"würden" },
+    { type:"mc", q:"Wenn er nicht so müde ___, käme er mit.",
+      options:["wäre","ist","war"], answer:0,
+      hint:"Irreal: beide Teile im Konjunktiv II." },
+    { type:"mc", q:"Welcher Satz ist IRREAL?",
+      options:["Wenn ich reich wäre, würde ich reisen.","Wenn es regnet, nehme ich den Schirm.","Wenn du willst, komme ich mit."],
+      answer:0, hint:"Irreal = im Moment nicht Realität → Konjunktiv II." },
+    { type:"transform", prompt:"Machen Sie den Satz irreal: Ich habe kein Geld. Ich kaufe das Auto nicht.",
+      answer:"Wenn ich Geld hätte, würde ich das Auto kaufen." },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Wenn","ich","du","wäre,","würde","ich","mich","bewerben."],
+      answer:"Wenn ich du wäre, würde ich mich bewerben." }
+  ]);
+
+  /* ---------- K4: Pronominaladverbien ---------- */
+  add("k4-pronominaladverbien", [
+    { type:"mc", q:"Interessierst du dich für Technik? — Ja, ich interessiere mich sehr ___.",
+      options:["dafür","damit","darüber"], answer:0,
+      hint:"für → dafür (bei Sachen)." },
+    { type:"gap", q:"___ wartest du? — Auf den Bus. (Frage nach einer Sache, auf)", answer:"Worauf",
+      hint:"Frage bei Sachen: wo(r) + Präposition." },
+    { type:"mc", q:"Denkst du an deine Schwester? — Ja, ich denke oft ___.",
+      options:["an sie","daran","darüber"], answer:0,
+      hint:"Personen: Präposition + Pronomen (an sie); daran nur bei Sachen." },
+    { type:"gap", q:"Das Projekt ist wichtig. Wir sprechen morgen ___. (über)", answer:"darüber" },
+    { type:"mc", q:"Bei Personen fragt man mit …",
+      options:["Präposition + wen/wem (An wen …?)","wo(r)+Präposition (Woran …?)","warum"], answer:0 },
+    { type:"transform", prompt:"Antworten Sie mit Pronominaladverb: Freust du dich auf den Urlaub? — Ja, …",
+      answer:"Ja, ich freue mich darauf.",
+      accept:["Ich freue mich darauf.","Ja, ich freue mich sehr darauf."] }
+  ]);
+
+  /* ---------- K5: Komparativ/Superlativ vor Nomen ---------- */
+  add("k5-komp-super-nomen", [
+    { type:"gap", q:"Das ist der ___ Weg zum Bahnhof. (kurz, Superlativ)", answer:"kürzeste",
+      hint:"der kürzeste Weg — Umlaut + -este." },
+    { type:"gap", q:"Wir suchen ein ___ Hotel. (billig, Komparativ)", answer:"billigeres",
+      hint:"ein billiger·es Hotel (neutral, Akkusativ)." },
+    { type:"gap", q:"Ich nehme lieber den ___ Zug. (bequem, Komparativ)", answer:"bequemeren",
+      hint:"den bequemer·en Zug (maskulin, Akkusativ)." },
+    { type:"mc", q:"Das war die ___ Idee des Tages.",
+      options:["beste","gutste","besste"], answer:0, hint:"gut – besser – am besten / die beste." },
+    { type:"gap", q:"Wir fahren mit dem ___ Zug. (schnell, Superlativ)", answer:"schnellsten",
+      hint:"mit dem schnellst·en Zug (Dativ)." },
+    { type:"mc", q:"Immer ___ Menschen leben in großen Städten.",
+      options:["mehr","mehrere","meiste"], answer:0,
+      hint:"mehr/weniger vor Nomen bleiben ohne Endung." }
+  ]);
+
+  /* ---------- K5: damit / um … zu ---------- */
+  add("k5-damit-umzu", [
+    { type:"mc", q:"Ich spare jeden Monat, ___ ich eine große Reise machen kann.",
+      options:["damit","um","dass"], answer:0 },
+    { type:"mc", q:"»um … zu« ist nur möglich, wenn …",
+      options:["Haupt- und Nebensatz das gleiche Subjekt haben","der Satz kurz ist","ein Modalverb im Satz steht"],
+      answer:0 },
+    { type:"mc", q:"Ich schreibe dir die Adresse auf, ___ du den Weg findest.",
+      options:["damit","um … zu","weil"], answer:0,
+      hint:"Verschiedene Subjekte (ich / du) → nur damit." },
+    { type:"gap", q:"Er spricht leise, damit das Baby weiter ___ kann. (schlafen)", answer:"schlafen",
+      hint:"Nebensatz: … schlafen kann — konjugiertes Verb ganz am Ende." },
+    { type:"transform", prompt:"Verbinden Sie mit »um … zu«: Ich fahre in die Stadt. Ich will einkaufen.",
+      answer:"Ich fahre in die Stadt, um einzukaufen.",
+      hint:"Modalverb wollen fällt weg; einkaufen ist trennbar → ein·zu·kaufen." },
+    { type:"order", q:"Bilden Sie den Satz:",
+      tokens:["Sie","macht","einen Kurs,","um","besser","Deutsch","zu","sprechen."],
+      answer:"Sie macht einen Kurs, um besser Deutsch zu sprechen." }
+  ]);
+
+  /* ---------- K6: Futur I ---------- */
+  add("k6-futur1", [
+    { type:"gap", q:"Nächstes Jahr ___ ich mehr Sport machen. (werden)", answer:"werde" },
+    { type:"gap", q:"___ ihr uns im Sommer besuchen? (werden)", answer:"Werdet" },
+    { type:"mc", q:"Vermutung: Das ___ wohl stimmen.",
+      options:["wird","will","würde"], answer:0,
+      hint:"Futur I + wohl = Vermutung." },
+    { type:"mc", q:"Wo steht der Infinitiv im Futur I?",
+      options:["am Satzende","auf Position 2","direkt nach werden"], answer:0 },
+    { type:"gap", q:"Die Städte ___ in Zukunft grüner werden.", answer:"werden" },
+    { type:"transform", prompt:"Ins Futur I: Wir ziehen bald um.",
+      answer:"Wir werden bald umziehen." }
+  ]);
+
+  /* ---------- K6: n-Deklination ---------- */
+  add("k6-n-deklination", [
+    { type:"gap", q:"Ich frage morgen den Kolleg___.", answer:"en",
+      hint:"Akkusativ: den Kollegen." },
+    { type:"gap", q:"Wir helfen dem neuen Student___.", answer:"en",
+      hint:"Dativ: dem Studenten." },
+    { type:"gap", q:"der Name → Ich beginne mit dem Nam___.", answer:"en",
+      hint:"Sonderfall Name: mit dem Namen." },
+    { type:"mc", q:"Das ist Herr Meier. Kennst du ___ schon?",
+      options:["Herrn Meier","Herr Meier","Herren Meier"], answer:0,
+      hint:"Herr gehört zur n-Deklination: den/dem Herrn." },
+    { type:"mc", q:"Welches Nomen gehört zur n-Deklination?",
+      options:["der Junge","der Tisch","das Kind"], answer:0,
+      hint:"Maskuline Personen auf -e: Junge, Kollege, Kunde …" },
+    { type:"gap", q:"das Foto des Präsident___", answer:"en",
+      hint:"n-Deklination auch im Genitiv: des Präsidenten (ohne -s)." }
+  ]);
+
+  /* ---------- K6: Relativsätze ---------- */
+  add("k6-relativsaetze", [
+    { type:"gap", q:"Das ist der Film, ___ ich gestern gesehen habe.", answer:"den",
+      hint:"sehen + Akkusativ, maskulin → den." },
+    { type:"gap", q:"Die Frau, ___ dort drüben steht, ist meine Nachbarin.", answer:"die" },
+    { type:"gap", q:"Das Haus, in ___ wir wohnen, ist über hundert Jahre alt.", answer:"dem",
+      hint:"in + Dativ (Wo?) → in dem." },
+    { type:"gap", q:"Der Bus, auf ___ wir warten, hat Verspätung.", answer:"den",
+      hint:"warten auf + Akkusativ → auf den." },
+    { type:"mc", q:"die Leute, ___ ich oft geholfen habe",
+      options:["denen","die","den"], answer:0,
+      hint:"helfen + Dativ; Dativ Plural = denen." },
+    { type:"transform", prompt:"Verbinden Sie: Das ist mein Freund. Ich reise oft mit ihm.",
+      answer:"Das ist mein Freund, mit dem ich oft reise.",
+      hint:"Präposition + Relativpronomen: mit dem." }
+  ]);
+
+  /* ============ NEU: Unit 7 — Meister-Werkstatt ============ */
+  G.units.push({ id: 7, title: "Meister-Werkstatt", theme: "Verbformen · Wortbildung · Satzbau · Konnektoren",
+    grammar: ["w-verbformen","w-verben-praep","w-wortbildung","w-satzbau","w-konnektoren"],
+    vocab: "w7", aussprache: "—" });
+
+  G.grammar["w-verbformen"] = {
+    title: "Unregelmäßige Verben: Präteritum & Partizip II",
+    unit: 7, tag: "Verbformen",
+    rule: [
+      { h:"Warum diese Liste?",
+        body:"Für B1 musst du die wichtigsten unregelmäßigen Verben in <b>drei Formen</b> sicher können: Infinitiv – Präteritum – Partizip II. Lerne sie laut und in Beispielsätzen." },
+      { h:"Muster mit Vokalwechsel",
+        body:"<i>ei → ie/i:</i> bleiben – blieb – geblieben · schreiben – schrieb – geschrieben<br><i>i → a → u/o:</i> finden – fand – gefunden · beginnen – begann – begonnen<br><i>e → a → o:</i> nehmen – nahm – genommen · sprechen – sprach – gesprochen" },
+      { h:"Mischverben (-te, aber neuer Stamm)",
+        body:"bringen – brachte – gebracht · denken – dachte – gedacht · wissen – wusste – gewusst · kennen – kannte – gekannt · nennen – nannte – genannt" },
+      { h:"Perfekt mit sein",
+        body:"Ortswechsel oder Zustandswechsel → <b>sein</b>: fahren, gehen, kommen, laufen, fliegen, aufstehen, einschlafen — und auch <b>bleiben, passieren, werden</b>." },
+      { h:"Mini-Tabelle zum Wiederholen",
+        body:"fahren–fuhr–(ist) gefahren · gehen–ging–(ist) gegangen · kommen–kam–(ist) gekommen · sehen–sah–gesehen · lesen–las–gelesen · essen–aß–gegessen · trinken–trank–getrunken · schlafen–schlief–geschlafen · treffen–traf–getroffen · verlieren–verlor–verloren · bieten–bot–geboten · laufen–lief–(ist) gelaufen · helfen–half–geholfen · geben–gab–gegeben" }
+    ],
+    exercises: [
+      { type:"gap", q:"fahren → Präteritum: er ___", answer:"fuhr" },
+      { type:"gap", q:"nehmen → Präteritum: sie ___", answer:"nahm" },
+      { type:"gap", q:"denken → Präteritum: ich ___", answer:"dachte" },
+      { type:"gap", q:"wissen → Präteritum: wir ___ es nicht.", answer:"wussten" },
+      { type:"gap", q:"bleiben → Partizip II: Er ist zu Hause ___.", answer:"geblieben" },
+      { type:"gap", q:"treffen → Partizip II: Ich habe ihn gestern ___.", answer:"getroffen" },
+      { type:"gap", q:"verlieren → Partizip II: Sie hat ihren Schlüssel ___.", answer:"verloren",
+        hint:"ver- ist untrennbar → kein ge-." },
+      { type:"gap", q:"beginnen → Partizip II: Der Kurs hat schon ___.", answer:"begonnen" },
+      { type:"mc", q:"laufen — Perfekt mit …", options:["sein (ist gelaufen)","haben (hat gelaufen)","werden"], answer:0 },
+      { type:"mc", q:"passieren — Perfekt mit …", options:["sein","haben","—"], answer:0,
+        hint:"Was ist passiert? — ist passiert." },
+      { type:"gap", q:"schlafen → Präteritum: das Kind ___ lange.", answer:"schlief" },
+      { type:"gap", q:"bringen → Partizip II: Er hat mir Blumen ___.", answer:"gebracht" }
+    ]
+  };
+
+  G.grammar["w-verben-praep"] = {
+    title: "Verben mit Präpositionen",
+    unit: 7, tag: "Verben + Präposition",
+    rule: [
+      { h:"Immer im Paket lernen",
+        body:"Verb + Präposition + Kasus als Einheit lernen: <i>warten <b>auf</b> + Akk.</i>, <i>träumen <b>von</b> + Dat.</i> Ein kurzer Beispielsatz hilft: <i>Ich warte auf den Bus.</i>" },
+      { h:"Häufige Verben mit Akkusativ",
+        body:"warten auf · sich freuen auf (Zukunft) / über (jetzt) · denken an · sich erinnern an · sich interessieren für · sich ärgern über · sich kümmern um · sich bewerben um · sprechen/diskutieren über · achten auf" },
+      { h:"Häufige Verben mit Dativ",
+        body:"träumen von · erzählen von · teilnehmen an · anfangen/aufhören mit · gehören zu · fragen nach · Angst haben vor · sich verabreden mit · gratulieren zu" },
+      { h:"Fragen & Antworten",
+        body:"Sache: <i>Worauf wartest du? — Darauf.</i> · Person: <i>Auf wen wartest du? — Auf ihn.</i>" }
+    ],
+    exercises: [
+      { type:"gap", q:"Ich warte schon zwanzig Minuten ___ den Bus.", answer:"auf" },
+      { type:"gap", q:"Sie träumt ___ einem Haus am See.", answer:"von" },
+      { type:"gap", q:"Wir freuen uns sehr ___ deinen Besuch nächste Woche.", answer:"auf",
+        hint:"Zukunft → sich freuen auf." },
+      { type:"gap", q:"Er hat sich ___ das Geschenk gefreut.", answer:"über",
+        hint:"Etwas ist schon da → sich freuen über." },
+      { type:"gap", q:"Interessierst du dich ___ Geschichte?", answer:"für" },
+      { type:"gap", q:"Sie nimmt ___ einem Deutschkurs teil.", answer:"an" },
+      { type:"mc", q:"denken an + …", options:["Akkusativ","Dativ","Genitiv"], answer:0 },
+      { type:"mc", q:"teilnehmen an + …", options:["Dativ","Akkusativ","Genitiv"], answer:0 },
+      { type:"gap", q:"Kümmerst du dich ___ die Katze, wenn ich weg bin?", answer:"um" },
+      { type:"gap", q:"Ich habe ein bisschen Angst ___ der Prüfung.", answer:"vor" },
+      { type:"transform", prompt:"Antworten Sie kurz mit Pronominaladverb: Ärgerst du dich über den Lärm? — Ja, …",
+        answer:"Ja, ich ärgere mich darüber.", accept:["Ich ärgere mich darüber."] },
+      { type:"gap", q:"Sie bewirbt sich ___ eine Stelle als Analystin.", answer:"um" }
+    ]
+  };
+
+  G.grammar["w-wortbildung"] = {
+    title: "Wortbildung: -ung, -heit/-keit, Komposita & Co.",
+    unit: 7, tag: "Wortbildung",
+    rule: [
+      { h:"Nomen aus Verben: -ung",
+        body:"Verb → Nomen mit -ung, <b>immer feminin</b>: wohnen → die Wohnung · einladen → die Einladung · lösen → die Lösung." },
+      { h:"Nomen aus Adjektiven: -heit / -keit",
+        body:"<b>Immer feminin.</b> Nach -ig/-lich meist -keit: möglich → die Möglichkeit · richtig → die Richtigkeit. Sonst oft -heit: gesund → die Gesundheit · schön → die Schönheit." },
+      { h:"Komposita",
+        body:"Das <b>letzte</b> Wort bestimmt Artikel und Grundbedeutung: die Stadt + der Plan = <b>der</b> Stadtplan. Oft mit Fugen-s: die Arbeit + der Platz = der Arbeit<b>s</b>platz." },
+      { h:"Infinitiv als Nomen",
+        body:"Der Infinitiv als Nomen ist <b>immer neutral</b>: das Lesen, das Schwimmen, das Einkaufen. <i>Das Wandern macht mir Spaß.</i>" },
+      { h:"Personen: -er / -erin",
+        body:"Verb → Person: fahren → der Fahrer / die Fahrerin · lehren → der Lehrer / die Lehrerin." }
+    ],
+    exercises: [
+      { type:"gap", q:"einladen → die Einlad___", answer:"ung" },
+      { type:"gap", q:"möglich → die ___", answer:"Möglichkeit" },
+      { type:"gap", q:"gesund → die ___", answer:"Gesundheit" },
+      { type:"gap", q:"wohnen → die ___", answer:"Wohnung" },
+      { type:"mc", q:"die Stadt + der Plan = …",
+        options:["der Stadtplan","die Stadtplan","das Stadtplan"], answer:0,
+        hint:"Das letzte Wort (der Plan) bestimmt den Artikel." },
+      { type:"mc", q:"die Arbeit + der Platz = …",
+        options:["der Arbeitsplatz","der Arbeitplatz","die Arbeitsplatz"], answer:0,
+        hint:"Mit Fugen-s: Arbeit·s·platz." },
+      { type:"mc", q:"Artikel: ___ Schwimmen ist gesund.",
+        options:["Das","Der","Die"], answer:0,
+        hint:"Infinitiv als Nomen → immer das." },
+      { type:"gap", q:"lehren → weibliche Person: die ___", answer:"Lehrerin" },
+      { type:"gap", q:"sicher → die ___", answer:"Sicherheit" },
+      { type:"mc", q:"Alle Nomen auf -ung, -heit und -keit sind …",
+        options:["feminin","maskulin","neutral"], answer:0 },
+      { type:"gap", q:"fahren → männliche Person: der ___", answer:"Fahrer" },
+      { type:"gap", q:"entscheiden → die Entscheid___", answer:"ung" }
+    ]
+  };
+
+  G.grammar["w-satzbau"] = {
+    title: "Satzbau & Wortstellung",
+    unit: 7, tag: "Satzbau",
+    rule: [
+      { h:"Position 2",
+        body:"Im Aussagesatz steht das konjugierte Verb <b>immer auf Position 2</b> — egal, was auf Position 1 steht: <i>Heute <b>fahre</b> ich nach Wien.</i>" },
+      { h:"Die Satzklammer",
+        body:"Trennbare Verben, Perfekt, Modalverben und Futur bilden eine Klammer: <i>Ich <b>habe</b> gestern lange <b>gearbeitet</b>.</i> · <i>Ich <b>muss</b> morgen früh <b>aufstehen</b>.</i>" },
+      { h:"TeKaMoLo",
+        body:"Angaben stehen meist in der Reihenfolge <b>Te</b>mporal (wann?) – <b>Ka</b>usal (warum?) – <b>Mo</b>dal (wie?) – <b>Lo</b>kal (wo/wohin?): <i>Ich fahre <b>morgen</b> <b>wegen eines Termins</b> <b>mit dem Zug</b> <b>nach Wien</b>.</i>" },
+      { h:"Dativ & Akkusativ",
+        body:"Zwei Nomen: Dativ vor Akkusativ (<i>Ich schenke <b>meiner Schwester</b> <b>ein Buch</b>.</i>). Ist der Akkusativ ein Pronomen, steht er zuerst: <i>Ich schenke <b>es ihr</b>.</i>" },
+      { h:"Nebensatz",
+        body:"Im Nebensatz steht das konjugierte Verb am Ende. Steht der Nebensatz vorn, beginnt der Hauptsatz mit dem Verb: <i>Wenn es regnet, <b>nehmen</b> wir den Bus.</i>" }
+    ],
+    exercises: [
+      { type:"order", q:"Bilden Sie den Satz (Zeitangabe zuerst):",
+        tokens:["Heute","fahre","ich","mit dem Zug","nach Wien."],
+        answer:"Heute fahre ich mit dem Zug nach Wien." },
+      { type:"order", q:"Bilden Sie den Satz:",
+        tokens:["Am Montag","muss","er","sehr früh","aufstehen."],
+        answer:"Am Montag muss er sehr früh aufstehen." },
+      { type:"order", q:"Bilden Sie den Satz:",
+        tokens:["Ich","habe","gestern","im Büro","lange","gearbeitet."],
+        answer:"Ich habe gestern im Büro lange gearbeitet." },
+      { type:"order", q:"Nebensatz zuerst:",
+        tokens:["Weil","sie","müde","ist,","bleibt","sie","zu Hause."],
+        answer:"Weil sie müde ist, bleibt sie zu Hause." },
+      { type:"order", q:"Dativ vor Akkusativ:",
+        tokens:["Er","hat","mir","das Buch","geschenkt."],
+        answer:"Er hat mir das Buch geschenkt." },
+      { type:"order", q:"Akkusativ-Pronomen zuerst:",
+        tokens:["Ich","schenke","es","ihm","morgen."],
+        answer:"Ich schenke es ihm morgen." },
+      { type:"order", q:"Bilden Sie die Frage:",
+        tokens:["Kannst","du","mir","bitte","helfen?"],
+        answer:"Kannst du mir bitte helfen?" },
+      { type:"order", q:"wenn-Satz zuerst:",
+        tokens:["Wenn","es","regnet,","nehmen","wir","den Bus."],
+        answer:"Wenn es regnet, nehmen wir den Bus." },
+      { type:"order", q:"Mit Infinitiv + zu:",
+        tokens:["Sie","hat","vergessen,","die Tür","abzuschließen."],
+        answer:"Sie hat vergessen, die Tür abzuschließen." },
+      { type:"order", q:"Futur I:",
+        tokens:["Morgen","werde","ich","meine Eltern","besuchen."],
+        answer:"Morgen werde ich meine Eltern besuchen." }
+    ]
+  };
+
+  G.grammar["w-konnektoren"] = {
+    title: "Konnektoren im Überblick",
+    unit: 7, tag: "Konnektoren-Mix",
+    rule: [
+      { h:"Drei Familien",
+        body:"<b>Position 0</b> (Wortstellung wie zwei Hauptsätze): und, oder, aber, denn, sondern.<br><b>Position 1</b> (danach sofort das Verb): deshalb, deswegen, darum, daher, trotzdem, dann.<br><b>Nebensatz</b> (Verb am Ende): weil, da, dass, wenn, als, obwohl, damit, sodass, ob." },
+      { h:"Grund – Folge – Gegensatz – Ziel",
+        body:"Grund: weil/da/denn · Folge: deshalb/sodass · Gegensatz: obwohl/trotzdem/aber · Ziel: damit/um … zu." },
+      { h:"wenn oder als?",
+        body:"<b>als</b> = einmal in der Vergangenheit (<i>Als ich ankam, …</i>). <b>wenn</b> = Gegenwart/Zukunft oder „immer wenn“." }
+    ],
+    exercises: [
+      { type:"mc", q:"Ich bleibe zu Hause, ___ ich bin krank.",
+        options:["denn","weil","deshalb"], answer:0,
+        hint:"Nach denn folgt Hauptsatz-Wortstellung (ich bin)." },
+      { type:"mc", q:"Ich bleibe zu Hause, ___ ich krank bin.",
+        options:["weil","denn","trotzdem"], answer:0,
+        hint:"Verb am Ende → Nebensatz-Konnektor." },
+      { type:"mc", q:"Ich bin krank, ___ bleibe ich zu Hause.",
+        options:["deshalb","weil","denn"], answer:0,
+        hint:"Nach deshalb kommt sofort das Verb." },
+      { type:"gap", q:"Es regnet, ___ gehen wir spazieren. (Gegensatz, Position 1)", answer:"trotzdem" },
+      { type:"mc", q:"Er lernt jeden Tag, ___ er die Prüfung besteht.",
+        options:["damit","denn","deshalb"], answer:0 },
+      { type:"mc", q:"Ich komme nicht heute, ___ erst morgen.",
+        options:["sondern","aber","oder"], answer:0,
+        hint:"Nach Negation + Korrektur → sondern." },
+      { type:"gap", q:"Zuerst koche ich, ___ essen wir zusammen. (Reihenfolge, Position 1)",
+        answer:"dann", alt:["danach"], hint:"dann/danach + Verb." },
+      { type:"mc", q:"___ ich in Wien ankam, regnete es.",
+        options:["Als","Wenn","Ob"], answer:0,
+        hint:"Einmalige Situation in der Vergangenheit → als." },
+      { type:"mc", q:"Immer ___ ich Zeit habe, lese ich.",
+        options:["wenn","als","ob"], answer:0 },
+      { type:"mc", q:"Ich weiß nicht, ___ er heute kommt.",
+        options:["ob","dass","weil"], answer:0,
+        hint:"Indirekte Ja/Nein-Frage → ob." },
+      { type:"transform", prompt:"Verbinden Sie mit »trotzdem«: Es ist kalt. Wir gehen schwimmen.",
+        answer:"Es ist kalt, trotzdem gehen wir schwimmen." },
+      { type:"mc", q:"aber, denn, und, oder, sondern stehen auf …",
+        options:["Position 0 — die Wortstellung ändert sich nicht","Position 1 — danach kommt das Verb","am Satzende"],
+        answer:0 }
+    ]
+  };
+})();
+
+/* ============ Wortschatz-Erweiterung ============ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+  const V = (id, cards) => { if (G.vocab[id]) G.vocab[id].cards.push(...cards); };
+
+  V("k1", [
+    { de:"die Unterkunft", en:"accommodation", art:"die", pl:"-künfte" },
+    { de:"das Reiseziel", en:"travel destination", art:"das", pl:"-e" },
+    { de:"die Durchsage", en:"announcement", art:"die", pl:"-n" },
+    { de:"das Gleis", en:"platform, track", art:"das", pl:"-e" },
+    { de:"die Verspätung", en:"delay", art:"die", pl:"-en", ex:"Der Zug hat 20 Minuten Verspätung." },
+    { de:"umsteigen", en:"to change (trains)", ex:"Ich muss in Linz umsteigen." },
+    { de:"verpassen", en:"to miss (a train/chance)", ex:"den Anschluss verpassen" },
+    { de:"erreichen", en:"to reach, to catch", ex:"den letzten Bus erreichen" },
+    { de:"das Gepäck", en:"luggage", art:"das" },
+    { de:"der Ausflug", en:"excursion, trip", art:"der", pl:"-flüge" },
+    { de:"die Sehenswürdigkeit", en:"sight, attraction", art:"die", pl:"-en" },
+    { de:"empfehlen", en:"to recommend", ex:"er empfiehlt, empfahl, hat empfohlen" },
+    { de:"die Ermäßigung", en:"discount, reduction", art:"die", pl:"-en" },
+    { de:"die Jugendherberge", en:"youth hostel", art:"die", pl:"-n" },
+    { de:"der Reiseführer", en:"guidebook; tour guide", art:"der", pl:"-" },
+    { de:"das Abenteuer", en:"adventure", art:"das", pl:"-" },
+    { de:"unterwegs", en:"on the way, travelling" },
+    { de:"die Rückfahrt", en:"return journey", art:"die", pl:"-en" },
+    { de:"die Landschaft", en:"landscape, scenery", art:"die", pl:"-en" },
+    { de:"der Wanderweg", en:"hiking trail", art:"der", pl:"-e" },
+    { de:"übernachten", en:"to stay overnight", ex:"im Zelt übernachten" },
+    { de:"die Aussicht", en:"view", art:"die", pl:"-en", ex:"eine tolle Aussicht auf die Berge" },
+    { de:"spontan", en:"spontaneous(ly)" },
+    { de:"verschieben", en:"to postpone", ex:"die Reise auf Mai verschieben" },
+    { de:"stornieren", en:"to cancel (a booking)", ex:"das Hotel kostenlos stornieren" },
+    { de:"die Umgebung", en:"surroundings", art:"die" },
+    { de:"das Verkehrsmittel", en:"means of transport", art:"das", pl:"-" }
+  ]);
+
+  V("k2", [
+    { de:"das Gerät", en:"device, appliance", art:"das", pl:"-e" },
+    { de:"der Kundendienst", en:"customer service", art:"der" },
+    { de:"die Reklamation", en:"complaint (about goods)", art:"die", pl:"-en" },
+    { de:"reklamieren", en:"to complain, make a claim", ex:"die kaputte Ware reklamieren" },
+    { de:"umtauschen", en:"to exchange (goods)", ex:"das Geschenk umtauschen" },
+    { de:"die Garantie", en:"guarantee, warranty", art:"die", pl:"-n", ex:"Das Gerät hat noch Garantie." },
+    { de:"die Rechnung", en:"invoice, bill", art:"die", pl:"-en" },
+    { de:"die Lieferung", en:"delivery", art:"die", pl:"-en" },
+    { de:"liefern", en:"to deliver" },
+    { de:"der Vertrag", en:"contract", art:"der", pl:"-träge" },
+    { de:"kündigen", en:"to cancel, terminate", ex:"den Handyvertrag kündigen" },
+    { de:"der Rabatt", en:"discount", art:"der", pl:"-e" },
+    { de:"das Angebot", en:"offer", art:"das", pl:"-e" },
+    { de:"der Kunde", en:"customer (n-Dekl.)", art:"der", pl:"-n", ex:"den Kunden, dem Kunden" },
+    { de:"die Reparatur", en:"repair", art:"die", pl:"-en" },
+    { de:"kaputtgehen", en:"to break (down)", ex:"Der Drucker ist schon wieder kaputtgegangen." },
+    { de:"funktionieren", en:"to work, function" },
+    { de:"der Bildschirm", en:"screen", art:"der", pl:"-e" },
+    { de:"herunterladen", en:"to download", ex:"eine App herunterladen" },
+    { de:"die Anleitung", en:"instructions, manual", art:"die", pl:"-en" },
+    { de:"der Hersteller", en:"manufacturer", art:"der", pl:"-" },
+    { de:"der Vorteil", en:"advantage", art:"der", pl:"-e" },
+    { de:"der Nachteil", en:"disadvantage", art:"der", pl:"-e" },
+    { de:"kostenlos", en:"free of charge" },
+    { de:"die Marke", en:"brand", art:"die", pl:"-n" },
+    { de:"die Zielgruppe", en:"target group", art:"die", pl:"-n" },
+    { de:"der Werbespot", en:"commercial, ad spot", art:"der", pl:"-s" }
+  ]);
+
+  V("k3", [
+    { de:"das Ereignis", en:"event", art:"das", pl:"-se" },
+    { de:"die Veränderung", en:"change", art:"die", pl:"-en" },
+    { de:"sich verändern", en:"to change (oneself/itself)" },
+    { de:"der Umzug", en:"move (house)", art:"der", pl:"-züge" },
+    { de:"umziehen", en:"to move (house)", ex:"Wir sind nach Wien umgezogen." },
+    { de:"die Kindheit", en:"childhood", art:"die" },
+    { de:"die Erinnerung", en:"memory", art:"die", pl:"-en" },
+    { de:"sich erinnern an + Akk.", en:"to remember", ex:"Ich erinnere mich gern an den Sommer." },
+    { de:"das Glück", en:"luck, happiness", art:"das" },
+    { de:"zufrieden", en:"satisfied, content" },
+    { de:"die Höflichkeit", en:"politeness", art:"die" },
+    { de:"höflich / unhöflich", en:"polite / impolite" },
+    { de:"sich bedanken", en:"to say thank you", ex:"sich für die Hilfe bedanken" },
+    { de:"sich entschuldigen", en:"to apologise", ex:"sich bei jemandem entschuldigen" },
+    { de:"begrüßen", en:"to greet" },
+    { de:"das Verhalten", en:"behaviour", art:"das" },
+    { de:"sich benehmen", en:"to behave", ex:"Er hat sich gut benommen." },
+    { de:"die Beziehung", en:"relationship", art:"die", pl:"-en" },
+    { de:"sich verlieben in + Akk.", en:"to fall in love with" },
+    { de:"heiraten", en:"to marry" },
+    { de:"die Hochzeit", en:"wedding", art:"die", pl:"-en" },
+    { de:"plötzlich", en:"suddenly" },
+    { de:"damals", en:"back then" },
+    { de:"der Ratschlag", en:"advice", art:"der", pl:"-schläge" },
+    { de:"das Verhältnis", en:"relationship, ratio", art:"das", pl:"-se" },
+    { de:"die Trennung", en:"separation", art:"die", pl:"-en" }
+  ]);
+
+  V("k4", [
+    { de:"die Bewerbung", en:"application", art:"die", pl:"-en" },
+    { de:"sich bewerben um + Akk.", en:"to apply for", ex:"sich um eine Stelle bewerben" },
+    { de:"der Lebenslauf", en:"CV, résumé", art:"der", pl:"-läufe" },
+    { de:"die Stelle", en:"position, job", art:"die", pl:"-n" },
+    { de:"die Stellenanzeige", en:"job advert", art:"die", pl:"-n" },
+    { de:"das Vorstellungsgespräch", en:"job interview", art:"das", pl:"-e" },
+    { de:"der Arbeitgeber", en:"employer", art:"der", pl:"-" },
+    { de:"der Arbeitnehmer", en:"employee", art:"der", pl:"-" },
+    { de:"die Erfahrung", en:"experience", art:"die", pl:"-en" },
+    { de:"die Kenntnisse", en:"knowledge, skills (pl.)", art:"die", ex:"gute Deutschkenntnisse" },
+    { de:"das Gehalt", en:"salary", art:"das", pl:"-hälter" },
+    { de:"die Abteilung", en:"department", art:"die", pl:"-en" },
+    { de:"der Kollege", en:"colleague (n-Dekl.)", art:"der", pl:"-n" },
+    { de:"die Besprechung", en:"meeting", art:"die", pl:"-en" },
+    { de:"der Termin", en:"appointment", art:"der", pl:"-e" },
+    { de:"die Überstunden", en:"overtime (pl.)", art:"die", ex:"Überstunden machen" },
+    { de:"die Teilzeit / die Vollzeit", en:"part-time / full-time", art:"die" },
+    { de:"selbstständig", en:"self-employed; independent" },
+    { de:"arbeitslos", en:"unemployed" },
+    { de:"die Weiterbildung", en:"further training", art:"die", pl:"-en" },
+    { de:"die Fähigkeit", en:"ability, skill", art:"die", pl:"-en" },
+    { de:"zuverlässig", en:"reliable" },
+    { de:"teamfähig", en:"able to work in a team" },
+    { de:"das Praktikum", en:"internship", art:"das", pl:"Praktika" },
+    { de:"einstellen", en:"to hire", ex:"neue Mitarbeiter einstellen" },
+    { de:"verdienen", en:"to earn" },
+    { de:"die Voraussetzung", en:"requirement, prerequisite", art:"die", pl:"-en" }
+  ]);
+
+  V("k5", [
+    { de:"der Umweltschutz", en:"environmental protection", art:"der" },
+    { de:"umweltfreundlich", en:"environmentally friendly" },
+    { de:"der Müll / der Abfall", en:"rubbish, waste", art:"der" },
+    { de:"trennen", en:"to separate (waste)", ex:"den Müll trennen" },
+    { de:"die Verpackung", en:"packaging", art:"die", pl:"-en" },
+    { de:"vermeiden", en:"to avoid", ex:"Plastik vermeiden" },
+    { de:"verschwenden", en:"to waste", ex:"Lebensmittel verschwenden" },
+    { de:"der Strom", en:"electricity", art:"der" },
+    { de:"die Energie", en:"energy", art:"die" },
+    { de:"das Klima", en:"climate", art:"das" },
+    { de:"der Klimawandel", en:"climate change", art:"der" },
+    { de:"das Gewitter", en:"thunderstorm", art:"das", pl:"-" },
+    { de:"der Sturm", en:"storm", art:"der", pl:"Stürme" },
+    { de:"die Temperatur", en:"temperature", art:"die", pl:"-en" },
+    { de:"trocken / feucht", en:"dry / damp" },
+    { de:"das Hochwasser", en:"flood", art:"das" },
+    { de:"verbrauchen", en:"to consume, use up", ex:"weniger Wasser verbrauchen" },
+    { de:"wegwerfen", en:"to throw away", ex:"Er wirft nichts weg." },
+    { de:"wiederverwenden", en:"to reuse" },
+    { de:"das Pfand", en:"deposit (on bottles)", art:"das" },
+    { de:"regional", en:"regional, local" },
+    { de:"die Mülltonne", en:"rubbish bin", art:"die", pl:"-n" },
+    { de:"der Verbrauch", en:"consumption", art:"der" },
+    { de:"die Maßnahme", en:"measure, action", art:"die", pl:"-n" },
+    { de:"sich engagieren für + Akk.", en:"to get involved in", ex:"sich für die Umwelt engagieren" }
+  ]);
+
+  V("k6", [
+    { de:"die Zukunft", en:"future", art:"die" },
+    { de:"zukünftig", en:"in future, future (adj.)" },
+    { de:"der Vorsatz", en:"resolution", art:"der", pl:"-sätze", ex:"gute Vorsätze fürs neue Jahr" },
+    { de:"die Prognose", en:"forecast, prognosis", art:"die", pl:"-n" },
+    { de:"die Erwartung", en:"expectation", art:"die", pl:"-en" },
+    { de:"erwarten", en:"to expect" },
+    { de:"die Entwicklung", en:"development", art:"die", pl:"-en" },
+    { de:"entwickeln", en:"to develop" },
+    { de:"die Forschung", en:"research", art:"die" },
+    { de:"der Roboter", en:"robot", art:"der", pl:"-" },
+    { de:"künstlich", en:"artificial", ex:"künstliche Intelligenz" },
+    { de:"die Drohne", en:"drone", art:"die", pl:"-n" },
+    { de:"öffentlich", en:"public", ex:"öffentliche Verkehrsmittel" },
+    { de:"der Stau", en:"traffic jam", art:"der", pl:"-s" },
+    { de:"das Viertel", en:"quarter, district", art:"das", pl:"-" },
+    { de:"die Lebensqualität", en:"quality of life", art:"die" },
+    { de:"das Konzert", en:"concert", art:"das", pl:"-e" },
+    { de:"die Band", en:"band", art:"die", pl:"-s" },
+    { de:"das Lied", en:"song", art:"das", pl:"-er" },
+    { de:"das Instrument", en:"instrument", art:"das", pl:"-e" },
+    { de:"die Geige", en:"violin", art:"die", pl:"-n" },
+    { de:"das Schlagzeug", en:"drums", art:"das" },
+    { de:"auftreten", en:"to perform", ex:"Die Band tritt heute Abend auf." },
+    { de:"der Auftritt", en:"performance, gig", art:"der", pl:"-e" },
+    { de:"das Publikum", en:"audience", art:"das" },
+    { de:"berühmt", en:"famous" }
+  ]);
+
+  G.vocab["w7"] = {
+    title: "Werkstatt · Verben mit Präpositionen",
+    unit: 7,
+    cards: [
+      { de:"warten auf + Akk.", en:"to wait for", ex:"Ich warte auf den Bus." },
+      { de:"sich freuen auf + Akk.", en:"to look forward to", ex:"Ich freue mich auf das Wochenende." },
+      { de:"sich freuen über + Akk.", en:"to be pleased about", ex:"Sie freut sich über das Geschenk." },
+      { de:"denken an + Akk.", en:"to think of", ex:"Denkst du an den Termin?" },
+      { de:"sich erinnern an + Akk.", en:"to remember", ex:"Ich erinnere mich an den Urlaub." },
+      { de:"sich interessieren für + Akk.", en:"to be interested in", ex:"Er interessiert sich für Musik." },
+      { de:"sich ärgern über + Akk.", en:"to be annoyed about", ex:"Sie ärgert sich über den Lärm." },
+      { de:"sich kümmern um + Akk.", en:"to take care of", ex:"Wer kümmert sich um die Katze?" },
+      { de:"sich bewerben um + Akk.", en:"to apply for", ex:"Ich bewerbe mich um die Stelle." },
+      { de:"sich bewerben bei + Dat.", en:"to apply to (a company)", ex:"Ich bewerbe mich bei der Firma." },
+      { de:"sprechen über + Akk.", en:"to talk about", ex:"Wir sprechen über das Projekt." },
+      { de:"sprechen mit + Dat.", en:"to talk to", ex:"Ich spreche mit der Chefin." },
+      { de:"träumen von + Dat.", en:"to dream of", ex:"Sie träumt von einer Weltreise." },
+      { de:"erzählen von + Dat.", en:"to tell about", ex:"Erzähl mir von deiner Reise!" },
+      { de:"teilnehmen an + Dat.", en:"to take part in", ex:"Ich nehme am Kurs teil." },
+      { de:"anfangen mit + Dat.", en:"to start with", ex:"Wir fangen mit der Arbeit an." },
+      { de:"aufhören mit + Dat.", en:"to stop (doing)", ex:"Er hört mit dem Rauchen auf." },
+      { de:"gehören zu + Dat.", en:"to belong to, be part of", ex:"Das gehört zu meinen Aufgaben." },
+      { de:"fragen nach + Dat.", en:"to ask about", ex:"Sie fragt nach dem Weg." },
+      { de:"suchen nach + Dat.", en:"to search for", ex:"Wir suchen nach einer Lösung." },
+      { de:"Angst haben vor + Dat.", en:"to be afraid of", ex:"Ich habe Angst vor der Prüfung." },
+      { de:"gratulieren zu + Dat.", en:"to congratulate on", ex:"Ich gratuliere dir zum Geburtstag!" },
+      { de:"einladen zu + Dat.", en:"to invite to", ex:"Sie lädt uns zur Party ein." },
+      { de:"passen zu + Dat.", en:"to suit, match", ex:"Die Jacke passt zu der Hose." },
+      { de:"achten auf + Akk.", en:"to pay attention to", ex:"Achte auf die Wortstellung!" },
+      { de:"sich verabreden mit + Dat.", en:"to arrange to meet", ex:"Ich verabrede mich mit Freunden." },
+      { de:"diskutieren über + Akk.", en:"to discuss", ex:"Wir diskutieren über das Thema." },
+      { de:"sich vorbereiten auf + Akk.", en:"to prepare for", ex:"Ich bereite mich auf die Prüfung vor." },
+      { de:"sich entschuldigen bei + Dat. / für + Akk.", en:"to apologise to sb / for sth", ex:"Er entschuldigt sich bei mir für den Fehler." },
+      { de:"danken für + Akk.", en:"to thank for", ex:"Ich danke dir für deine Hilfe." },
+      { de:"halten von + Dat.", en:"to think of (opinion)", ex:"Was hältst du von der Idee?" },
+      { de:"gehen um + Akk.", en:"to be about", ex:"In dem Film geht es um Freundschaft." },
+      { de:"sich unterhalten mit + Dat. / über + Akk.", en:"to chat with / about", ex:"Wir unterhalten uns über Musik." },
+      { de:"sich beschweren über + Akk.", en:"to complain about", ex:"Der Gast beschwert sich über das Zimmer." },
+      { de:"berichten über + Akk.", en:"to report on", ex:"Die Zeitung berichtet über das Konzert." },
+      { de:"sich treffen mit + Dat.", en:"to meet with", ex:"Ich treffe mich mit meiner Kollegin." },
+      { de:"zufrieden sein mit + Dat.", en:"to be satisfied with", ex:"Ich bin mit dem Ergebnis zufrieden." },
+      { de:"verantwortlich sein für + Akk.", en:"to be responsible for", ex:"Sie ist für das Team verantwortlich." },
+      { de:"stolz sein auf + Akk.", en:"to be proud of", ex:"Er ist stolz auf seine Tochter." },
+      { de:"verliebt sein in + Akk.", en:"to be in love with", ex:"Sie ist in ihren Nachbarn verliebt." }
+    ]
+  };
+})();
+
+/* ============ Prüfungstraining-Erweiterung ============ */
+(function () {
+  const G = (window.DATA = window.DATA || {});
+
+  /* --- Lesen: richtig/falsch (Originaltexte, selbst verfasst) --- */
+  G.exam.lesen.push(
+    { title: "Lesen · Richtig oder falsch? (Repair-Café)",
+      instruction: "Lesen Sie den Text und entscheiden Sie: richtig oder falsch?",
+      text: "Jeden ersten Samstag im Monat hilft Miriam Berger ehrenamtlich im Repair-Café ihres Stadtviertels. Besucher bringen kaputte Geräte mit — vom Toaster bis zum Radio — und reparieren sie zusammen mit Freiwilligen wie Miriam. Der Service kostet nichts, nur für Ersatzteile muss man selbst bezahlen. Miriam ist eigentlich Buchhalterin und hat das Reparieren erst vor zwei Jahren von ihrem Großvater gelernt. Am Anfang wollte sie nur ihre eigene Kaffeemaschine retten, heute repariert sie fast jedes Wochenende etwas. „Die meisten Geräte sind gar nicht wirklich kaputt“, sagt sie. „Oft fehlt nur ein kleines Teil, das ein paar Euro kostet.“ So landen weniger Geräte im Müll — und die Besucher lernen, dass Reparieren oft billiger ist als Neukaufen.",
+      items: [
+        { q: "Das Repair-Café findet einmal pro Monat statt.", answer: true },
+        { q: "Die Reparatur und die Ersatzteile sind kostenlos.", answer: false },
+        { q: "Miriam arbeitet hauptberuflich als Buchhalterin.", answer: true },
+        { q: "Sie kann schon seit ihrer Kindheit Geräte reparieren.", answer: false },
+        { q: "Viele Geräte kann man mit einem günstigen Ersatzteil retten.", answer: true }
+      ] },
+    { title: "Lesen · Richtig oder falsch? (Berufswechsel)",
+      instruction: "Lesen Sie den Text und entscheiden Sie: richtig oder falsch?",
+      text: "Zehn Jahre lang arbeitete Jonas Weber als Bankkaufmann in Frankfurt. Der Job war sicher und gut bezahlt, aber Jonas fühlte sich immer unzufriedener: lange Meetings, wenig Bewegung, kaum Zeit für die Familie. Als seine Bank eine Filiale schloss, nutzte er die Chance und machte eine Ausbildung zum Bäcker — ein Traum aus seiner Jugend. Heute steht er um drei Uhr morgens in der Backstube. Das frühe Aufstehen findet er auch nach zwei Jahren noch schwer, und er verdient deutlich weniger als früher. Trotzdem sagt er: „Ich würde es wieder so machen.“ Am Nachmittag hat er jetzt Zeit für seine Kinder, und die Arbeit mit den Händen macht ihn zufriedener als jede Beförderung.",
+      items: [
+        { q: "Jonas hat früher bei einer Bank gearbeitet.", answer: true },
+        { q: "Er hat gekündigt, weil er zu wenig verdient hat.", answer: false },
+        { q: "Bäcker zu werden war schon lange sein Wunsch.", answer: true },
+        { q: "An das frühe Aufstehen hat er sich schnell gewöhnt.", answer: false },
+        { q: "Er bereut seine Entscheidung nicht.", answer: true }
+      ] }
+  );
+
+  /* --- Lesen: Überschriften zuordnen (Originaltexte) --- */
+  G.exam.reading.push(
+    { title: "Lesen · Überschrift zuordnen (Carsharing)",
+      instruction: "Welche Überschrift (A–D) passt zum Text? Es gibt nur eine richtige Lösung.",
+      text: "In immer mehr Städten teilen sich Nachbarn ein Auto: Man reserviert den Wagen per App, zahlt nur für die gefahrenen Stunden und muss sich nicht um Reparaturen, Versicherung oder Parkplätze kümmern. Wer nur selten fährt, spart damit viel Geld. Für Menschen, die täglich lange Strecken fahren, lohnt sich das Modell dagegen kaum.",
+      options: ["A: Auto teilen statt besitzen — für wen es sich lohnt",
+                "B: Reparaturen werden immer teurer",
+                "C: Apps machen das Autofahren gefährlich",
+                "D: Jeder braucht heute ein eigenes Auto"],
+      answer: 0 },
+    { title: "Lesen · Überschrift zuordnen (Digitale Nachbarschaft)",
+      instruction: "Welche Überschrift (A–D) passt zum Text?",
+      text: "Über eine Nachbarschafts-App suchen Menschen in vielen Stadtvierteln Hilfe im Alltag: Jemand braucht eine Bohrmaschine, ein anderer sucht jemanden, der beim Umzug hilft oder die Blumen gießt. Was als kleine Idee begann, hat inzwischen Hunderttausende Mitglieder. Viele sagen, sie hätten ihre Nachbarn erst durch die App richtig kennengelernt.",
+      options: ["A: Umziehen wird immer schwieriger",
+                "B: Eine App bringt Nachbarn zusammen",
+                "C: Werkzeug kaufen leicht gemacht",
+                "D: Weniger Kontakte durch das Internet"],
+      answer: 1 }
+  );
+
+  /* --- Schreiben: Aufgaben mit Punkten & Redemitteln --- */
+  G.exam.schreiben.push(
+    { title: "Schreiben · Halbformelle E-Mail (Kurs verschieben)",
+      instruction: "Ihr Deutschkurs beginnt nächste Woche, aber Sie sind krank. Schreiben Sie eine E-Mail an die Sprachschule (ca. 80 Wörter). Vergessen Sie Anrede und Gruß nicht. Gehen Sie auf folgende Punkte ein:",
+      points: ["Grund für Ihr Schreiben", "Frage: späterer Kursbeginn oder anderer Kurs?", "Bitte um schnelle Antwort"],
+      hints: "Sehr geehrte Damen und Herren, … · Leider kann ich … , weil … · Wäre es möglich, …? · Könnten Sie mir bitte mitteilen, ob …? · Vielen Dank im Voraus. Mit freundlichen Grüßen" },
+    { title: "Schreiben · Informelle E-Mail (Besuch planen)",
+      instruction: "Eine Freundin / Ein Freund möchte Sie im Sommer besuchen. Antworten Sie (ca. 80 Wörter). Gehen Sie auf folgende Punkte ein:",
+      points: ["Freude über den Besuch", "Vorschlag: Was können Sie zusammen machen?", "Frage zur Ankunft (wann? wie?)"],
+      hints: "Liebe/Lieber … · Ich habe mich sehr über deine Nachricht gefreut! · Wir könnten … · Hast du Lust, …zu …? · Wann kommst du genau an? · Liebe Grüße" }
+  );
+
+  /* --- Sprechen: weitere Aufgaben --- */
+  G.exam.sprechen.push(
+    { title: "Sprechen · Ein Thema präsentieren (Teil 2)",
+      instruction: "Präsentieren Sie ein Thema (ca. 3 Minuten), z. B. „Einkaufen im Internet — Vor- und Nachteile“. Struktur: 1) Einleitung & Thema nennen, 2) Situation im Heimatland, 3) eigene Erfahrungen, 4) Vor- und Nachteile + Meinung, 5) Abschluss & Dank.",
+      hints: "In meiner Präsentation geht es um … · In meinem Heimatland … · Ich persönlich habe die Erfahrung gemacht, dass … · Ein großer Vorteil ist, dass … · Dagegen spricht, dass … · Zusammenfassend kann ich sagen, dass … · Vielen Dank für Ihre Aufmerksamkeit! · Rückfragen: Könnten Sie das bitte wiederholen? / Was meinen Sie mit …?" }
+  );
+
+  /* --- Redemittel: neue Gruppen --- */
+  G.redemittel.groups.push(
+    { title: "Etwas reklamieren (K2)", items: [
+      "Ich habe bei Ihnen … bestellt / gekauft, aber leider …",
+      "Das Gerät funktioniert nicht richtig: …",
+      "Ich möchte den Artikel umtauschen / zurückgeben.",
+      "Das Gerät hat noch Garantie.",
+      "Könnten Sie mir bitte sagen, wie lange die Reparatur dauert?",
+      "Ich bitte Sie, mir das Geld zurückzuerstatten.",
+      "Vielen Dank im Voraus für Ihre Hilfe." ] },
+    { title: "Über Vergangenes erzählen (K3)", items: [
+      "Als ich klein war, …",
+      "Damals / Früher habe ich …",
+      "Vor drei Jahren bin ich …",
+      "Zuerst … , dann … , danach … , am Ende …",
+      "Das war eine schöne / schwierige Zeit, weil …",
+      "Daran erinnere ich mich noch genau." ] },
+    { title: "Im Vorstellungsgespräch (K4)", items: [
+      "Ich habe Ihre Anzeige gelesen und mich sehr dafür interessiert.",
+      "Zurzeit arbeite ich als … bei …",
+      "Ich habe viel Erfahrung mit …",
+      "Meine Stärken sind … — ich bin zuverlässig und teamfähig.",
+      "Ich würde gern wissen, wie die Arbeitszeiten sind.",
+      "Ab wann könnte ich anfangen?" ] },
+    { title: "Diskutieren & Meinung sagen (K5)", items: [
+      "Meiner Meinung nach …",
+      "Ich bin davon überzeugt, dass …",
+      "Da bin ich anderer Meinung, denn …",
+      "Das stimmt zwar, aber …",
+      "Ein wichtiges Argument dafür / dagegen ist, dass …",
+      "Können wir uns darauf einigen, dass …?" ] },
+    { title: "Ratschläge geben (K3/K4)", items: [
+      "An deiner Stelle würde ich …",
+      "Du solltest vielleicht …",
+      "Wie wäre es, wenn du …?",
+      "Ich würde dir raten, … zu …",
+      "Hast du schon versucht, … zu …?",
+      "Am besten sprichst du zuerst mit …" ] }
+  );
+
+  /* --- Meta aktualisieren --- */
+  G.meta.subtitle = "Grammatik · Wortschatz · Prüfung · Werkstatt";
+})();
+
+/* ============================================================
+   NETZWERK neu B1 — Meister · engine
+   Shared by the desktop and mobile builds.
+   window.APP_MODE = 'desktop' | 'mobile' is set by each shell.
+   ============================================================ */
+(function () {
+  const D = window.DATA;
+  const MODE = window.APP_MODE || "desktop";
+  const STORE_KEY = "nw-b1-meister-v1";
+
+  /* ---------- progress (localStorage) ---------- */
+  const defaultProgress = () => ({
+    xp: 0,
+    streak: 0,
+    lastDay: null,
+    grammar: {},          // moduleId -> {done:[bool per ex], correct:int, seen:int}
+    vocab: {},            // cardKey -> {box:1..5, due:ts}
+    exam: {},             // taskKey -> true
+    createdAt: Date.now()
+  });
+  let P = load();
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return defaultProgress();
+      return Object.assign(defaultProgress(), JSON.parse(raw));
+    } catch (e) { return defaultProgress(); }
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(P)); } catch (e) {}
+    renderHUD();
+  }
+  function bumpStreak() {
+    const today = new Date().toISOString().slice(0, 10);
+    if (P.lastDay === today) return;
+    const yest = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+    P.streak = (P.lastDay === yest) ? P.streak + 1 : 1;
+    P.lastDay = today;
+  }
+  function addXP(n) { P.xp += n; bumpStreak(); save(); }
+
+  /* ---------- helpers ---------- */
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const el = (tag, cls, html) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  };
+  const norm = (s) => (s || "").toLowerCase()
+    .replace(/[.,!?;:]/g, "").replace(/\s+/g, " ").trim();
+  const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0;[a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "de-DE"; u.rate = 0.92;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  /* ---------- routing ---------- */
+  const ROOT = () => $("#view");
+  let current = { screen: "dash" };
+
+  function go(screen, params) {
+    current = Object.assign({ screen }, params || {});
+    render();
+    if (MODE === "mobile") window.scrollTo(0, 0);
+    setActiveNav(screen);
+  }
+  function setActiveNav(screen) {
+    document.querySelectorAll("[data-nav]").forEach(b => {
+      b.classList.toggle("active", b.dataset.nav === screen);
+    });
+  }
+
+  function render() {
+    const r = ROOT(); r.innerHTML = "";
+    if (current.screen === "dash") return renderDash(r);
+    if (current.screen === "grammar") return renderGrammarList(r);
+    if (current.screen === "module") return renderModule(r, current.id);
+    if (current.screen === "vocab") return renderVocabList(r);
+    if (current.screen === "deck") return renderDeck(r, current.id, current.modeV);
+    if (current.screen === "exam") return renderExamList(r);
+    if (current.screen === "examtask") return renderExamTask(r, current.kind, current.idx);
+    if (current.screen === "redemittel") return renderRedemittel(r);
+  }
+
+  /* ---------- HUD ---------- */
+  function renderHUD() {
+    const x = $("#hud-xp"), s = $("#hud-streak");
+    if (x) x.textContent = P.xp;
+    if (s) s.textContent = P.streak;
+  }
+
+  /* ====================================================
+     DASHBOARD
+  ==================================================== */
+  function moduleStats(id) {
+    const m = P.grammar[id]; const total = D.grammar[id].exercises.length;
+    if (!m) return { pct: 0, total, correct: 0 };
+    const done = (m.done || []).filter(Boolean).length;
+    return { pct: Math.round((done / total) * 100), total, correct: m.correct || 0 };
+  }
+  function unitMastery(u) {
+    let done = 0, total = 0;
+    u.grammar.forEach(id => { const s = moduleStats(id); done += Math.round(s.pct / 100 * s.total); total += s.total; });
+    // vocab contribution
+    const deck = D.vocab[u.vocab];
+    deck.cards.forEach(c => {
+      const k = u.vocab + "::" + c.de; total += 1;
+      const v = P.vocab[k]; if (v && v.box >= 4) done += 1; else if (v && v.box >= 2) done += 0.5;
+    });
+    return total ? Math.round(done / total * 100) : 0;
+  }
+
+  function renderDash(r) {
+    const head = el("div", "screen-head");
+    head.appendChild(el("p", "eyebrow", "Sprachlabor"));
+    head.appendChild(el("h1", null, "Netzwerk neu B1 · Meister"));
+    head.appendChild(el("p", "lede", "Sechs Kapitel. Regel, Übung, Wiederholung — in kurzen Schleifen. Wähle ein Kapitel oder geh direkt zu Wortschatz und Prüfung."));
+    r.appendChild(head);
+
+    // ring summary
+    const grid = el("div", "unit-grid");
+    D.units.forEach(u => {
+      const pct = unitMastery(u);
+      const card = el("button", "unit-card");
+      card.innerHTML =
+        `<div class="ring" style="--p:${pct}"><span>${pct}<small>%</small></span></div>
+         <div class="unit-meta"><span class="kap">Kapitel ${u.id}</span>
+         <strong>${u.title}</strong><em>${u.theme}</em></div>`;
+      card.onclick = () => go("grammar", { focus: u.id });
+      grid.appendChild(card);
+    });
+    r.appendChild(grid);
+
+    // three pillars quick links
+    const pillars = el("div", "pillars");
+    [["Grammatik", "grammar", D.units.reduce((n, u) => n + u.grammar.length, 0) + " Module"],
+     ["Wortschatz", "vocab", Object.values(D.vocab).reduce((n, d) => n + d.cards.length, 0) + " Karten"],
+     ["Prüfung", "exam", "Zertifikat B1"]].forEach(([t, scr, sub]) => {
+      const p = el("button", "pillar");
+      p.innerHTML = `<strong>${t}</strong><span>${sub}</span>`;
+      p.onclick = () => go(scr);
+      pillars.appendChild(p);
+    });
+    r.appendChild(pillars);
+
+    // stats footer
+    const sf = el("div", "stat-row");
+    sf.innerHTML =
+      `<div class="stat"><b>${P.xp}</b><span>XP</span></div>
+       <div class="stat"><b>${P.streak}</b><span>Tage in Folge</span></div>
+       <div class="stat"><b>${vocabDueCount()}</b><span>Karten fällig</span></div>`;
+    r.appendChild(sf);
+  }
+
+  /* ====================================================
+     GRAMMAR
+  ==================================================== */
+  function renderGrammarList(r) {
+    r.appendChild(crumb("Grammatik"));
+    D.units.forEach(u => {
+      const sec = el("section", "kap-block");
+      sec.appendChild(el("h2", "kap-h", `<span>Kapitel ${u.id}</span> ${u.title}`));
+      const list = el("div", "mod-list");
+      u.grammar.forEach(id => {
+        const m = D.grammar[id]; const s = moduleStats(id);
+        const row = el("button", "mod-row");
+        row.innerHTML =
+          `<div class="mod-bar"><i style="width:${s.pct}%"></i></div>
+           <div class="mod-txt"><strong>${m.title}</strong><span class="tag">${m.tag}</span></div>
+           <div class="mod-pct">${s.pct}%</div>`;
+        row.onclick = () => go("module", { id });
+        list.appendChild(row);
+      });
+      sec.appendChild(list);
+      r.appendChild(sec);
+    });
+  }
+
+  function renderModule(r, id) {
+    const m = D.grammar[id];
+    r.appendChild(crumb(m.title, () => go("grammar")));
+
+    // RULE pane
+    const rule = el("div", "rule-pane");
+    rule.appendChild(el("p", "eyebrow", "Regel · Kapitel " + m.unit));
+    rule.appendChild(el("h2", "rule-title", m.title));
+    m.rule.forEach(sec => {
+      const b = el("div", "rule-block");
+      b.appendChild(el("h4", null, sec.h));
+      b.appendChild(el("p", null, sec.body));
+      rule.appendChild(b);
+    });
+    const startBtn = el("button", "primary big", "Üben →");
+    rule.appendChild(startBtn);
+    r.appendChild(rule);
+
+    // PRACTICE pane (hidden until start, side-by-side on desktop)
+    const practice = el("div", "practice-pane");
+    r.appendChild(practice);
+    startBtn.onclick = () => { runDrills(practice, id); if (practice.scrollIntoView) practice.scrollIntoView({ behavior: "smooth", block: "start" }); };
+
+    if (MODE === "desktop") runDrills(practice, id); // show immediately on desktop
+  }
+
+  function runDrills(host, id) {
+    const m = D.grammar[id];
+    const exs = m.exercises;
+    let i = 0, correctCount = 0;
+    P.grammar[id] = P.grammar[id] || { done: new Array(exs.length).fill(false), correct: 0, seen: 0 };
+
+    function step() {
+      host.innerHTML = "";
+      const card = el("div", "ex-card");
+      const prog = el("div", "ex-prog");
+      for (let k = 0; k < exs.length; k++) {
+        const d = el("i"); if (k < i) d.className = "done"; if (k === i) d.className = "now";
+        prog.appendChild(d);
+      }
+      card.appendChild(prog);
+
+      if (i >= exs.length) {
+        card.appendChild(el("h3", "done-h", "Modul geschafft 🎉"));
+        card.appendChild(el("p", null, `Richtig: <b>${correctCount} / ${exs.length}</b>`));
+        const again = el("button", "ghost", "Nochmal üben");
+        again.onclick = () => { i = 0; correctCount = 0; step(); };
+        const back = el("button", "primary", "Zurück zur Liste");
+        back.onclick = () => go("grammar");
+        const row = el("div", "btn-row"); row.append(again, back); card.appendChild(row);
+        host.appendChild(card);
+        return;
+      }
+
+      const ex = exs[i];
+      card.appendChild(el("span", "ex-type", typeLabel(ex.type)));
+      renderExercise(card, ex, (ok) => {
+        P.grammar[id].seen++;
+        if (ok) { correctCount++; if (!P.grammar[id].done[i]) { P.grammar[id].done[i] = true; P.grammar[id].correct++; addXP(10); } else save(); }
+        else save();
+        const next = el("button", "primary", i + 1 >= exs.length ? "Fertig" : "Weiter →");
+        next.onclick = () => { i++; step(); };
+        card.appendChild(next);
+        next.focus();
+      });
+      host.appendChild(card);
+    }
+    step();
+  }
+
+  function typeLabel(t) {
+    return { mc: "Multiple Choice", gap: "Lücke füllen", transform: "Umformen", order: "Wörter ordnen" }[t] || t;
+  }
+
+  /* ---------- exercise renderers ---------- */
+  function renderExercise(card, ex, done) {
+    if (ex.type === "mc") return renderMC(card, ex, done);
+    if (ex.type === "gap") return renderGap(card, ex, done);
+    if (ex.type === "transform") return renderTransform(card, ex, done);
+    if (ex.type === "order") return renderOrder(card, ex, done);
+  }
+
+  function feedback(card, ok, solution, hint) {
+    const fb = el("div", "fb " + (ok ? "ok" : "no"));
+    fb.innerHTML = ok
+      ? `<b>Richtig!</b> ${hint ? "<span>" + hint + "</span>" : ""}`
+      : `<b>Noch nicht.</b> Lösung: <u>${solution}</u> ${hint ? "<span>" + hint + "</span>" : ""}`;
+    card.appendChild(fb);
+  }
+
+  function renderMC(card, ex, done) {
+    card.appendChild(el("p", "ex-q", ex.q));
+    const opts = el("div", "opts");
+    let answered = false;
+    ex.options.forEach((o, k) => {
+      const b = el("button", "opt", o);
+      b.onclick = () => {
+        if (answered) return; answered = true;
+        const ok = k === ex.answer;
+        b.classList.add(ok ? "ok" : "no");
+        if (!ok) opts.children[ex.answer].classList.add("ok");
+        feedback(card, ok, ex.options[ex.answer], ex.hint);
+        done(ok);
+      };
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+  }
+
+  function renderGap(card, ex, done) {
+    const q = el("p", "ex-q"); q.innerHTML = ex.q.replace("___", '<span class="blank">_____</span>');
+    card.appendChild(q);
+    const row = el("div", "input-row");
+    const inp = el("input", "txt"); inp.type = "text"; inp.placeholder = "Antwort …"; inp.autocomplete = "off";
+    const check = el("button", "primary", "Prüfen");
+    row.append(inp, check); card.appendChild(row);
+    let answered = false;
+    const accept = [ex.answer].concat(ex.alt || [], ex.accept || []).map(norm);
+    function go2() {
+      if (answered) return; answered = true;
+      const ok = accept.includes(norm(inp.value));
+      inp.classList.add(ok ? "ok" : "no"); inp.disabled = true; check.disabled = true;
+      feedback(card, ok, ex.answer || "(leer)", ex.hint);
+      done(ok);
+    }
+    check.onclick = go2;
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") go2(); });
+    setTimeout(() => inp.focus(), 30);
+  }
+
+  function renderTransform(card, ex, done) {
+    card.appendChild(el("p", "ex-q", ex.prompt));
+    const row = el("div", "input-row");
+    const inp = el("input", "txt"); inp.type = "text"; inp.placeholder = "Ganzer Satz …"; inp.autocomplete = "off";
+    const check = el("button", "primary", "Prüfen");
+    row.append(inp, check); card.appendChild(row);
+    let answered = false;
+    const accept = [ex.answer].concat(ex.accept || []).map(norm);
+    function go2() {
+      if (answered) return; answered = true;
+      const ok = accept.includes(norm(inp.value));
+      inp.classList.add(ok ? "ok" : "no"); inp.disabled = true; check.disabled = true;
+      feedback(card, ok, ex.answer, ex.hint);
+      done(ok);
+    }
+    check.onclick = go2;
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") go2(); });
+    setTimeout(() => inp.focus(), 30);
+  }
+
+  function renderOrder(card, ex, done) {
+    card.appendChild(el("p", "ex-q", ex.q || "Bringen Sie die Wörter in die richtige Reihenfolge:"));
+    const pool = el("div", "token-pool");
+    const line = el("div", "token-line");
+    card.appendChild(line); card.appendChild(pool);
+    const chosen = [];
+    shuffle(ex.tokens).forEach(tok => {
+      const t = el("button", "token", tok);
+      t.onclick = () => {
+        if (t.classList.contains("used")) return;
+        t.classList.add("used");
+        chosen.push(tok);
+        const lt = el("button", "token in-line", tok);
+        lt.onclick = () => { lt.remove(); t.classList.remove("used"); const ix = chosen.indexOf(tok); if (ix > -1) chosen.splice(ix, 1); };
+        line.appendChild(lt);
+      };
+      pool.appendChild(t);
+    });
+    const check = el("button", "primary", "Prüfen");
+    card.appendChild(check);
+    let answered = false;
+    check.onclick = () => {
+      if (answered) return; answered = true;
+      const ok = norm(chosen.join(" ")) === norm(ex.answer);
+      line.classList.add(ok ? "ok" : "no");
+      feedback(card, ok, ex.answer, ex.hint);
+      done(ok);
+    };
+  }
+
+  /* ====================================================
+     VOCAB — Leitner SRS
+  ==================================================== */
+  const BOX_DAYS = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 16 };
+  function cardKey(deckId, de) { return deckId + "::" + de; }
+  function cardState(deckId, de) {
+    const k = cardKey(deckId, de);
+    return P.vocab[k] || { box: 1, due: 0 };
+  }
+  function setCard(deckId, de, ok) {
+    const k = cardKey(deckId, de);
+    const st = P.vocab[k] || { box: 1, due: 0 };
+    st.box = ok ? Math.min(5, st.box + 1) : 1;
+    st.due = Date.now() + BOX_DAYS[st.box] * 864e5;
+    P.vocab[k] = st;
+    if (ok) addXP(4); else save();
+  }
+  function vocabDueCount() {
+    let n = 0; const now = Date.now();
+    D.units.forEach(u => D.vocab[u.vocab].cards.forEach(c => {
+      const st = P.vocab[cardKey(u.vocab, c.de)];
+      if (!st || st.due <= now) n++;
+    }));
+    return n;
+  }
+
+  function renderVocabList(r) {
+    r.appendChild(crumb("Wortschatz"));
+    r.appendChild(el("p", "lede", "Leitner-System: Was du kannst, kommt seltener; was schwerfällt, öfter. Wähle einen Übungsmodus pro Deck."));
+    Object.keys(D.vocab).forEach(id => {
+      const deck = D.vocab[id];
+      const due = deck.cards.filter(c => { const st = P.vocab[cardKey(id, c.de)]; return !st || st.due <= Date.now(); }).length;
+      const learned = deck.cards.filter(c => { const st = P.vocab[cardKey(id, c.de)]; return st && st.box >= 4; }).length;
+      const sec = el("div", "deck-card");
+      sec.innerHTML =
+        `<div class="deck-top"><strong>${deck.title}</strong>
+         <span class="deck-num">${learned}/${deck.cards.length} gelernt · ${due} fällig</span></div>`;
+      const modes = el("div", "deck-modes");
+      [["Karteikarten", "flip"], ["Artikel-Quiz", "article"], ["EN → DE tippen", "type"]].forEach(([label, mv]) => {
+        const b = el("button", "chip", label);
+        b.onclick = () => go("deck", { id, modeV: mv });
+        modes.appendChild(b);
+      });
+      sec.appendChild(modes);
+      r.appendChild(sec);
+    });
+  }
+
+  function dueCards(deckId, nounsOnly) {
+    const deck = D.vocab[deckId];
+    const now = Date.now();
+    let pool = nounsOnly ? deck.cards.filter(c => c.art) : deck.cards;
+    let due = pool.filter(c => { const st = P.vocab[cardKey(deckId, c.de)]; return !st || st.due <= now; });
+    if (due.length === 0) due = pool.slice(); // nothing due → review all
+    return shuffle(due);
+  }
+
+  function renderDeck(r, deckId, modeV) {
+    const deck = D.vocab[deckId];
+    r.appendChild(crumb(deck.title, () => go("vocab")));
+    const queue = dueCards(deckId, modeV === "article");
+    let i = 0, right = 0;
+    const host = el("div", "deck-host"); r.appendChild(host);
+
+    function step() {
+      host.innerHTML = "";
+      if (i >= queue.length) {
+        const done = el("div", "ex-card");
+        done.appendChild(el("h3", "done-h", "Runde fertig ✓"));
+        done.appendChild(el("p", null, `Gewusst: <b>${right} / ${queue.length}</b>`));
+        const again = el("button", "ghost", "Neue Runde");
+        again.onclick = () => go("deck", { id: deckId, modeV });
+        const back = el("button", "primary", "Zu den Decks");
+        back.onclick = () => go("vocab");
+        const row = el("div", "btn-row"); row.append(again, back); done.appendChild(row);
+        host.appendChild(done);
+        return;
+      }
+      const c = queue[i];
+      const card = el("div", "vocab-card");
+      const meter = el("div", "ex-prog");
+      for (let k = 0; k < queue.length; k++) { const d = el("i"); if (k < i) d.className = "done"; if (k === i) d.className = "now"; meter.appendChild(d); }
+      card.appendChild(meter);
+
+      if (modeV === "flip") flipCard(card, c, deckId, after);
+      else if (modeV === "article") articleCard(card, c, deckId, after);
+      else typeCard(card, c, deckId, after);
+
+      host.appendChild(card);
+      function after(ok) { if (ok) right++; setCard(deckId, c.de, ok); i++; setTimeout(step, ok ? 420 : 1100); }
+    }
+    step();
+  }
+
+  function flipCard(card, c, deckId, after) {
+    const front = el("div", "flip-front");
+    front.innerHTML = `<span class="art">${c.art || ""}</span><b>${c.de.replace(/^(der|die|das)\s/, "")}</b>`;
+    const sp = el("button", "spk", "🔊"); sp.onclick = (e) => { e.stopPropagation(); speak(c.de); };
+    front.appendChild(sp);
+    card.appendChild(front);
+    const reveal = el("button", "ghost wide", "Umdrehen");
+    card.appendChild(reveal);
+    reveal.onclick = () => {
+      reveal.remove();
+      const back = el("div", "flip-back");
+      back.innerHTML = `<p class="en">${c.en}</p>${c.ex ? '<p class="ex">' + c.ex + "</p>" : ""}`;
+      card.appendChild(back);
+      const row = el("div", "btn-row");
+      const no = el("button", "ghost", "Nochmal"); no.onclick = () => after(false);
+      const yes = el("button", "primary", "Gewusst"); yes.onclick = () => after(true);
+      row.append(no, yes); card.appendChild(row);
+      speak(c.de);
+    };
+  }
+
+  function articleCard(card, c, deckId, after) {
+    const bare = c.de.replace(/^(der|die|das)\s/, "");
+    if (!c.art) { after(true); return; } // skip non-nouns gracefully
+    card.appendChild(el("p", "ex-q", "Welcher Artikel?"));
+    card.appendChild(el("div", "art-word", bare));
+    const opts = el("div", "opts art-opts");
+    let answered = false;
+    ["der", "die", "das"].forEach(a => {
+      const b = el("button", "opt", a);
+      b.onclick = () => {
+        if (answered) return; answered = true;
+        const ok = a === c.art;
+        b.classList.add(ok ? "ok" : "no");
+        if (!ok) [...opts.children].find(x => x.textContent === c.art).classList.add("ok");
+        feedback(card, ok, c.art + " " + bare, c.en);
+        speak(c.de);
+        const n = el("button", "primary", "Weiter →"); n.onclick = () => after(ok); card.appendChild(n); n.focus();
+      };
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+  }
+
+  function typeCard(card, c, deckId, after) {
+    card.appendChild(el("p", "ex-q", "Wie heißt das auf Deutsch?"));
+    card.appendChild(el("div", "art-word small", c.en));
+    const row = el("div", "input-row");
+    const inp = el("input", "txt"); inp.type = "text"; inp.placeholder = "mit Artikel …"; inp.autocomplete = "off";
+    const check = el("button", "primary", "Prüfen");
+    row.append(inp, check); card.appendChild(row);
+    let answered = false;
+    const target = norm(c.de);
+    const bare = norm(c.de.replace(/^(der|die|das)\s/, ""));
+    function go2() {
+      if (answered) return; answered = true;
+      const v = norm(inp.value);
+      const ok = v === target || v === bare;
+      inp.classList.add(ok ? "ok" : "no"); inp.disabled = true; check.disabled = true;
+      feedback(card, ok, c.de, c.ex || "");
+      speak(c.de);
+      const n = el("button", "primary", "Weiter →"); n.onclick = () => after(ok); card.appendChild(n); n.focus();
+    }
+    check.onclick = go2;
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") go2(); });
+    setTimeout(() => inp.focus(), 30);
+  }
+
+  /* ====================================================
+     EXAM
+  ==================================================== */
+  function renderExamList(r) {
+    r.appendChild(crumb("Prüfung"));
+    r.appendChild(el("p", "lede", "Aufgabentypen im Format Zertifikat B1 / DTZ — Lesen, Schreiben, Sprechen."));
+    const map = [["lesen", "Lesen · Richtig/Falsch"], ["reading", "Lesen · Überschriften"], ["schreiben", "Schreiben"], ["sprechen", "Sprechen"]];
+    map.forEach(([kind, label]) => {
+      const sec = el("section", "kap-block");
+      sec.appendChild(el("h2", "kap-h", `<span>Teil</span> ${label}`));
+      const list = el("div", "mod-list");
+      D.exam[kind].forEach((t, idx) => {
+        const done = P.exam[kind + idx];
+        const row = el("button", "mod-row");
+        row.innerHTML = `<div class="mod-txt"><strong>${t.title}</strong></div><div class="mod-pct">${done ? "✓" : "›"}</div>`;
+        row.onclick = () => go("examtask", { kind, idx });
+        list.appendChild(row);
+      });
+      sec.appendChild(list);
+      r.appendChild(sec);
+    });
+  }
+
+  function renderExamTask(r, kind, idx) {
+    const t = D.exam[kind][idx];
+    r.appendChild(crumb(t.title, () => go("exam")));
+    const box = el("div", "exam-task");
+    box.appendChild(el("p", "instruction", t.instruction));
+
+    if (kind === "lesen") {
+      box.appendChild(el("div", "exam-text", t.text));
+      let answered = 0, right = 0;
+      t.items.forEach(it => {
+        const q = el("div", "rf-row");
+        q.appendChild(el("p", "rf-q", it.q));
+        const opts = el("div", "rf-opts");
+        ["richtig", "falsch"].forEach((lab, k) => {
+          const want = (k === 0);
+          const b = el("button", "opt", lab);
+          b.onclick = () => {
+            if (q.dataset.done) return; q.dataset.done = "1"; answered++;
+            const ok = want === it.answer;
+            b.classList.add(ok ? "ok" : "no");
+            if (ok) right++;
+            if (answered === t.items.length) finish(box, right, t.items.length, kind, idx);
+          };
+          opts.appendChild(b);
+        });
+        q.appendChild(opts); box.appendChild(q);
+      });
+    } else if (kind === "reading") {
+      box.appendChild(el("div", "exam-text", t.text));
+      const opts = el("div", "opts");
+      let answered = false;
+      t.options.forEach((o, k) => {
+        const b = el("button", "opt", o);
+        b.onclick = () => {
+          if (answered) return; answered = true;
+          const ok = k === t.answer;
+          b.classList.add(ok ? "ok" : "no");
+          if (!ok) opts.children[t.answer].classList.add("ok");
+          finish(box, ok ? 1 : 0, 1, kind, idx);
+        };
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+    } else if (kind === "schreiben") {
+      const pts = el("ul", "points"); t.points.forEach(p => pts.appendChild(el("li", null, p))); box.appendChild(pts);
+      box.appendChild(el("p", "hint-line", t.hints));
+      const ta = el("textarea", "writer"); ta.placeholder = "Schreiben Sie hier …";
+      const count = el("p", "wordcount", "0 Wörter");
+      ta.addEventListener("input", () => {
+        const w = ta.value.trim().split(/\s+/).filter(Boolean).length;
+        count.textContent = w + " Wörter";
+      });
+      box.appendChild(ta); box.appendChild(count);
+      const b = el("button", "primary", "Als erledigt markieren");
+      b.onclick = () => { P.exam[kind + idx] = true; addXP(15); finish(box, 1, 1, kind, idx, true); };
+      box.appendChild(b);
+    } else { // sprechen
+      box.appendChild(el("p", "hint-line", t.hints));
+      const b = el("button", "primary", "Geübt — erledigt");
+      b.onclick = () => { P.exam[kind + idx] = true; addXP(15); finish(box, 1, 1, kind, idx, true); };
+      box.appendChild(b);
+    }
+    r.appendChild(box);
+  }
+
+  function finish(box, right, total, kind, idx, silent) {
+    if (!silent) { P.exam[kind + idx] = true; addXP(right * 10); }
+    const fb = el("div", "fb ok");
+    fb.innerHTML = silent ? "<b>Erledigt ✓</b>" : `<b>Fertig.</b> Richtig: ${right} / ${total}`;
+    box.appendChild(fb);
+    const back = el("button", "ghost", "Zurück zur Prüfungsliste");
+    back.onclick = () => go("exam");
+    box.appendChild(back);
+  }
+
+  /* ====================================================
+     REDEMITTEL
+  ==================================================== */
+  function renderRedemittel(r) {
+    r.appendChild(crumb("Redemittel"));
+    r.appendChild(el("p", "lede", "Bausteine zum Sprechen und Schreiben — aus den „kurz und klar\"-Seiten."));
+    D.redemittel.groups.forEach(g => {
+      const sec = el("div", "rede-card");
+      sec.appendChild(el("h3", null, g.title));
+      const ul = el("ul"); g.items.forEach(it => {
+        const li = el("li");
+        li.innerHTML = `<span>${it}</span>`;
+        const sp = el("button", "spk small", "🔊"); sp.onclick = () => speak(it.replace(/…/g, ""));
+        li.appendChild(sp);
+        ul.appendChild(li);
+      });
+      sec.appendChild(ul); r.appendChild(sec);
+    });
+  }
+
+  /* ---------- crumb ---------- */
+  function crumb(title, back) {
+    const c = el("div", "screen-head");
+    if (back) { const b = el("button", "crumb-back", "← zurück"); b.onclick = back; c.appendChild(b); }
+    c.appendChild(el("h1", null, title));
+    return c;
+  }
+
+  /* ====================================================
+     BACKUP / RESTORE (Sichern / Laden)
+  ==================================================== */
+  function exportCode() {
+    return btoa(unescape(encodeURIComponent(JSON.stringify(P))));
+  }
+  function importCode(code) {
+    try {
+      const obj = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+      P = Object.assign(defaultProgress(), obj); save(); render(); return true;
+    } catch (e) { return false; }
+  }
+
+  function openBackup() {
+    const ov = el("div", "overlay");
+    const sheet = el("div", "sheet");
+    sheet.innerHTML = `<h3>Fortschritt sichern / laden</h3>
+      <p>Kopiere den Code zum Sichern, oder füge einen Code ein und lade ihn — so nimmst du deinen Fortschritt auf ein anderes Gerät mit.</p>`;
+    const ta = el("textarea", "code-area"); ta.value = exportCode(); ta.readOnly = false;
+    sheet.appendChild(ta);
+    const row = el("div", "btn-row");
+    const copy = el("button", "primary", "Code kopieren");
+    copy.onclick = () => { ta.select(); document.execCommand && document.execCommand("copy"); copy.textContent = "Kopiert ✓"; };
+    const loadB = el("button", "ghost", "Code laden");
+    loadB.onclick = () => { if (importCode(ta.value)) { close(); } else { loadB.textContent = "Ungültiger Code"; } };
+    const cl = el("button", "ghost", "Schließen"); cl.onclick = close;
+    row.append(copy, loadB, cl); sheet.appendChild(row);
+    ov.appendChild(sheet); document.body.appendChild(ov);
+    ov.onclick = (e) => { if (e.target === ov) close(); };
+    function close() { ov.remove(); }
+  }
+  function resetAll() {
+    if (!confirm("Wirklich den gesamten Fortschritt löschen?")) return;
+    P = defaultProgress(); save(); render();
+  }
+
+  /* ====================================================
+     NAV WIRING + KEYBOARD
+  ==================================================== */
+  function wireNav() {
+    document.querySelectorAll("[data-nav]").forEach(b => {
+      b.onclick = () => go(b.dataset.nav);
+    });
+    const sb = $("#btn-backup"); if (sb) sb.onclick = openBackup;
+    const rb = $("#btn-reset"); if (rb) rb.onclick = resetAll;
+  }
+
+  if (MODE === "desktop") {
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      const keys = { "1": "dash", "2": "grammar", "3": "vocab", "4": "exam", "5": "redemittel" };
+      if (keys[e.key]) go(keys[e.key]);
+    });
+  }
+
+  /* ---------- boot ---------- */
+  window.NWB1 = { go, boot() { P = load(); wireNav(); renderHUD(); go("dash"); } };
+})();
+
+</script>
+<script>NWB1.boot();</script>
+</body>
+</html>
